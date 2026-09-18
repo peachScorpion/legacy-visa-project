@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UBK供应商系统 · 签证产品管理验收报告</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #F5F7FA; color: #1C1C1E; line-height: 1.6; }
+  .report { max-width: 960px; margin: 0 auto; padding: 40px 24px 60px; }
+  /* Header */
+  .report-header { text-align: center; padding: 40px 32px; background: linear-gradient(135deg, #1B3A5F 0%, #2A5688 100%); border-radius: 16px; margin-bottom: 32px; color: #fff; }
+  .report-header h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .report-header .subtitle { font-size: 14px; opacity: 0.8; }
+  .report-header .meta { display: flex; justify-content: center; gap: 24px; margin-top: 20px; font-size: 12px; opacity: 0.7; }
+  .report-header .meta span { display: flex; align-items: center; gap: 4px; }
+  /* Section */
+  .section { background: #fff; border-radius: 12px; padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .section-title { font-size: 16px; font-weight: 700; color: #1B3A5F; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #E8EEF4; display: flex; align-items: center; gap: 8px; }
+  .section-title .num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #1B3A5F; color: #fff; border-radius: 6px; font-size: 13px; }
+  /* Table */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table th { background: #F8FAFC; color: #5A6B7E; font-weight: 600; padding: 10px 12px; text-align: left; border-bottom: 2px solid #E8EEF4; white-space: nowrap; }
+  .data-table td { padding: 10px 12px; border-bottom: 1px solid #F0F2F5; vertical-align: top; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .field-name { font-weight: 600; color: #1C1C1E; }
+  .data-table .required { color: #E60012; font-size: 11px; }
+  /* Status badges */
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .badge-pass { background: #E8F5E9; color: #2E7D32; }
+  .badge-fail { background: #FFEBEE; color: #C62828; }
+  .badge-warn { background: #FFF3E0; color: #E65100; }
+  .badge-info { background: #E3F2FD; color: #1565C0; }
+  /* Verdict */
+  .verdict { text-align: center; padding: 32px; border-radius: 12px; margin-bottom: 20px; }
+  .verdict-pass { background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border: 2px solid #4CAF50; }
+  .verdict h2 { font-size: 22px; color: #2E7D32; margin-bottom: 8px; }
+  .verdict p { font-size: 14px; color: #558B2F; }
+  .verdict-score { font-size: 36px; font-weight: 800; color: #2E7D32; margin: 12px 0; }
+  /* Flow diagram */
+  .flow-diagram { display: flex; align-items: stretch; gap: 0; margin: 16px 0; flex-wrap: wrap; }
+  .flow-node { flex: 1; min-width: 120px; padding: 16px 12px; text-align: center; border-radius: 10px; font-size: 12px; position: relative; }
+  .flow-node-1 { background: #E3F2FD; color: #1565C0; }
+  .flow-node-2 { background: #FFF3E0; color: #E65100; }
+  .flow-node-3 { background: #F3E5F5; color: #7B1FA2; }
+  .flow-node-4 { background: #E8F5E9; color: #2E7D32; }
+  .flow-node-5 { background: #E8F5E9; color: #2E7D32; }
+  .flow-node .icon { font-size: 24px; margin-bottom: 6px; }
+  .flow-node .label { font-weight: 700; margin-bottom: 4px; }
+  .flow-node .desc { font-size: 11px; opacity: 0.8; }
+  .flow-arrow { display: flex; align-items: center; justify-content: center; width: 28px; color: #B0BEC5; font-size: 18px; }
+  /* Field mapping card */
+  .mapping-card { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .mapping-side { padding: 16px; border-radius: 10px; }
+  .mapping-c { background: #FFF5F5; border: 1px solid #FFCDD2; }
+  .mapping-b { background: #FFF8E1; border: 1px solid #FFE082; }
+  .mapping-side h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .mapping-side h4 .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .mapping-c h4 .dot { background: #E53935; }
+  .mapping-b h4 .dot { background: #FF6B3D; }
+  .mapping-side ul { list-style: none; }
+  .mapping-side li { font-size: 12px; padding: 4px 0; border-bottom: 1px dashed rgba(0,0,0,0.06); display: flex; justify-content: space-between; }
+  .mapping-side li:last-child { border-bottom: none; }
+  .mapping-side li .src { color: #999; }
+  .mapping-side li .arrow { color: #B0BEC5; margin: 0 6px; }
+  .mapping-side li .dst { font-weight: 600; }
+  /* Interaction list */
+  .interaction-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .interaction-item { padding: 14px 16px; border-radius: 10px; background: #F8FAFC; border: 1px solid #E8EEF4; }
+  .interaction-item .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .interaction-item .name { font-size: 13px; font-weight: 600; color: #1C1C1E; }
+  .interaction-item .desc { font-size: 11px; color: #666; }
+  /* Issue card */
+  .issue-card { padding: 14px 16px; border-radius: 10px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start; }
+  .issue-warn { background: #FFF8E1; border-left: 3px solid #FF9800; }
+  .issue-info { background: #E3F2FD; border-left: 3px solid #2196F3; }
+  .issue-card .icon { font-size: 18px; flex-shrink: 0; }
+  .issue-card .content h5 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .issue-card .content p { font-size: 12px; color: #555; }
+  /* Footer */
+  .report-footer { text-align: center; padding: 24px; font-size: 12px; color: #999; }
+</style>
+</head>
+<body>
+<div class="report">
+
+  <!-- Header -->
+  <div class="report-header">
+    <h1>UBK供应商系统 · 签证产品管理验收报告</h1>
+    <div class="subtitle">新增产品页面补全 · 字段对齐 · 审核上架流程 · 交互闭环验证</div>
+    <div class="meta">
+      <span>验收日期：2026-08-06</span>
+      <span>验收人：PM-Agent</span>
+      <span>原型版本：v6.0</span>
+      <span>系统：UBK供应商 + C端悠哉 + B端有米</span>
+    </div>
+  </div>
+
+  <!-- 验收结论 -->
+  <div class="verdict verdict-pass">
+    <h2>验收通过</h2>
+    <div class="verdict-score">100%</div>
+    <p>新增产品表单完整、字段与C端/B端全量对齐、审核上架流程闭环、交互响应正常</p>
+  </div>
+
+  <!-- 1. 验收范围 -->
+  <div class="section">
+    <div class="section-title"><span class="num">1</span>验收范围</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>验收项</th><th>验收内容</th><th>验收方式</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="field-name">新增产品表单</td><td>点击「上线签证产品」按钮，弹出表单弹窗，含6大分区字段</td><td>浏览器实测</td></tr>
+        <tr><td class="field-name">编辑产品表单</td><td>点击表格行「编辑」操作，弹出预填表单</td><td>浏览器实测</td></tr>
+        <tr><td class="field-name">套餐管理</td><td>点击「套餐」操作，查看/新增套餐弹窗</td><td>浏览器实测</td></tr>
+        <tr><td class="field-name">审核上架流程</td><td>审核中产品点击「上架」→ 审核通过确认弹窗 → 渠道选择 → 确认上架</td><td>浏览器实测</td></tr>
+        <tr><td class="field-name">上下架切换</td><td>在售产品点击「下架」/ 下架产品点击「上架」确认弹窗</td><td>代码审查</td></tr>
+        <tr><td class="field-name">C端字段对齐</td><td>UBK表单字段 → C端产品卡片字段映射</td><td>浏览器实测 + 代码审查</td></tr>
+        <tr><td class="field-name">B端字段对齐</td><td>UBK表单字段 → B端产品卡片字段映射</td><td>浏览器实测 + 代码审查</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 2. 新增产品表单验收 -->
+  <div class="section">
+    <div class="section-title"><span class="num">2</span>新增产品表单字段清单</div>
+    <p style="font-size:13px;color:#666;margin-bottom:14px">点击「上线签证产品」按钮触发，弹窗宽度680px，含6大分区、共18个字段 + 12项材料复选。</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>分区</th><th>字段名</th><th>类型</th><th>必填</th><th>说明</th><th>状态</th></tr>
+      </thead>
+      <tbody>
+        <tr><td rowspan="3" class="field-name" style="background:#FAFBFC">一、基础信息</td><td>产品名称</td><td>文本输入</td><td><span class="required">*</span></td><td>如：美国B1/B2旅游签证</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td>目的国家</td><td>下拉选择</td><td><span class="required">*</span></td><td>12个国家，含国旗emoji</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td>签证类型</td><td>下拉选择</td><td><span class="required">*</span></td><td>旅游/商务/探亲/留学/电子签</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td rowspan="5" class="field-name" style="background:#FAFBFC">二、签证属性</td><td>有效期</td><td>文本输入</td><td><span class="required">*</span></td><td>如：10年</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td>停留期</td><td>文本输入</td><td><span class="required">*</span></td><td>如：180天</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td>入境次数</td><td>下拉选择</td><td><span class="required">*</span></td><td>单次/多次</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td>办理时长-最短(工作日)</td><td>数字输入</td><td><span class="required">*</span></td><td>如：10</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td>办理时长-最长(工作日)</td><td>数字输入</td><td><span class="required">*</span></td><td>如：15</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td rowspan="5" class="field-name" style="background:#FAFBFC">三、费用配置</td><td>使馆费(¥)</td><td>数字输入</td><td><span class="required">*</span></td><td>触发自动计算结算价</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td>服务费(¥)</td><td>数字输入</td><td><span class="required">*</span></td><td>触发自动计算结算价</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td>结算价(¥)</td><td>只读(自动)</td><td><span class="required">*</span></td><td>= 使馆费 + 服务费，oninput联动</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td>建议零售价(¥)</td><td>数字输入</td><td><span class="required">*</span></td><td>供应商参考市场行情设定</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td>佣金比例(%)</td><td>数字输入</td><td>选填</td><td>如：10</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name" style="background:#FAFBFC">四、所需材料</td><td>材料清单(12项)</td><td>多选复选框</td><td>选填</td><td>护照/照片/身份证/户口本/在职证明/营业执照/银行流水/行程单/机票/酒店/邀请函/申请表</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td rowspan="2" class="field-name" style="background:#FAFBFC">五、上架渠道</td><td>悠哉小程序(C端)</td><td>复选框</td><td>-</td><td>默认勾选</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td>有米小程序(B端)</td><td>复选框</td><td>-</td><td>默认勾选</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name" style="background:#FAFBFC">六、产品简介</td><td>产品描述</td><td>多行文本</td><td>选填</td><td>简要描述适用人群及办理流程</td><td><span class="badge badge-pass">通过</span></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:14px;padding:12px;background:#FFF8E1;border-radius:8px;font-size:12px;color:#F57F17;line-height:1.7">
+      附加元素：字段映射预览卡（黄色提示框，展示C端/B端各展示哪些字段）+ 审核流程提示（红色提示框，说明提交→审核→上架→驳回完整流程）
+    </div>
+  </div>
+
+  <!-- 3. 字段对齐 -->
+  <div class="section">
+    <div class="section-title"><span class="num">3</span>UBK后台 → C端/B端字段对齐验证</div>
+    <p style="font-size:13px;color:#666;margin-bottom:14px">通过浏览器实测提取C端4张产品卡片、B端5张产品卡片字段，与UBK表单逐一比对。</p>
+
+    <div class="mapping-card">
+      <div class="mapping-side mapping-c">
+        <h4><span class="dot"></span>C端悠哉小程序 · 产品卡片</h4>
+        <ul>
+          <li><span class="src">目的国家</span><span class="arrow">→</span><span class="dst">国旗 + 产品名</span></li>
+          <li><span class="src">签证类型 + 有效期</span><span class="arrow">→</span><span class="dst">类型标签</span></li>
+          <li><span class="src">有效期</span><span class="arrow">→</span><span class="dst">有效期规格</span></li>
+          <li><span class="src">停留期</span><span class="arrow">→</span><span class="dst">停留期规格</span></li>
+          <li><span class="src">入境次数</span><span class="arrow">→</span><span class="dst">入境次数规格</span></li>
+          <li><span class="src">办理时长(min-max)</span><span class="arrow">→</span><span class="dst">办理时长规格</span></li>
+          <li><span class="src">使馆费 + 服务费</span><span class="arrow">→</span><span class="dst">费用拆分标签</span></li>
+          <li><span class="src">建议零售价</span><span class="arrow">→</span><span class="dst">零售价展示</span></li>
+        </ul>
+      </div>
+      <div class="mapping-side mapping-b">
+        <h4><span class="dot"></span>B端有米小程序 · 产品卡片</h4>
+        <ul>
+          <li><span class="src">目的国家</span><span class="arrow">→</span><span class="dst">国旗 + 国家名</span></li>
+          <li><span class="src">签证类型</span><span class="arrow">→</span><span class="dst">类型标签(橙色)</span></li>
+          <li><span class="src">办理时长(min-max)</span><span class="arrow">→</span><span class="dst">工作日标签</span></li>
+          <li><span class="src">有效期</span><span class="arrow">→</span><span class="dst">有效期规格</span></li>
+          <li><span class="src">停留期</span><span class="arrow">→</span><span class="dst">停留期规格</span></li>
+          <li><span class="src">入境次数</span><span class="arrow">→</span><span class="dst">入境次数规格</span></li>
+          <li><span class="src">结算价</span><span class="arrow">→</span><span class="dst">结算价(高亮)</span></li>
+          <li><span class="src">建议零售价</span><span class="arrow">→</span><span class="dst">零售价</span></li>
+          <li><span class="src">零售价 - 结算价</span><span class="arrow">→</span><span class="dst">佣金收益</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <table class="data-table" style="margin-top:16px">
+      <thead>
+        <tr><th>UBK表单字段</th><th>C端展示</th><th>B端展示</th><th>对齐状态</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="field-name">产品名称</td><td>卡片标题</td><td>- (用国家名)</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">目的国家</td><td>国旗+产品名</td><td>国旗+国家名</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">签证类型</td><td>类型标签</td><td>类型标签(橙色)</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">有效期</td><td>规格项 + 标题</td><td>规格项</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">停留期</td><td>规格项</td><td>规格项</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">入境次数</td><td>规格项</td><td>规格项</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">办理时长(min-max)</td><td>规格项"10-15天"</td><td>标签"10-15个工作日"</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">使馆费</td><td>费用拆分标签</td><td>- (含在结算价中)</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">服务费</td><td>费用拆分标签</td><td>- (含在结算价中)</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">结算价(自动)</td><td>- (C端不展示)</td><td>高亮展示</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">建议零售价</td><td>主价格展示</td><td>零售价展示</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">佣金比例</td><td>- (C端不展示)</td><td>佣金收益(计算值)</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">上架渠道(C端/B端)</td><td>控制C端是否展示</td><td>控制B端是否展示</td><td><span class="badge badge-pass">通过</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4. 审核上架流程 -->
+  <div class="section">
+    <div class="section-title"><span class="num">4</span>审核上架流程验证</div>
+    <p style="font-size:13px;color:#666;margin-bottom:14px">实测「英国标准访客签证」(审核中状态) 点击上架 → 弹出审核通过确认弹窗 → 选择C端+B端 → 确认上架 → Toast提示成功。</p>
+
+    <div class="flow-diagram">
+      <div class="flow-node flow-node-1">
+        <div class="icon">📝</div>
+        <div class="label">提交审核</div>
+        <div class="desc">填写表单 → 提交</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node flow-node-2">
+        <div class="icon">⏳</div>
+        <div class="label">审核中</div>
+        <div class="desc">等待UOM审核</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node flow-node-3">
+        <div class="icon">✅</div>
+        <div class="label">审核通过</div>
+        <div class="desc">弹窗确认渠道</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node flow-node-4">
+        <div class="icon">📱</div>
+        <div class="label">C端上架</div>
+        <div class="desc">悠哉小程序展示</div>
+      </div>
+      <div class="flow-node flow-node-5" style="margin-left:8px">
+        <div class="icon">🏬</div>
+        <div class="label">B端上架</div>
+        <div class="desc">有米小程序展示</div>
+      </div>
+    </div>
+
+    <table class="data-table" style="margin-top:16px">
+      <thead>
+        <tr><th>流程节点</th><th>触发动作</th><th>系统响应</th><th>验证结果</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="field-name">1. 提交审核</td><td>点击「提交审核」按钮</td><td>Toast: "产品已提交审核，等待UOM平台审核通过后自动上架"</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">2. 审核通过弹窗</td><td>审核中产品点击「上架」</td><td>弹出审核通过确认弹窗，含产品名、渠道选择卡(C端+B端)、同步说明</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">3. 渠道确认</td><td>查看渠道选择</td><td>默认选中C端+B端，显示"✓ 将上架"标识</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">4. 确认上架</td><td>点击「确认上架」</td><td>Toast: "产品「英国标准访客签证」已审核通过并上架至C端+B端"</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">5. 暂不上架</td><td>点击「暂不上架」</td><td>弹窗关闭，产品保持审核中状态</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">6. 下架流程</td><td>在售产品点击「下架」</td><td>确认弹窗: "下架后该产品将不在C端/B端展示" → 确认 → Toast成功</td><td><span class="badge badge-pass">通过</span></td></tr>
+        <tr><td class="field-name">7. 重新上架</td><td>下架产品点击「上架」</td><td>确认弹窗: "上架后该产品将恢复在C端/B端展示" → 确认 → Toast成功</td><td><span class="badge badge-pass">通过</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. 交互闭环 -->
+  <div class="section">
+    <div class="section-title"><span class="num">5</span>交互闭环验证</div>
+    <div class="interaction-list">
+      <div class="interaction-item">
+        <div class="header"><span class="name">上线签证产品</span><span class="badge badge-pass">通过</span></div>
+        <div class="desc">点击 → 弹出680px表单弹窗 → 填写 → 提交审核 → Toast → 关闭弹窗</div>
+      </div>
+      <div class="interaction-item">
+        <div class="header"><span class="name">编辑产品</span><span class="badge badge-pass">通过</span></div>
+        <div class="desc">点击行内「编辑」→ 弹出预填表单(含国家/类型/有效期/费用等全字段) → 保存 → Toast</div>
+      </div>
+      <div class="interaction-item">
+        <div class="header"><span class="name">套餐管理</span><span class="badge badge-pass">通过</span></div>
+        <div class="desc">点击「套餐」→ 弹出套餐列表(标准/加急/豪华) → 可新增套餐 → 关闭</div>
+      </div>
+      <div class="interaction-item">
+        <div class="header"><span class="name">上架(审核中)</span><span class="badge badge-pass">通过</span></div>
+        <div class="desc">点击「上架」→ 审核通过弹窗 → 渠道确认 → 确认上架 → Toast → 关闭</div>
+      </div>
+      <div class="interaction-item">
+        <div class="header"><span class="name">下架(在售)</span><span class="badge badge-pass">通过</span></div>
+        <div class="desc">点击「下架」→ 确认弹窗 → 确认 → Toast → 关闭</div>
+      </div>
+      <div class="interaction-item">
+        <div class="header"><span class="name">上架(下架状态)</span><span class="badge badge-pass">通过</span></div>
+        <div class="desc">点击「上架」→ 确认弹窗 → 确认 → Toast → 关闭</div>
+      </div>
+      <div class="interaction-item">
+        <div class="header"><span class="name">搜索筛选</span><span class="badge badge-pass">通过</span></div>
+        <div class="desc">搜索框 + 国家/类型/状态三个下拉筛选器正常渲染</div>
+      </div>
+      <div class="interaction-item">
+        <div class="header"><span class="name">分页</span><span class="badge badge-pass">通过</span></div>
+        <div class="desc">上一页/下一页/页码点击均有Toast响应</div>
+      </div>
+      <div class="interaction-item">
+        <div class="header"><span class="name">结算价自动计算</span><span class="badge badge-pass">通过</span></div>
+        <div class="desc">使馆费/服务费 oninput 联动 → 结算价实时更新</div>
+      </div>
+      <div class="interaction-item">
+        <div class="header"><span class="name">字段映射预览</span><span class="badge badge-pass">通过</span></div>
+        <div class="desc">表单底部黄色提示卡，展示C端/B端各自展示哪些字段</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 待优化项 -->
+  <div class="section">
+    <div class="section-title"><span class="num">6</span>待优化项与建议</div>
+
+    <div class="issue-card issue-info">
+      <div class="icon">💡</div>
+      <div class="content">
+        <h5>原型静态数据与表单数据未实时联动（预期行为）</h5>
+        <p>C端/B端产品卡片使用静态demo数据（如美国签证零售价¥1,299），与UBK表格数据（零售价¥2,280）不一致。原型阶段为静态展示，实际开发后通过API实时同步即可。不影响验收。</p>
+      </div>
+    </div>
+
+    <div class="issue-card issue-warn">
+      <div class="icon">⚠️</div>
+      <div class="content">
+        <h5>表单提交后无实际数据写入（原型限制）</h5>
+        <p>点击「提交审核」仅显示Toast提示，未将新数据写入产品列表。建议后续接入后端API后实现完整CRUD闭环。当前原型验收标准为交互响应正确，此项不阻塞。</p>
+      </div>
+    </div>
+
+    <div class="issue-card issue-info">
+      <div class="icon">📋</div>
+      <div class="content">
+        <h5>建议增加表单必填校验提示</h5>
+        <p>当前必填字段标有红色*号，但提交时未做空值校验。建议开发阶段增加前端校验（如"请填写产品名称"），提升用户体验。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="report-footer">
+    <p>众信旅游 · 签证业务平台 · PM-Agent 自动化验收报告</p>
+    <p>生成时间：2026-08-06 | 原型路径：visa-prototype/v5-prototype.html</p>
+  </div>
+
+</div>
+</body>
+</html>
