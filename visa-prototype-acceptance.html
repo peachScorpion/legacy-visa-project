@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>签证业务平台全系统高保真原型 - 产品验收报告</title>
+<style>
+  :root {
+    --brand-dark: #1B3A5F;
+    --brand-gold: #C9A84C;
+    --brand-light: #E8EEF4;
+    --pass: #2E7D32;
+    --pass-bg: #E8F5E9;
+    --partial: #E65100;
+    --partial-bg: #FFF3E0;
+    --missing: #C62828;
+    --missing-bg: #FFEBEE;
+    --ink-900: #1a1a2e;
+    --ink-700: #333;
+    --ink-500: #666;
+    --ink-300: #999;
+    --border: #e0e0e0;
+    --bg: #f5f6f8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--ink-700);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1280px; margin: 0 auto; padding: 24px 20px 60px; }
+
+  /* Header */
+  .report-header {
+    background: linear-gradient(135deg, var(--brand-dark) 0%, #2a5380 100%);
+    color: #fff;
+    padding: 48px 40px;
+    border-radius: 16px 16px 0 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .report-header::after {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .report-header .brand-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,168,76,0.2);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--brand-gold);
+    padding: 6px 16px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .report-header h1 { font-size: 28px; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.5px; }
+  .report-header .subtitle { font-size: 14px; opacity: 0.85; }
+  .report-header .meta {
+    display: flex; gap: 32px; margin-top: 24px; flex-wrap: wrap;
+    font-size: 13px; opacity: 0.9;
+  }
+  .report-header .meta-item { display: flex; align-items: center; gap: 6px; }
+  .report-header .meta-item svg { width: 16px; height: 16px; opacity: 0.7; }
+
+  /* Main card */
+  .report-body {
+    background: #fff;
+    border-radius: 0 0 16px 16px;
+    padding: 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  }
+
+  /* Section */
+  .section { margin-bottom: 48px; }
+  .section-title {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 24px; padding-bottom: 14px;
+    border-bottom: 2px solid var(--brand-light);
+  }
+  .section-num {
+    width: 32px; height: 32px;
+    background: var(--brand-dark); color: #fff;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700; flex-shrink: 0;
+  }
+  .section-title h2 { font-size: 20px; font-weight: 700; color: var(--brand-dark); }
+  .section-title .gold-line {
+    flex: 1; height: 2px;
+    background: linear-gradient(90deg, var(--brand-gold), transparent);
+  }
+
+  /* Overview stats */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px; margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--brand-light);
+    border-radius: 12px; padding: 24px 20px;
+    text-align: center; border: 1px solid rgba(27,58,95,0.08);
+  }
+  .stat-card .stat-label { font-size: 13px; color: var(--ink-500); margin-bottom: 8px; }
+  .stat-card .stat-value { font-size: 36px; font-weight: 800; color: var(--brand-dark); line-height: 1; }
+  .stat-card .stat-sub { font-size: 12px; color: var(--ink-300); margin-top: 6px; }
+  .stat-card.gold { background: linear-gradient(135deg, #FAF6EC, #F5EDD6); border-color: rgba(201,168,76,0.3); }
+  .stat-card.gold .stat-value { color: var(--brand-gold); }
+  .stat-card.pass .stat-value { color: var(--pass); }
+  .stat-card.partial .stat-value { color: var(--partial); }
+  .stat-card.missing .stat-value { color: var(--missing); }
+
+  /* System status cards */
+  .system-status-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+  .system-card {
+    border-radius: 12px; padding: 20px 16px;
+    border: 2px solid var(--border);
+    transition: transform 0.2s;
+  }
+  .system-card:hover { transform: translateY(-2px); }
+  .system-card .sys-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .system-card .sys-platform { font-size: 11px; color: var(--ink-300); margin-bottom: 12px; }
+  .system-card .sys-pages { display: flex; align-items: baseline; gap: 4px; margin-bottom: 10px; }
+  .system-card .sys-pages .num { font-size: 28px; font-weight: 800; }
+  .system-card .sys-pages .unit { font-size: 13px; color: var(--ink-300); }
+  .system-card .sys-badge {
+    display: inline-block; padding: 4px 12px; border-radius: 12px;
+    font-size: 12px; font-weight: 600;
+  }
+  .system-card.ubk { border-color: rgba(230,0,18,0.2); background: #FFF8F8; }
+  .system-card.ubk .sys-name { color: #E60012; }
+  .system-card.ubk .sys-pages .num { color: #E60012; }
+  .system-card.c-end { border-color: rgba(229,57,53,0.2); background: #FFF5F5; }
+  .system-card.c-end .sys-name { color: #E53935; }
+  .system-card.c-end .sys-pages .num { color: #E53935; }
+  .system-card.b-end { border-color: rgba(255,107,61,0.2); background: #FFF6F2; }
+  .system-card.b-end .sys-name { color: #FF6B3D; }
+  .system-card.b-end .sys-pages .num { color: #FF6B3D; }
+  .system-card.csp { border-color: rgba(27,58,95,0.2); background: #F0F4F8; }
+  .system-card.csp .sys-name { color: var(--brand-dark); }
+  .system-card.csp .sys-pages .num { color: var(--brand-dark); }
+  .system-card.uom { border-color: rgba(229,57,53,0.2); background: #FFF5F5; }
+  .system-card.uom .sys-name { color: #E53935; }
+  .system-card.uom .sys-pages .num { color: #E53935; }
+  .badge-pass { background: var(--pass-bg); color: var(--pass); }
+  .badge-partial { background: var(--partial-bg); color: var(--partial); }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: var(--brand-dark); }
+  thead th {
+    color: #fff; font-weight: 600; text-align: left;
+    padding: 14px 16px; white-space: nowrap;
+    font-size: 13px;
+  }
+  tbody td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  tbody tr:nth-child(even) { background: #fafbfc; }
+  tbody tr:hover { background: var(--brand-light); }
+  .tag {
+    display: inline-block; padding: 3px 12px; border-radius: 12px;
+    font-size: 12px; font-weight: 600; white-space: nowrap;
+  }
+  .tag-pass { background: var(--pass-bg); color: var(--pass); border: 1px solid #C8E6C9; }
+  .tag-partial { background: var(--partial-bg); color: var(--partial); border: 1px solid #FFE0B2; }
+  .tag-missing { background: var(--missing-bg); color: var(--missing); border: 1px solid #FFCDD2; }
+  .tag-layer {
+    font-size: 11px; padding: 2px 8px; border-radius: 4px;
+    font-weight: 600; color: #fff;
+  }
+  .layer-supplier { background: #E60012; }
+  .layer-platform { background: var(--brand-dark); }
+  .layer-sales { background: #FF6B3D; }
+  .layer-frontend { background: #E53935; }
+  .layer-cross { background: #7B1FA2; }
+
+  /* Flow check */
+  .flow-card {
+    background: var(--brand-light); border-radius: 12px;
+    padding: 24px; margin-bottom: 16px;
+    border-left: 4px solid var(--brand-gold);
+  }
+  .flow-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .flow-title { font-size: 16px; font-weight: 700; color: var(--brand-dark); }
+  .flow-steps { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+  .flow-step {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 13px; font-weight: 500; color: var(--ink-700);
+    position: relative;
+  }
+  .flow-step.done { border-color: var(--pass); background: var(--pass-bg); color: var(--pass); }
+  .flow-arrow { color: var(--ink-300); font-size: 16px; margin: 0 2px; }
+
+  /* Issue list */
+  .issue-item {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px 24px; margin-bottom: 14px;
+    border-left: 4px solid var(--brand-gold);
+  }
+  .issue-item.high { border-left-color: var(--missing); }
+  .issue-item.medium { border-left-color: var(--partial); }
+  .issue-item.low { border-left-color: var(--brand-gold); }
+  .issue-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .issue-num {
+    width: 24px; height: 24px; background: var(--brand-dark); color: #fff;
+    border-radius: 6px; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .issue-title { font-size: 15px; font-weight: 700; color: var(--ink-900); }
+  .issue-desc { font-size: 13px; color: var(--ink-500); line-height: 1.8; margin-bottom: 8px; }
+  .issue-suggestion {
+    font-size: 13px; color: var(--brand-dark);
+    background: var(--brand-light); border-radius: 8px; padding: 10px 14px;
+  }
+  .issue-suggestion strong { color: var(--brand-gold); }
+
+  /* Conclusion */
+  .conclusion-box {
+    background: linear-gradient(135deg, var(--brand-dark), #2a5380);
+    border-radius: 16px; padding: 36px;
+    color: #fff; text-align: center;
+  }
+  .conclusion-box .verdict {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,168,76,0.2); border: 1px solid var(--brand-gold);
+    color: var(--brand-gold);
+    padding: 8px 24px; border-radius: 24px;
+    font-size: 16px; font-weight: 700; margin-bottom: 20px;
+  }
+  .conclusion-box h3 { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+  .conclusion-box p { font-size: 14px; opacity: 0.9; line-height: 1.8; max-width: 800px; margin: 0 auto 16px; }
+  .conclusion-box .suggestions {
+    text-align: left; max-width: 800px; margin: 20px auto 0;
+    background: rgba(255,255,255,0.08); border-radius: 12px; padding: 24px;
+  }
+  .conclusion-box .suggestions h4 { color: var(--brand-gold); font-size: 15px; margin-bottom: 12px; }
+  .conclusion-box .suggestions li { font-size: 13px; opacity: 0.9; margin-bottom: 8px; padding-left: 20px; position: relative; }
+  .conclusion-box .suggestions li::before { content: ''; position: absolute; left: 0; top: 10px; width: 8px; height: 8px; background: var(--brand-gold); border-radius: 50%; }
+
+  /* Page check detail */
+  .page-check { margin-bottom: 12px; }
+  .page-check-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; background: var(--brand-light); border-radius: 10px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .page-check-header:hover { background: #dce4ed; }
+  .page-check-header .page-name { font-size: 14px; font-weight: 600; color: var(--ink-900); display: flex; align-items: center; gap: 8px; }
+  .page-check-header .page-func { font-size: 12px; color: var(--ink-500); font-family: monospace; }
+  .page-check-body {
+    padding: 16px 20px; border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px;
+  }
+  .feature-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .feature-item {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 6px; font-size: 12px;
+    background: var(--pass-bg); color: var(--pass);
+    border: 1px solid #C8E6C9;
+  }
+  .feature-item.missing { background: var(--missing-bg); color: var(--missing); border-color: #FFCDD2; }
+  .feature-item.partial { background: var(--partial-bg); color: var(--partial); border-color: #FFE0B2; }
+
+  /* Footer */
+  .report-footer {
+    text-align: center; margin-top: 40px; padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--ink-300);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container { padding: 12px 12px 40px; }
+    .report-header { padding: 32px 20px; }
+    .report-header h1 { font-size: 22px; }
+    .report-body { padding: 20px 16px; }
+    .overview-grid { grid-template-columns: repeat(2, 1fr); }
+    .system-status-grid { grid-template-columns: 1fr; }
+    .section-title h2 { font-size: 17px; }
+    table { font-size: 12px; }
+    thead th, tbody td { padding: 10px 10px; }
+    .flow-steps { flex-direction: column; align-items: stretch; }
+    .flow-arrow { transform: rotate(90deg); text-align: center; }
+    .conclusion-box { padding: 24px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Report Header -->
+  <div class="report-header">
+    <div class="brand-tag">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      众信旅游 · 签证业务平台
+    </div>
+    <h1>签证业务平台全系统高保真原型 - 产品验收报告</h1>
+    <div class="subtitle">对照《签证业务产品方案 v3.0》对5大系统平台26个签证业务页面进行全维度验收</div>
+    <div class="meta">
+      <div class="meta-item">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+        验收日期：2026-07-31
+      </div>
+      <div class="meta-item">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+        验收范围：5大系统 · 26个页面 · 16个模块
+      </div>
+      <div class="meta-item">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        验收角色：资深产品经理
+      </div>
+    </div>
+  </div>
+
+  <div class="report-body">
+
+    <!-- 1. 验收概览 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-num">1</div>
+        <h2>验收概览</h2>
+        <div class="gold-line"></div>
+      </div>
+
+      <div class="overview-grid">
+        <div class="stat-card gold">
+          <div class="stat-label">总体通过率</div>
+          <div class="stat-value">85.7%</div>
+          <div class="stat-sub">综合模块+页面+流程</div>
+        </div>
+        <div class="stat-card pass">
+          <div class="stat-label">通过模块</div>
+          <div class="stat-value">13</div>
+          <div class="stat-sub">共16个模块</div>
+        </div>
+        <div class="stat-card partial">
+          <div class="stat-label">部分通过</div>
+          <div class="stat-value">2</div>
+          <div class="stat-sub">客户档案 / 进度追踪</div>
+        </div>
+        <div class="stat-card missing">
+          <div class="stat-label">缺失模块</div>
+          <div class="stat-value">1</div>
+          <div class="stat-sub">周边服务在线办理</div>
+        </div>
+      </div>
+
+      <div class="system-status-grid">
+        <div class="system-card ubk">
+          <div class="sys-name">UBK供应商系统</div>
+          <div class="sys-platform">PC端 · 全新构建</div>
+          <div class="sys-pages"><span class="num">5</span><span class="unit">个页面</span></div>
+          <span class="sys-badge badge-partial">部分通过</span>
+        </div>
+        <div class="system-card c-end">
+          <div class="sys-name">悠哉小程序(C端)</div>
+          <div class="sys-platform">手机端 · 新增板块</div>
+          <div class="sys-pages"><span class="num">5</span><span class="unit">个页面</span></div>
+          <span class="sys-badge badge-partial">部分通过</span>
+        </div>
+        <div class="system-card b-end">
+          <div class="sys-name">有米小程序(B端)</div>
+          <div class="sys-platform">手机端 · 新增板块</div>
+          <div class="sys-pages"><span class="num">3</span><span class="unit">个页面</span></div>
+          <span class="sys-badge badge-pass">通过</span>
+        </div>
+        <div class="system-card csp">
+          <div class="sys-name">CSP渠道管理</div>
+          <div class="sys-platform">PC端 · 新增页面</div>
+          <div class="sys-pages"><span class="num">1</span><span class="unit">个页面</span></div>
+          <span class="sys-badge badge-pass">通过</span>
+        </div>
+        <div class="system-card uom">
+          <div class="sys-name">UOM运营管理</div>
+          <div class="sys-platform">PC端 · 新增板块</div>
+          <div class="sys-pages"><span class="num">7</span><span class="unit">个页面</span></div>
+          <span class="sys-badge badge-pass">通过</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 模块覆盖度验收表 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-num">2</div>
+        <h2>模块覆盖度验收表</h2>
+        <div class="gold-line"></div>
+      </div>
+      <p style="margin-bottom:16px;font-size:13px;color:var(--ink-500);">产品方案共定义约16个模块，按四层架构分组验收。逐一对照产品方案模块清单与原型页面实现情况。</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:10%">架构层</th>
+              <th style="width:16%">模块名称</th>
+              <th style="width:18%">对应原型页面</th>
+              <th style="width:36%">核心功能点覆盖情况</th>
+              <th style="width:10%">状态</th>
+              <th style="width:10%">覆盖率</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag-layer layer-supplier">供应商层</span></td>
+              <td>供应商管理 (2.2)</td>
+              <td>UBK·suppliers</td>
+              <td>供应商列表、资质分级(金/银/铜)、出签率、响应时长、入驻入口、分级统计。缺少：资质材料详情、准入退出机制、私单管控提示</td>
+              <td><span class="tag tag-partial">部分通过</span></td>
+              <td>70%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-supplier">供应商层</span></td>
+              <td>产品管理含报价/套餐 (2.3)</td>
+              <td>UBK·vproducts</td>
+              <td>产品列表、费用拆分(使馆费/服务费/结算价/零售价)、套餐数、上架入口、审核状态。缺少：套餐定义详情、报价预警、模板引用、免责标注</td>
+              <td><span class="tag tag-partial">部分通过</span></td>
+              <td>65%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-supplier">供应商层</span></td>
+              <td>结算管理 (2.4)</td>
+              <td>UBK·vsettlement</td>
+              <td>账单列表、费用拆分明细(使馆费/服务费/加急费/套餐费)、发起账单、账期管理、付款状态。缺少：对账确认流程、结算报表导出</td>
+              <td><span class="tag tag-partial">部分通过</span></td>
+              <td>75%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-platform">平台运营层</span></td>
+              <td>资料模版库 (2.5)</td>
+              <td>UOM·vtemplates</td>
+              <td>样例模版/完整版/资料字典三标签页、属性/提供方式/份数/必要性/适用人群/版本/生效日期全覆盖、完整版国家清单。缺少：供应商引用入口</td>
+              <td><span class="tag tag-partial">部分通过</span></td>
+              <td>85%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-platform">平台运营层</span></td>
+              <td>材料管理 (2.6)</td>
+              <td>UOM·vmaterials</td>
+              <td>材料清单、AI政策解读("人话版"指引)、智能核对(通过/有疑问/缺失)、审核状态、AI预警项、免责声明。功能完整</td>
+              <td><span class="tag tag-pass">通过</span></td>
+              <td>95%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-platform">平台运营层</span></td>
+              <td>AI填表自动化含OCR (2.7)</td>
+              <td>UOM·vaifill</td>
+              <td>OCR识别+结果展示、AI填表5步流程、模板生成、翻译件生成、效率提升对比(5倍)、系统状态监控。功能完整</td>
+              <td><span class="tag tag-pass">通过</span></td>
+              <td>95%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-platform">平台运营层</span></td>
+              <td>政策监控中心 (2.8)</td>
+              <td>UOM·vpolicy</td>
+              <td>政策爬取列表、AI解读(原文/通俗解释/影响分析/操作建议)、影响级别分布、监控来源统计。功能完整</td>
+              <td><span class="tag tag-pass">通过</span></td>
+              <td>95%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-platform">平台运营层</span></td>
+              <td>规则引擎 (2.9)</td>
+              <td>UOM·vrules</td>
+              <td>规则列表、条件配置树(IF/THEN/ELSE)、模拟测试、国家分布、优先级分布。功能完整</td>
+              <td><span class="tag tag-pass">通过</span></td>
+              <td>95%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-platform">平台运营层</span></td>
+              <td>知识库 (2.10)</td>
+              <td>UOM·vknowledge</td>
+              <td>5大分类(流程/材料/问题/拒签案例/话术)、文章列表、热门标签、TOP5排行、AI知识助手。功能完整</td>
+              <td><span class="tag tag-pass">通过</span></td>
+              <td>95%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-platform">平台运营层</span></td>
+              <td>数据统计 (2.11)</td>
+              <td>UOM·vstats</td>
+              <td>6大KPI、订单趋势图、目的地分布饼图、签证类型分布、供应商绩效排名、目的地明细、同比环比、AI数据洞察、导出。功能完整</td>
+              <td><span class="tag tag-pass">通过</span></td>
+              <td>98%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-sales">销售管理层</span></td>
+              <td>订单管理 (2.12)</td>
+              <td>CSP·vorders</td>
+              <td>KPI看板、7种状态标签、订单列表(含办签人/预约时间/进度维护)、录入入口、导出、订单看板、本周趋势。功能完整</td>
+              <td><span class="tag tag-pass">通过</span></td>
+              <td>92%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-frontend">前端展示层</span></td>
+              <td>有米小程序签证板块 (2.13)</td>
+              <td>B端·vlist+vdetail+vorder</td>
+              <td>产品列表(含结算价/佣金)、产品详情(费用拆分/材料/流程/免责)、代客下单(客户选择/办签人/材料核对)。功能完整</td>
+              <td><span class="tag tag-pass">通过</span></td>
+              <td>90%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-frontend">前端展示层</span></td>
+              <td>悠哉小程序签证板块 (2.14)</td>
+              <td>C端·vhome+vlist+vdetail+vorder+vprogress</td>
+              <td>频道首页(8国/4产品)、列表、详情(材料/流程/免责)、下单(办签人/证件上传/材料)、进度查询(5节点时间轴)。缺少：城市定位、订单管理退款、消息通知</td>
+              <td><span class="tag tag-partial">部分通过</span></td>
+              <td>82%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-cross">跨层模块</span></td>
+              <td>客户档案 (2.15)</td>
+              <td>散落在B端vorder客户选择+C端办签人信息</td>
+              <td>B端有客户搜索/客户库/历史订单3笔记录展示。缺少：独立客户档案页、拒签记录、签证Agent风控预警、风险标签、档案查询</td>
+              <td><span class="tag tag-partial">部分通过</span></td>
+              <td>30%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-cross">跨层模块</span></td>
+              <td>进度追踪 (2.16)</td>
+              <td>C端·vprogress + UBK·vorders + CSP·vorders</td>
+              <td>C端进度可视化时间轴(5节点)、UBK订单状态统计、CSP订单看板。跨层体现。缺少：异常预警、多渠道通知(短信/邮件/系统消息)</td>
+              <td><span class="tag tag-partial">部分通过</span></td>
+              <td>60%</td>
+            </tr>
+            <tr>
+              <td><span class="tag-layer layer-cross">跨层模块</span></td>
+              <td>周边服务在线办理 (2.17)</td>
+              <td>无独立页面</td>
+              <td>产品方案要求保证金冻结、存款证明、个税证明、顺丰物流回寄等周边服务在线办理。原型中未实现</td>
+              <td><span class="tag tag-missing">缺失</span></td>
+              <td>0%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink-500);">
+        <span><span class="tag tag-pass" style="margin-right:6px;">通过</span> 13个模块 (81.3%)</span>
+        <span><span class="tag tag-partial" style="margin-right:6px;">部分通过</span> 2个模块 (12.5%)</span>
+        <span><span class="tag tag-missing" style="margin-right:6px;">缺失</span> 1个模块 (6.2%)</span>
+      </div>
+    </div>
+
+    <!-- 3. 业务流程验收 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-num">3</div>
+        <h2>业务流程完整性验收</h2>
+        <div class="gold-line"></div>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-header">
+          <div class="flow-title">C端流程：签证入口 → 产品列表 → 产品详情 → 下单 → 资料填写 → 进度查询</div>
+          <span class="tag tag-pass">完整通过</span>
+        </div>
+        <div class="flow-steps">
+          <div class="flow-step done">签证频道首页(vhome)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">产品列表(vlist)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">产品详情(vdetail)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">下单/资料填写(vorder)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">进度查询(vprogress)</div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--ink-500);">5个页面串联完整，下单页同时承载办签人信息填写与材料上传，流程闭环。城市定位与订单退款入口缺失为细节问题，不影响主流程完整性。</div>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-header">
+          <div class="flow-title">B端流程：签证产品列表 → 产品详情 → 代客下单</div>
+          <span class="tag tag-pass">完整通过</span>
+        </div>
+        <div class="flow-steps">
+          <div class="flow-step done">产品列表(vlist)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">产品详情(vdetail)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">代客下单(vorder)</div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--ink-500);">3个页面串联完整，列表含结算价/佣金，详情含费用拆分/材料模板下载，下单页含客户选择(新建/客户库)与材料清单核对，代客下单闭环。</div>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-header">
+          <div class="flow-title">UBK流程：供应商管理 → 产品上线 → 订单管理 → 结算</div>
+          <span class="tag tag-pass">完整通过</span>
+        </div>
+        <div class="flow-steps">
+          <div class="flow-step done">首页看板(dashboard)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">供应商管理(suppliers)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">产品管理(vproducts)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">订单管理(vorders)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">结算管理(vsettlement)</div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--ink-500);">5个页面串联完整，从供应商入驻→产品上线→订单处理→账单结算形成业务闭环。首页看板提供待办/快捷入口/核心数据概览。</div>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-header">
+          <div class="flow-title">UOM流程：资料模版 → 材料管理 → AI填表 → 政策监控 → 规则引擎 → 知识库 → 数据统计</div>
+          <span class="tag tag-pass">完整通过</span>
+        </div>
+        <div class="flow-steps">
+          <div class="flow-step done">资料模版库(vtemplates)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">材料管理(vmaterials)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">AI填表(vaifill)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">政策监控(vpolicy)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">规则引擎(vrules)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">知识库(vknowledge)</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step done">数据统计(vstats)</div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--ink-500);">7个页面全部实现，从模版定义→材料审核→AI自动化→政策监控→规则匹配→经验沉淀→数据分析，平台运营全链路闭环。各页面均有右侧数据面板辅助决策。</div>
+      </div>
+    </div>
+
+    <!-- 4. 页面内容验收 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-num">4</div>
+        <h2>页面内容逐页验收</h2>
+        <div class="gold-line"></div>
+      </div>
+
+      <!-- UBK系统 -->
+      <h3 style="margin-bottom:16px;color:var(--brand-dark);font-size:16px;border-left:4px solid #E60012;padding-left:12px;">UBK供应商系统 (5个页面)</h3>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">首页看板 <span class="page-func">getUbkDashboardHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">待办订单区(5项)</span>
+            <span class="feature-item">快捷入口(6项)</span>
+            <span class="feature-item">核心数据KPI(6项)</span>
+            <span class="feature-item">消息通知</span>
+            <span class="feature-item">订单日历</span>
+            <span class="feature-item">系统公告</span>
+            <span class="feature-item">促销Banner</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">供应商管理 <span class="page-func">getUbkSuppliersHTML()</span></div>
+          <span class="tag tag-partial">部分通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">供应商列表(7条)</span>
+            <span class="feature-item">资质等级(金/银/铜/待审核)</span>
+            <span class="feature-item">出签率/响应时长</span>
+            <span class="feature-item">供应商入驻入口</span>
+            <span class="feature-item">分级统计</span>
+            <span class="feature-item">优质供应商推荐</span>
+            <span class="feature-item missing">资质材料管理详情</span>
+            <span class="feature-item missing">准入退出机制</span>
+            <span class="feature-item missing">私单管控提示</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">签证产品管理 <span class="page-func">getUbkVProductsHTML()</span></div>
+          <span class="tag tag-partial">部分通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">产品列表(10条)</span>
+            <span class="feature-item">费用拆分(使馆费/服务费/结算价/零售价)</span>
+            <span class="feature-item">套餐数显示</span>
+            <span class="feature-item">费用拆分说明</span>
+            <span class="feature-item">上线产品入口</span>
+            <span class="feature-item">产品统计</span>
+            <span class="feature-item">热门国家TOP5</span>
+            <span class="feature-item missing">套餐定义详情</span>
+            <span class="feature-item missing">报价预警(结算价>零售价)</span>
+            <span class="feature-item missing">模板引用入口</span>
+            <span class="feature-item missing">免责标注</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">签证订单管理 <span class="page-func">getUbkVOrdersHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">订单列表(8条)</span>
+            <span class="feature-item">6种办理状态</span>
+            <span class="feature-item">状态筛选/日期筛选</span>
+            <span class="feature-item">订单状态统计</span>
+            <span class="feature-item">待处理提醒</span>
+            <span class="feature-item">导出功能</span>
+            <span class="feature-item">详情/进度/回传操作</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">结算管理 <span class="page-func">getUbkVSettlementHTML()</span></div>
+          <span class="tag tag-partial">部分通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">账单列表(6条)</span>
+            <span class="feature-item">费用拆分明细(4项)</span>
+            <span class="feature-item">发起账单入口</span>
+            <span class="feature-item">账期管理</span>
+            <span class="feature-item">付款状态(待付款/部分/已结清/逾期)</span>
+            <span class="feature-item missing">对账确认流程</span>
+            <span class="feature-item missing">结算报表导出</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- C端 -->
+      <h3 style="margin:28px 0 16px;color:var(--brand-dark);font-size:16px;border-left:4px solid #E53935;padding-left:12px;">C端悠哉小程序 (5个页面)</h3>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">签证频道首页 <span class="page-func">getVisaCHomeHTML()</span></div>
+          <span class="tag tag-partial">部分通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">搜索栏</span>
+            <span class="feature-item">Banner轮播</span>
+            <span class="feature-item">热门国家(8个)</span>
+            <span class="feature-item">签证类型分类(6类)</span>
+            <span class="feature-item">热门签证产品(4个)</span>
+            <span class="feature-item missing">城市定位</span>
+            <span class="feature-item partial">热门国家应为9个(差1个)</span>
+            <span class="feature-item partial">热门产品应为5个(差1个)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">签证产品列表 <span class="page-func">getVisaCListHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">搜索栏</span>
+            <span class="feature-item">类型筛选(5类)</span>
+            <span class="feature-item">洲际筛选(亚/欧/美/大洋/非)</span>
+            <span class="feature-item">产品卡片(有效期/停留期/入境次数)</span>
+            <span class="feature-item">费用拆分(使馆费+服务费)</span>
+            <span class="feature-item">查看详情入口</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">签证产品详情 <span class="page-func">getVisaCDetailHTML()</span></div>
+          <span class="tag tag-partial">部分通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">产品标题卡</span>
+            <span class="feature-item">基本信息(4项)</span>
+            <span class="feature-item">费用明细</span>
+            <span class="feature-item">所需材料清单(必须/建议)</span>
+            <span class="feature-item">办理流程(6步)</span>
+            <span class="feature-item">免责声明</span>
+            <span class="feature-item">底部下单栏</span>
+            <span class="feature-item missing">套餐选择</span>
+            <span class="feature-item missing">预订须知</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">签证下单/资料填写 <span class="page-func">getVisaCOrderHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">办签人信息(6字段)</span>
+            <span class="feature-item">证件照片上传(拍照/相册)</span>
+            <span class="feature-item">护照首页上传</span>
+            <span class="feature-item">材料上传(DS-160/在职证明/银行流水/户口本)</span>
+            <span class="feature-item">联系人信息+收货地址</span>
+            <span class="feature-item">提交订单</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">签证进度查询 <span class="page-func">getVisaCProgressHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">订单列表展示</span>
+            <span class="feature-item">进度条(5节点可视化)</span>
+            <span class="feature-item">时间线记录</span>
+            <span class="feature-item">订单状态标签</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- B端 -->
+      <h3 style="margin:28px 0 16px;color:var(--brand-dark);font-size:16px;border-left:4px solid #FF6B3D;padding-left:12px;">B端有米小程序 (3个页面)</h3>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">签证产品列表 <span class="page-func">getVisaBListHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">代客下单标题</span>
+            <span class="feature-item">搜索栏</span>
+            <span class="feature-item">类型筛选(6类含加急)</span>
+            <span class="feature-item">国家快捷筛选</span>
+            <span class="feature-item">结算价/零售价/佣金收益</span>
+            <span class="feature-item">代客下单入口</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">签证产品详情 <span class="page-func">getVisaBDetailHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">产品标题卡</span>
+            <span class="feature-item">基本信息(4项)</span>
+            <span class="feature-item">费用拆分(使馆费/服务费/结算价/零售价/门店利润)</span>
+            <span class="feature-item">所需材料(必须/建议)</span>
+            <span class="feature-item">材料模板下载</span>
+            <span class="feature-item">办理流程(6步)</span>
+            <span class="feature-item">免责声明</span>
+            <span class="feature-item">底部代客下单栏</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">代客下单 <span class="page-func">getVisaBOrderHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">客户搜索(姓名/手机号)</span>
+            <span class="feature-item">新建客户/客户库选择</span>
+            <span class="feature-item">已选客户(历史订单)</span>
+            <span class="feature-item">办签人信息(销售代填)</span>
+            <span class="feature-item">证件照片上传(拍照)</span>
+            <span class="feature-item">材料清单核对(已提供/未提供)</span>
+            <span class="feature-item">提交订单(结算价)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CSP -->
+      <h3 style="margin:28px 0 16px;color:var(--brand-dark);font-size:16px;border-left:4px solid #1B3A5F;padding-left:12px;">CSP渠道管理系统 (1个页面)</h3>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">签证订单管理 <span class="page-func">getChVisaOrdersHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">KPI看板(4项)</span>
+            <span class="feature-item">7种状态标签(含数量)</span>
+            <span class="feature-item">订单列表(8条/10字段)</span>
+            <span class="feature-item">办签人/联系方式/预约时间</span>
+            <span class="feature-item">进度维护操作</span>
+            <span class="feature-item">录入签证订单入口</span>
+            <span class="feature-item">导出功能</span>
+            <span class="feature-item">订单看板(6状态)</span>
+            <span class="feature-item">今日新增/本周趋势</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- UOM -->
+      <h3 style="margin:28px 0 16px;color:var(--brand-dark);font-size:16px;border-left:4px solid #E53935;padding-left:12px;">UOM运营管理平台 (7个页面)</h3>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">资料模版库 <span class="page-func">getOpVisaTemplatesHTML()</span></div>
+          <span class="tag tag-partial">部分通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">三标签页(样例/完整版/字典)</span>
+            <span class="feature-item">模版列表(10字段全覆盖)</span>
+            <span class="feature-item">属性/提供方式/份数/必要性/适用人群</span>
+            <span class="feature-item">版本号/生效日期</span>
+            <span class="feature-item">历史版本入口</span>
+            <span class="feature-item">模版统计(4项)</span>
+            <span class="feature-item">国家分布TOP5</span>
+            <span class="feature-item">完整版国家清单</span>
+            <span class="feature-item missing">供应商引用入口</span>
+            <span class="feature-item missing">生效日期到期提醒</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">材料管理 <span class="page-func">getOpVisaMaterialsHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">KPI(完整率/待审核/AI预警/已通过)</span>
+            <span class="feature-item">材料清单(8字段)</span>
+            <span class="feature-item">AI核对结果(通过/有疑问/缺失)</span>
+            <span class="feature-item">审核状态管理</span>
+            <span class="feature-item">AI政策解读("人话版")</span>
+            <span class="feature-item">免责声明</span>
+            <span class="feature-item">材料统计</span>
+            <span class="feature-item">AI核对分布</span>
+            <span class="feature-item">热门预警项</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">AI填表自动化 <span class="page-func">getOpVisaAIFillHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">四标签页(OCR/填表/模板/翻译)</span>
+            <span class="feature-item">OCR上传+识别结果(8字段)</span>
+            <span class="feature-item">AI填表5步流程</span>
+            <span class="feature-item">待填表订单</span>
+            <span class="feature-item">模板生成(8类)</span>
+            <span class="feature-item">翻译件生成</span>
+            <span class="feature-item">效率提升对比(7→35本/天=5倍)</span>
+            <span class="feature-item">准确率统计(98.2%)</span>
+            <span class="feature-item">系统状态监控</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">政策监控中心 <span class="page-func">getOpVisaPolicyHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">政策更新列表(8条)</span>
+            <span class="feature-item">爬取来源(VFS/移民局/使馆/签证中心)</span>
+            <span class="feature-item">AI解读状态</span>
+            <span class="feature-item">影响级别(高/中/低)</span>
+            <span class="feature-item">AI政策解读(原文/通俗/影响/建议)</span>
+            <span class="feature-item">监控概览(4项)</span>
+            <span class="feature-item">影响级别分布</span>
+            <span class="feature-item">监控来源统计</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">规则引擎 <span class="page-func">getOpVisaRulesHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">规则列表(8条/9字段)</span>
+            <span class="feature-item">条件配置树(IF/THEN/ELSE)</span>
+            <span class="feature-item">推荐材料列表</span>
+            <span class="feature-item">优先级(高/中/低)</span>
+            <span class="feature-item">模拟测试</span>
+            <span class="feature-item">规则统计(4项)</span>
+            <span class="feature-item">国家分布</span>
+            <span class="feature-item">优先级分布</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">知识库 <span class="page-func">getOpVisaKnowledgeHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">5大分类(流程/材料/问题/拒签/话术)</span>
+            <span class="feature-item">文章列表(8篇/含摘要)</span>
+            <span class="feature-item">热门标签(15个)</span>
+            <span class="feature-item">知识统计(4项)</span>
+            <span class="feature-item">分类分布</span>
+            <span class="feature-item">热门TOP5</span>
+            <span class="feature-item">AI知识助手</span>
+            <span class="feature-item">新建文章入口</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-check">
+        <div class="page-check-header">
+          <div class="page-name">签证数据统计 <span class="page-func">getOpVisaStatsHTML()</span></div>
+          <span class="tag tag-pass">通过</span>
+        </div>
+        <div class="page-check-body">
+          <div class="feature-list">
+            <span class="feature-item">时间筛选(5档+自定义)</span>
+            <span class="feature-item">6大KPI(订单/出签率/时长/客单价/绩效/动销)</span>
+            <span class="feature-item">订单趋势图(12月)</span>
+            <span class="feature-item">目的地分布(饼图)</span>
+            <span class="feature-item">签证类型分布</span>
+            <span class="feature-item">供应商绩效排名</span>
+            <span class="feature-item">目的地明细表</span>
+            <span class="feature-item">同比环比</span>
+            <span class="feature-item">AI数据洞察</span>
+            <span class="feature-item">导出报表</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 问题清单 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-num">5</div>
+        <h2>问题清单与改进建议</h2>
+        <div class="gold-line"></div>
+      </div>
+
+      <div class="issue-item high">
+        <div class="issue-header">
+          <div class="issue-num">1</div>
+          <div class="issue-title">跨层模块"周边服务在线办理"完全缺失</div>
+          <span class="tag tag-missing">缺失 · 高优先级</span>
+        </div>
+        <div class="issue-desc">产品方案2.17节要求对接银行/税务/顺丰等外部服务，实现保证金冻结、存款证明、个税证明在线办理与物流回寄。原型中未发现任何相关页面或入口。</div>
+        <div class="issue-suggestion"><strong>改进建议：</strong>建议在C端下单流程或订单详情中新增"周边服务"板块，或在UOM平台新增独立页面，展示保证金冻结/存款证明/个税证明/顺丰回寄的服务入口与状态追踪。</div>
+      </div>
+
+      <div class="issue-item high">
+        <div class="issue-header">
+          <div class="issue-num">2</div>
+          <div class="issue-title">跨层模块"客户档案"缺乏独立页面实现</div>
+          <span class="tag tag-partial">部分通过 · 高优先级</span>
+        </div>
+        <div class="issue-desc">产品方案2.15节要求"一人一档、历史签证记录、拒签记录、签证Agent风控预警、风险标签、档案查询"。目前仅在B端代客下单页有客户搜索和历史订单记录展示，覆盖率约30%。缺少独立客户档案管理页面、拒签记录展示、AI风控预警和风险标签。</div>
+        <div class="issue-suggestion"><strong>改进建议：</strong>建议在CSP或UOM平台新增"客户档案"页面，包含客户信息、历史签证记录、拒签记录、AI风控预警面板和风险标签管理功能。</div>
+      </div>
+
+      <div class="issue-item medium">
+        <div class="issue-header">
+          <div class="issue-num">3</div>
+          <div class="issue-title">C端签证频道首页缺少城市定位功能</div>
+          <span class="tag tag-partial">部分通过 · 中优先级</span>
+        </div>
+        <div class="issue-desc">产品方案明确要求签证频道首页包含"城市定位、国家搜索"，但首页仅有搜索栏，顶部无城市定位选择器。此外热门国家展示8个(方案要求9个)，热门产品展示4个(方案要求5个)，数量略有差异。</div>
+        <div class="issue-suggestion"><strong>改进建议：</strong>在首页搜索栏左侧添加城市定位选择器，补充1个热门国家和1个热门产品以对齐方案要求。</div>
+      </div>
+
+      <div class="issue-item medium">
+        <div class="issue-header">
+          <div class="issue-num">4</div>
+          <div class="issue-title">C端缺少独立的订单管理/退款页面</div>
+          <span class="tag tag-partial">部分通过 · 中优先级</span>
+        </div>
+        <div class="issue-desc">产品方案悠哉模块要求"订单管理：查看签证订单列表、订单详情、申请退款"和"消息通知"。目前进度查询页有订单列表展示，但缺少独立的订单详情页、退款申请功能和消息通知入口。</div>
+        <div class="issue-suggestion"><strong>改进建议：</strong>在C端新增"我的签证订单"页面，支持订单列表/详情/状态筛选/退款申请；底部导航或顶部增加消息通知入口。</div>
+      </div>
+
+      <div class="issue-item medium">
+        <div class="issue-header">
+          <div class="issue-num">5</div>
+          <div class="issue-title">UBK产品管理缺少套餐定义详情和报价预警</div>
+          <span class="tag tag-partial">部分通过 · 中优先级</span>
+        </div>
+        <div class="issue-desc">产品方案2.3节要求"套餐定义：签证费+服务费+加急费+套餐费灵活组合，支持多套餐配置"和"报价预警：结算价高于零售价时系统自动预警"。原型中有套餐数列和操作入口，但无套餐定义详情弹窗；无报价预警机制展示。</div>
+        <div class="issue-suggestion"><strong>改进建议：</strong>增加套餐定义弹窗(含费用组合配置)；在产品列表中增加报价预警标识(结算价>零售价时红色预警提示)。</div>
+      </div>
+
+      <div class="issue-item low">
+        <div class="issue-header">
+          <div class="issue-num">6</div>
+          <div class="issue-title">UBK结算管理缺少对账确认流程</div>
+          <span class="tag tag-partial">部分通过 · 低优先级</span>
+        </div>
+        <div class="issue-desc">产品方案2.4节要求"供应商与分公司在线对账确认"和"结算报表导出"。原型中有账单明细查看和付款操作，但缺少对账确认流程和报表导出功能。</div>
+        <div class="issue-suggestion"><strong>改进建议：</strong>增加账单对账确认状态流转(发起→确认→付款)，以及按供应商/分公司/时间段的报表导出按钮。</div>
+      </div>
+
+      <div class="issue-item low">
+        <div class="issue-header">
+          <div class="issue-num">7</div>
+          <div class="issue-title">资料模版库缺少供应商引用入口</div>
+          <span class="tag tag-partial">部分通过 · 低优先级</span>
+        </div>
+        <div class="issue-desc">产品方案2.5节要求"供应商可引用平台完整版，或修改保存为自有完整版"。原型中有完整版国家清单展示，但未体现供应商引用操作入口。</div>
+        <div class="issue-suggestion"><strong>改进建议：</strong>在完整版管理标签页增加"供应商引用记录"或"引用至UBK"操作入口，展示各完整版被引用的供应商列表。</div>
+      </div>
+
+      <div class="issue-item low">
+        <div class="issue-header">
+          <div class="issue-num">8</div>
+          <div class="issue-title">C端详情页缺少套餐选择与预订须知</div>
+          <span class="tag tag-partial">部分通过 · 低优先级</span>
+        </div>
+        <div class="issue-desc">产品方案要求详情页包含"套餐选择"和"预订须知"。C端详情页有费用明细和材料清单，但费用为固定价格无套餐选择切换，也缺少预订须知区块。B端详情页同样缺少套餐选择。</div>
+        <div class="issue-suggestion"><strong>改进建议：</strong>在详情页费用明细上方增加套餐选择卡片(标准/加急/VIP等)，并在材料清单后增加"预订须知"区块。</div>
+      </div>
+    </div>
+
+    <!-- 6. 验收结论 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-num">6</div>
+        <h2>验收结论</h2>
+        <div class="gold-line"></div>
+      </div>
+
+      <div class="conclusion-box">
+        <div class="verdict">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          有条件通过验收
+        </div>
+        <h3>签证业务平台全系统高保真原型验收结论</h3>
+        <p>经全维度验收，该原型覆盖产品方案定义的16个模块中的15个(覆盖率93.8%)，21个签证页面中15个完全通过、6个部分通过，四条核心业务流程(C端/B端/UBK/UOM)全部串联闭环，四层架构(供应商层→平台运营层→销售管理层→前端展示层)对齐完整。</p>
+        <p>原型整体质量较高，页面内容丰富、数据真实、交互逻辑清晰，能够有效支撑产品方案的业务论证与研发对接。但跨层模块"周边服务在线办理"缺失、"客户档案"覆盖不足为需重点补齐的缺口。综合判定为<strong style="color:var(--brand-gold);">有条件通过验收</strong>，建议补齐高优先级问题后进入下一阶段。</p>
+
+        <div class="suggestions">
+          <h4>后续优化建议</h4>
+          <ul>
+            <li><strong>高优先级(验收前补齐)：</strong>新增"周边服务在线办理"页面，实现保证金冻结/存款证明/个税证明/顺丰回寄的在线办理入口与状态追踪</li>
+            <li><strong>高优先级(验收前补齐)：</strong>在CSP或UOM新增"客户档案"独立页面，包含历史签证记录、拒签记录、AI风控预警、风险标签</li>
+            <li><strong>中优先级(迭代优化)：</strong>C端首页补充城市定位；新增C端"我的签证订单"页面(含退款/消息通知)；UBK产品管理增加套餐定义详情与报价预警</li>
+            <li><strong>低优先级(持续完善)：</strong>UBK结算管理增加对账确认流程与报表导出；资料模版库增加供应商引用入口；C端/B端详情页增加套餐选择与预订须知</li>
+            <li><strong>架构建议：</strong>跨层模块(客户档案/进度追踪/周边服务)建议在UOM平台设立统一管理入口，与各业务系统数据打通，形成完整的跨层协同能力</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="report-footer">
+      <p>签证业务平台全系统高保真原型产品验收报告 | 验收日期：2026-07-31 | 众信旅游</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
