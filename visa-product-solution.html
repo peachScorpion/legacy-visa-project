@@ -1,0 +1,2675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>众信签证业务平台 - 产品方案 v3.1</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --navy-900: #0F2540;
+            --navy-800: #1B3A5F;
+            --navy-700: #2d5a8a;
+            --navy-100: #eaf1f8;
+            --gold-600: #C9A84C;
+            --gold-400: #dabf68;
+            --gold-100: #faf6ec;
+            --ink-900: #1a1a2e;
+            --ink-700: #333;
+            --ink-500: #666;
+            --ink-300: #999;
+            --ink-100: #f5f7fa;
+            --line: #e8ecf1;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+            --shadow-sm: 0 1px 3px rgba(15,37,64,0.06);
+            --shadow-md: 0 4px 16px rgba(15,37,64,0.08);
+            --shadow-lg: 0 12px 40px rgba(15,37,64,0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.7;
+            color: var(--ink-700);
+            background: var(--ink-100);
+            padding: 32px 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        /* ====== 文档头部 ====== */
+        .doc-header {
+            background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 50%, var(--navy-700) 100%);
+            color: #fff;
+            padding: 56px 48px 48px;
+            text-align: center;
+            position: relative;
+        }
+
+        .doc-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold-600), var(--gold-400), var(--gold-600));
+        }
+
+        .doc-header .eyebrow {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold-400);
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+
+        .doc-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .doc-header .subtitle {
+            font-size: 15px;
+            color: rgba(255,255,255,0.75);
+            font-weight: 300;
+        }
+
+        /* ====== 文档信息 ====== */
+        .doc-body {
+            padding: 40px 48px;
+        }
+
+        .doc-meta {
+            background: var(--navy-100);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            margin-bottom: 40px;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px 28px;
+            margin-bottom: 24px;
+        }
+
+        .meta-item {
+            font-size: 14px;
+        }
+
+        .meta-item label {
+            color: var(--ink-500);
+            display: block;
+            margin-bottom: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .meta-item span {
+            color: var(--navy-800);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .version-history {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-top: 4px;
+        }
+
+        .version-history h4 {
+            color: var(--navy-800);
+            margin-bottom: 14px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .version-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .version-table th {
+            background: var(--navy-800);
+            color: #fff;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .version-table th:first-child { border-radius: 4px 0 0 0; }
+        .version-table th:last-child { border-radius: 0 4px 0 0; }
+
+        .version-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
+        }
+
+        .version-table tr:last-child td { border-bottom: none; }
+
+        /* ====== 变更摘要 ====== */
+        .change-summary {
+            background: linear-gradient(135deg, #f0fdfa 0%, #e0f2f1 100%);
+            border: 1px solid #b2dfdb;
+            border-radius: var(--radius-md);
+            padding: 28px;
+            margin-bottom: 48px;
+        }
+
+        .change-summary h4 {
+            color: #00695c;
+            margin-bottom: 16px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .change-summary ul {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+        }
+
+        .change-summary li {
+            padding-left: 22px;
+            position: relative;
+            font-size: 14px;
+            color: var(--ink-700);
+            line-height: 1.7;
+        }
+
+        .change-summary li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #00695c;
+            font-weight: 700;
+        }
+
+        /* ====== 章节通用 ====== */
+        .section {
+            margin-bottom: 56px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .section-header .section-num {
+            background: var(--navy-800);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 4px;
+        }
+
+        .section-header.gold .section-num {
+            background: var(--gold-600);
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy-900);
+        }
+
+        .section-header .section-line {
+            flex: 1;
+            height: 1px;
+            background: var(--line);
+        }
+
+        /* ====== 子章节 ====== */
+        .subsection {
+            margin-bottom: 36px;
+        }
+
+        .subsection-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--navy-800);
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--navy-100);
+        }
+
+        .subsection-title::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: var(--gold-600);
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .layer-group-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            margin: 32px 0 20px;
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+        }
+
+        .layer-group-title::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: var(--gold-400);
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .layer-group-supplier { background: linear-gradient(90deg, #880e4f 0%, #ad1457 100%); }
+        .layer-group-platform { background: linear-gradient(90deg, var(--navy-800) 0%, var(--navy-700) 100%); }
+        .layer-group-sales { background: linear-gradient(90deg, #e65100 0%, #f57c00 100%); }
+        .layer-group-frontend { background: linear-gradient(90deg, #0277bd 0%, #0288d1 100%); }
+        .layer-group-cross { background: linear-gradient(90deg, #00695c 0%, #00897b 100%); }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-new {
+            background: #e0f2f1;
+            color: #00695c;
+            border: 1px solid #b2dfdb;
+        }
+
+        .badge-update {
+            background: #fff3e0;
+            color: #e65100;
+            border: 1px solid #ffe0b2;
+        }
+
+        /* ====== 卡片网格 ====== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            transition: box-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .card.highlight {
+            background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-700) 100%);
+            color: #fff;
+            border: none;
+        }
+
+        .card.highlight:hover {
+            box-shadow: 0 8px 28px rgba(27,58,95,0.25);
+        }
+
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: var(--navy-800);
+        }
+
+        .card.highlight .card-title {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .card p {
+            font-size: 14px;
+            color: var(--ink-500);
+            line-height: 1.7;
+        }
+
+        .card.highlight p {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .card-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--gold-600);
+            margin: 12px 0;
+            line-height: 1;
+        }
+
+        .card.highlight .card-value {
+            color: var(--gold-400);
+        }
+
+        /* ====== 标签 ====== */
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 6px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+        }
+
+        .tag-store { background: #d4edda; color: #155724; }
+        .tag-platform { background: #e2d5f1; color: #563d7c; }
+        .tag-supplier { background: #fce4ec; color: #880e4f; }
+        .tag-ai { background: #e0f2f1; color: #00695c; }
+        .tag-b { background: #fff3cd; color: #856404; }
+        .tag-frontend { background: #e1f5fe; color: #01579b; }
+        .tag-sales { background: #fff3e0; color: #e65100; }
+
+        /* ====== 场景卡片 ====== */
+        .scenario-card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: box-shadow 0.25s ease;
+        }
+
+        .scenario-card:hover {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .scenario-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .scenario-title {
+            font-size: 16px;
+            color: var(--navy-800);
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .user-story {
+            background: var(--navy-100);
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            margin: 14px 0;
+            font-size: 14px;
+            color: var(--ink-700);
+            line-height: 1.7;
+            border-left: 3px solid var(--navy-700);
+        }
+
+        .journey {
+            background: linear-gradient(90deg, var(--navy-800) 0%, var(--navy-700) 100%);
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            margin: 14px 0;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.7;
+        }
+
+        .module-tags {
+            margin-top: 12px;
+        }
+
+        /* ====== 表格（关键修复） ====== */
+        .table-wrap {
+            margin: 16px 0;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--line);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            table-layout: fixed;
+        }
+
+        thead th {
+            background: var(--navy-800);
+            color: #fff;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 500;
+            font-size: 13px;
+            letter-spacing: 0.3px;
+        }
+
+        tbody td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
+            word-wrap: break-word;
+            line-height: 1.6;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fbfcfd;
+        }
+
+        tbody tr:hover {
+            background: var(--gold-100);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .highlight {
+            background: #fff8e1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .highlight-new {
+            background: #e0f2f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #00695c;
+            font-weight: 600;
+        }
+
+        /* ====== 架构图（v3.1 重新设计） ====== */
+        .arch-diagram {
+            background: linear-gradient(180deg, #f7f9fc 0%, #eef2f8 100%);
+            padding: 36px 28px;
+            border-radius: var(--radius-md);
+            margin: 20px 0;
+            border: 1px solid var(--line);
+        }
+
+        /* --- 使用者角色 --- */
+        .arch-users-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .arch-user-pill {
+            background: #fff;
+            border: 1.5px solid var(--navy-700);
+            border-radius: 22px;
+            padding: 7px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--navy-800);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            box-shadow: 0 1px 3px rgba(27,58,95,0.08);
+        }
+        .arch-user-pill::before {
+            content: '';
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--gold-600);
+            box-shadow: 0 0 0 2px rgba(201,168,76,0.2);
+        }
+
+        /* --- 层间流向箭头 --- */
+        .arch-flow-arrow {
+            text-align: center;
+            color: var(--ink-300);
+            font-size: 18px;
+            line-height: 1;
+            margin: 2px 0 2px 0;
+            letter-spacing: 2px;
+        }
+        .arch-flow-label {
+            text-align: center;
+            font-size: 11px;
+            color: var(--ink-400);
+            margin-bottom: 2px;
+            font-weight: 500;
+        }
+
+        /* --- 架构层卡片 --- */
+        .arch-layer {
+            border-radius: 10px;
+            margin-bottom: 0;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.06);
+            background: #fff;
+        }
+        .arch-layer-header {
+            padding: 11px 18px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .arch-layer-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .arch-layer-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .arch-layer-sys-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .arch-layer-sys {
+            font-size: 11.5px;
+            font-weight: 500;
+            opacity: 0.92;
+            background: rgba(255,255,255,0.18);
+            padding: 2px 10px;
+            border-radius: 10px;
+            white-space: nowrap;
+        }
+        .arch-layer-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        .arch-badge-existing {
+            background: rgba(255,255,255,0.25);
+            color: #fff;
+        }
+        .arch-badge-new {
+            background: var(--gold-600);
+            color: #fff;
+        }
+        .arch-layer-body {
+            background: #fff;
+            padding: 14px 18px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .arch-module-chip {
+            background: var(--ink-50, #f8fafc);
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            padding: 6px 13px;
+            font-size: 12px;
+            color: var(--ink-700);
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .arch-module-chip-new {
+            border-style: dashed;
+            font-weight: 600;
+        }
+
+        /* --- 层配色 --- */
+        .arch-layer-frontend .arch-layer-header { background: linear-gradient(90deg, #00695C 0%, #00897B 100%); }
+        .arch-layer-frontend .arch-module-chip { border-color: #b2dfdb; background: #e0f2f1; color: #004D40; }
+        .arch-layer-frontend .arch-module-chip-new { border-color: #4DB6AC; background: #B2DFDB; color: #004D40; }
+        .arch-layer-sales .arch-layer-header { background: linear-gradient(90deg, #E65100 0%, #F57C00 100%); }
+        .arch-layer-sales .arch-module-chip { border-color: #ffe0b2; background: #fff3e0; color: #BF360C; }
+        .arch-layer-sales .arch-module-chip-new { border-color: #FFB74D; background: #FFE0B2; color: #BF360C; }
+        .arch-layer-platform .arch-layer-header { background: linear-gradient(90deg, var(--navy-800) 0%, #2A5A8A 100%); }
+        .arch-layer-platform .arch-module-chip { border-color: #c5cae9; background: #e8eaf6; color: #1A237E; }
+        .arch-layer-platform .arch-module-chip-new { border-color: var(--gold-600); background: #FFF8E1; color: #F57F17; }
+        .arch-layer-supplier .arch-layer-header { background: linear-gradient(90deg, #6A1B9A 0%, #8E24AA 100%); }
+        .arch-layer-supplier .arch-module-chip { border-color: #e1bee7; background: #f3e5f5; color: #4A148C; }
+
+        /* --- 小程序双系统子卡片 --- */
+        .arch-sys-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+        }
+        .arch-sys-card {
+            border-radius: 8px;
+            padding: 12px 14px;
+            border: 1px solid #b2dfdb;
+            background: linear-gradient(135deg, #e0f2f1 0%, #f1f8f7 100%);
+        }
+        .arch-sys-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .arch-sys-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #004D40;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .arch-sys-tag {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .arch-sys-tag-b { background: #FFF3E0; color: #E65100; border: 1px solid #FFCC80; }
+        .arch-sys-tag-c { background: #E3F2FD; color: #1565C0; border: 1px solid #90CAF9; }
+        .arch-flow-chain {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .arch-flow-node {
+            background: #fff;
+            border: 1px solid #80CBC4;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #00695C;
+            white-space: nowrap;
+        }
+        .arch-flow-arrow-h {
+            color: #4DB6AC;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .arch-sys-desc {
+            font-size: 11px;
+            color: #00695C;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        /* --- 支撑层 --- */
+        .arch-support-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .arch-support-box {
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 11.5px;
+            line-height: 1.7;
+            border: 1px solid;
+        }
+        .arch-support-box .support-title {
+            font-size: 12.5px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .arch-ai { background: #e0f2f1; border-color: #b2dfdb; }
+        .arch-ai .support-title { color: #00695c; }
+        .arch-data { background: #e8eaf6; border-color: #c5cae9; }
+        .arch-data .support-title { color: var(--navy-800); }
+        .arch-infra { background: #f5f5f5; border-color: #e0e0e0; }
+        .arch-infra .support-title { color: var(--ink-700); }
+
+        /* --- 外部对接 --- */
+        .arch-external-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .arch-external-pill {
+            background: #fff;
+            border: 1.5px dashed var(--gold-600);
+            border-radius: 16px;
+            padding: 6px 15px;
+            font-size: 12px;
+            color: var(--ink-700);
+            font-weight: 500;
+        }
+        .arch-external-label {
+            text-align: center;
+            font-size: 11px;
+            color: var(--ink-400);
+            margin-top: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .arch-support-row { grid-template-columns: 1fr; }
+            .arch-users-row { flex-wrap: wrap; }
+            .arch-sys-columns { grid-template-columns: 1fr; }
+        }
+
+        /* ====== 模块卡片 ====== */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .module-card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            transition: box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .module-card:hover {
+            border-color: var(--navy-700);
+            box-shadow: var(--shadow-md);
+        }
+
+        .module-card.new-module {
+            border: 1px solid #b2dfdb;
+            background: #fafffef;
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .module-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--navy-800);
+        }
+
+        .module-positioning {
+            color: var(--ink-500);
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--line);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .module-features {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+        }
+
+        .module-features li {
+            padding-left: 22px;
+            position: relative;
+            font-size: 13.5px;
+            color: var(--ink-700);
+            line-height: 1.6;
+        }
+
+        .module-features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 1px;
+            color: var(--gold-600);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .module-features li.new-feature::before {
+            content: "★";
+            color: #00695c;
+        }
+
+        /* ====== 路线图 ====== */
+        .roadmap {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 24px 0;
+        }
+
+        .phase {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 28px 24px 24px;
+            position: relative;
+            transition: box-shadow 0.25s ease;
+        }
+
+        .phase:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .phase-number {
+            position: absolute;
+            top: -14px;
+            left: 24px;
+            background: var(--gold-600);
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 15px;
+            box-shadow: 0 4px 12px rgba(201,168,76,0.3);
+        }
+
+        .phase-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--navy-800);
+            margin-top: 8px;
+            margin-bottom: 6px;
+        }
+
+        .phase-time {
+            color: var(--gold-600);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .phase-goals {
+            list-style: none;
+            display: grid;
+            gap: 6px;
+        }
+
+        .phase-goals li {
+            padding-left: 16px;
+            position: relative;
+            font-size: 13.5px;
+            color: var(--ink-700);
+            line-height: 1.6;
+        }
+
+        .phase-goals li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--gold-600);
+            font-weight: 700;
+        }
+
+        /* ====== 成功要素 ====== */
+        .success-factors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .factor {
+            background: #fff;
+            padding: 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--line);
+            border-top: 3px solid var(--gold-600);
+            transition: box-shadow 0.25s ease;
+        }
+
+        .factor:hover {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .factor-title {
+            font-weight: 600;
+            color: var(--navy-800);
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .factor-desc {
+            font-size: 13px;
+            color: var(--ink-500);
+            line-height: 1.6;
+        }
+
+        /* ====== 预期效果 ====== */
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .impact-item {
+            text-align: center;
+            padding: 28px 20px;
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--line);
+            transition: box-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        .impact-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+
+        .impact-value {
+            font-size: 38px;
+            font-weight: 700;
+            color: var(--gold-600);
+            margin: 8px 0;
+            line-height: 1;
+        }
+
+        .impact-label {
+            color: var(--ink-500);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* ====== 总结框 ====== */
+        .summary-box {
+            background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-700) 100%);
+            color: #fff;
+            padding: 32px 40px;
+            border-radius: var(--radius-md);
+            margin: 32px 0;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .summary-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--gold-600);
+            border-radius: 0 0 3px 3px;
+        }
+
+        /* ====== 响应式 ====== */
+        @media print {
+            body { background: #fff; padding: 0; }
+            .container { box-shadow: none; border-radius: 0; }
+            .section { page-break-inside: avoid; }
+        }
+
+        @media (max-width: 1024px) {
+            .meta-grid { grid-template-columns: repeat(2, 1fr); }
+            .roadmap { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 12px 8px; }
+            .doc-header { padding: 32px 20px; }
+            .doc-header h1 { font-size: 24px; }
+            .doc-body { padding: 24px 20px; }
+            .meta-grid { grid-template-columns: 1fr; }
+            .card-grid, .modules-grid, .impact-grid, .success-factors {
+                grid-template-columns: 1fr;
+            }
+            .section-header h2 { font-size: 20px; }
+            table { font-size: 12px; }
+            thead th, tbody td { padding: 10px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 文档头部 -->
+        <div class="doc-header">
+            <div class="eyebrow">VISA BUSINESS PLATFORM</div>
+            <h1>众信签证业务平台</h1>
+            <div class="subtitle">产品方案 v3.1 — 四层架构 + AI自动化能力 + 现有系统融合</div>
+        </div>
+
+        <div class="doc-body">
+            <!-- 文档信息 -->
+            <div class="doc-meta">
+                <div class="meta-grid">
+                    <div class="meta-item">
+                        <label>文档类型</label>
+                        <span>产品方案</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>产品名称</label>
+                        <span>签证业务平台</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>所属平台</label>
+                        <span>UBK系统 / UOM运营管理平台 / CSP门店销售PC端 / 有米小程序·悠哉小程序</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>目标用户</label>
+                        <span>供应商、平台运营、销售运营、门店销售、终端客户</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>覆盖业务</label>
+                        <span>日本、美国、申根、东南亚等</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>编制日期</label>
+                        <span>2026-07-30</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>编制人</label>
+                        <span>产品经理</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>文档状态</label>
+                        <span>评审稿 v3.1</span>
+                    </div>
+                </div>
+
+                <div class="version-history">
+                    <h4>版本变更记录</h4>
+                    <table class="version-table">
+                        <thead>
+                            <tr>
+                                <th style="width:8%">版本</th>
+                                <th style="width:12%">日期</th>
+                                <th>变更内容</th>
+                                <th style="width:10%">编制人</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>v1.0</td>
+                                <td>2025-07-30</td>
+                                <td>初稿，完成产品方案主体框架</td>
+                                <td>产品经理</td>
+                            </tr>
+                            <tr>
+                                <td>v2.0</td>
+                                <td>2026-07-30</td>
+                                <td>根据7月24日业务沟通会议纪要全面调整：产品定位从"内部签证部门工具"调整为"赋能门店与供应商的B端平台"；新增供应商管理、产品管理、结算管理、AI填表自动化、政策监控中心、知识库6大模块；调整订单管理、材料管理、规则引擎、客户档案等模块</td>
+                                <td>产品经理</td>
+                            </tr>
+                            <tr>
+                                <td>v3.0</td>
+                                <td>2026-07-30</td>
+                                <td>融合四层架构与闪电签自动化能力：系统架构从三层升级为四层（供应商层/平台运营层/销售管理层/前端展示层）；新增4大模块（有米/悠哉小程序签证板块、资料模版库、OCR智能识别、材料模板自动生成、周边服务在线办理）；AI填表自动化升级为OCR→智能填表→表格生成→翻译件生成完整流水线；模块从12个调整至约15个；实施周期调整为10个月分三期（3+3+4），人力增至24人月，成本约250万元</td>
+                                <td>产品经理</td>
+                            </tr>
+                            <tr>
+                                <td>v3.1</td>
+                                <td>2026-07-31</td>
+                                <td>现有系统融合对齐与架构图重新设计：前端展示层从独立H5+收单小程序调整为复用现有有米小程序（B端）和悠哉小程序（C端），新增签证业务板块（入口→产品列表→产品详情→下单）；销售管理层系统名从UUX运营系统更正为CSP门店销售PC端；平台运营层系统名从签证业务平台更正为UOM运营管理平台；合并客户订单管理模块至小程序签证板块，前端展示层从3个模块精简为2个模块，跨层模块含周边服务在线办理共3个；架构图重新设计，增加系统归属标识（现有系统/新增）、层间数据流向标注、小程序双系统子卡片</td>
+                                <td>产品经理</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- v3.0 变更摘要 -->
+            <div class="change-summary">
+                <h4>v3.0 核心变更摘要（四层架构升级 + 闪电签自动化能力）</h4>
+                <ul>
+                    <li><strong>系统架构升级</strong>：从"供应商层/平台层/门店层"三层架构升级为完整的四层架构 — 供应商层（UBK系统）、平台运营层（UOM运营管理平台）、销售管理层（CSP门店销售PC端）、前端展示层（有米小程序·悠哉小程序）</li>
+                    <li><strong>新增4大模块</strong>：前端展示层（有米小程序签证板块+悠哉小程序签证板块）、资料模版库（样例模版+完整版管理）、OCR智能识别、材料模板自动生成、周边服务在线办理</li>
+                    <li><strong>AI能力升级</strong>：AI填表自动化升级为"OCR扫描识别→智能填表→表格生成→翻译件生成"完整流水线，增加批量处理能力，OCR识别准确率目标95%+</li>
+                    <li><strong>模块扩展</strong>：从12个模块调整至约16个模块，按四层分组（供应商层3个、平台运营层7个、销售管理层1个、前端展示层2个、跨层模块3个）</li>
+                    <li><strong>现有模块增强</strong>：产品管理增加套餐定义；订单管理增加办签人信息与办理进度维护；结算管理保持现有模式；材料管理增加与资料模版库的关联</li>
+                    <li><strong>实施路线图重排</strong>：第一期聚焦供应商层+平台基础，第二期建设前端展示层+AI能力，第三期推进销售管理+智能升级；周期调整为10个月分三期（3+3+4），人力增至24人月，成本约250万元</li>
+                </ul>
+            </div>
+
+            <!-- v3.1 变更摘要 -->
+            <div class="change-summary" style="border-color: var(--gold-600);">
+                <h4>v3.1 核心变更摘要（现有系统融合对齐 + 架构图重新设计）</h4>
+                <ul>
+                    <li><strong>现有系统融合</strong>：前端展示层从独立H5+收单小程序调整为复用现有<strong>有米小程序（B端·门店销售）</strong>和<strong>悠哉小程序（C端·终端客户）</strong>，各自新增签证业务板块（入口→产品列表→产品详情→下单），不再新建独立H5</li>
+                    <li><strong>系统名对齐</strong>：销售管理层系统名从"UUX运营系统"更正为现有"CSP门店销售PC端"；平台运营层系统名从"签证业务平台"更正为现有"UOM运营管理平台"</li>
+                    <li><strong>模块精简</strong>：合并"客户订单管理"模块至小程序签证板块（复用现有小程序订单页），前端展示层从3个模块精简为2个模块，总模块数调整为约16个（跨层模块含周边服务在线办理）</li>
+                    <li><strong>架构图重新设计</strong>：增加系统归属标识（现有系统/新增模块）、层间数据流向标注（用户触达→订单同步→材料送审→产品上架）、小程序双系统子卡片展示签证业务流程</li>
+                </ul>
+            </div>
+
+            <!-- 一、方案概述 -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-num">01</span>
+                    <h2>方案概述</h2>
+                    <div class="section-line"></div>
+                </div>
+
+                <!-- 1.1 项目背景 -->
+                <div class="subsection">
+                    <div class="subsection-title">
+                        1.1 项目背景
+                        <span class="badge badge-update">架构升级</span>
+                    </div>
+                    <p style="margin-bottom: 20px; font-size: 15px; line-height: 1.8;">
+                        在v2.0版本完成B端平台化定位的基础上，v3.0进一步借鉴<strong>行业成熟的四层架构</strong>（供应商→平台→销售→前端）与<strong>闪电签自动化能力</strong>（OCR识别、材料模板生成、周边服务在线办理），将系统从"三层架构"升级为完整的"四层架构"，新增前端展示层实现线上获客闭环，同时强化AI自动化流水线，全面降低操作门槛、提升处理效率。
+                    </p>
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-title">价格无优势，服务是核心竞争力</div>
+                            <p>使馆费用透明，利润主要来自人工服务成本。客户选择门店的核心原因是<span class="highlight">专业、面对面的服务体验</span>，能有效规避材料填写错误等风险（如英国签证因遗忘父母生日导致终身禁签的案例）</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">沟通与操作成本高</div>
+                            <p>当前流程依赖大量线下沟通，资料审核反复，纸质邮寄与电子初审不一致频发。<span class="highlight">销售对签证要求掌握程度不一</span>，半懂不懂的销售可能额外加价100元以上</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">供应商管理复杂，渠道分散</div>
+                            <p>门店私接供应商未入驻平台则无法统一收款结算，只能走<span class="highlight">私单</span>，存在合规与风控隐患</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">政策变动频繁，同步滞后</div>
+                            <p>各国移民局、VFS官网政策更新频繁，<span class="highlight">人工同步滞后</span>，难以保证资料要求的实时性与准确性。官方文本晦涩难懂，销售理解困难</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-title"><span class="highlight-new">线上获客渠道缺失</span></div>
+                            <p>现有有米/悠哉小程序缺乏签证业务板块，客户无法在线浏览签证产品、下单、提交资料，<span class="highlight">线上获客能力薄弱</span>，操作人员收单依赖线下沟通效率低</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-title"><span class="highlight-new">证件录入与材料生成耗时</span></div>
+                            <p>护照、身份证等证件信息纯手工录入，在职证明、邀请函、翻译件等材料模板缺乏自动化生成能力，<span class="highlight">操作门槛高、重复劳动多</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.2 产品定位 -->
+                <div class="subsection">
+                    <div class="subsection-title">
+                        1.2 产品定位
+                        <span class="badge badge-update">定位升级</span>
+                    </div>
+                    <p style="margin-bottom: 24px; font-size: 16px; font-weight: 500; line-height: 1.8; color: var(--ink-900);">
+                        <strong>签证业务平台</strong>v3.0是基于四层架构与闪电签自动化能力构建的签证业务全链路平台，覆盖<strong>供应商层（UBK系统）、平台运营层（UOM运营管理平台）、销售管理层（CSP门店销售PC端）、前端展示层（有米小程序·悠哉小程序）</strong>四层架构，为供应商、平台运营、销售运营、门店销售及终端客户提供签证产品上线、在线下单、资料收单、AI自动化处理的完整闭环。
+                    </p>
+                    <div class="card-grid">
+                        <div class="card highlight">
+                            <div class="card-title">系统架构</div>
+                            <div class="card-value">4层</div>
+                            <p>供应商层 / 平台运营层 / 销售管理层 / 前端展示层</p>
+                        </div>
+                        <div class="card highlight">
+                            <div class="card-title">核心模块</div>
+                            <div class="card-value">约16个</div>
+                            <p>覆盖签证全业务流程（含4大新增模块）</p>
+                        </div>
+                        <div class="card highlight">
+                            <div class="card-title">AI自动化</div>
+                            <div class="card-value">OCR+AI</div>
+                            <p>OCR识别→智能填表→模板生成→翻译件 完整流水线</p>
+                        </div>
+                        <div class="card highlight">
+                            <div class="card-title">前端覆盖</div>
+                            <div class="card-value">100%</div>
+                            <p>有米/悠哉小程序新增签证板块覆盖线上获客</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.3 业务场景 -->
+                <div class="subsection">
+                    <div class="subsection-title">
+                        1.3 业务场景
+                        <span class="badge badge-new">新增场景</span>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-header">
+                            <div class="scenario-title">"使馆那些要求看不懂，客户问我也说不清楚"</div>
+                            <span class="tag tag-ai">AI能力</span>
+                        </div>
+                        <div class="user-story">
+                            作为门店销售，我希望系统能把各国移民局、VFS官网的签证要求翻译成通俗易懂的"人话"版指引，以便快速向客户解释需要准备什么材料、怎么准备。
+                        </div>
+                        <div class="journey">
+                            爬取官网最新政策 → AI转化为通俗指引 → 标注"以使馆最终通知为准" → 销售引用指引服务客户
+                        </div>
+                        <div class="module-tags">
+                            <span class="tag tag-ai">政策监控中心</span>
+                            <span class="tag tag-ai">AI政策解读</span>
+                            <span class="tag tag-platform">知识库</span>
+                        </div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-header">
+                            <div class="scenario-title">"每天手动填7本美国签证表，重复劳动太多了"</div>
+                            <span class="tag tag-ai">AI能力</span>
+                        </div>
+                        <div class="user-story">
+                            作为签证操作人员，我希望AI能自动模拟人工操作美国签证网站，实现指令触发后的自动填表、翻译、校验与提交，将每天7本的处理效率翻倍提升。
+                        </div>
+                        <div class="journey">
+                            导入客户资料 → AI自动翻译填写 → 校验信息准确性 → 触发提交 → 人工复核确认
+                        </div>
+                        <div class="module-tags">
+                            <span class="tag tag-ai">AI填表自动化</span>
+                            <span class="tag tag-platform">材料管理</span>
+                        </div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-header">
+                            <div class="scenario-title">"供应商私接单子走不了平台，收款结算全是问题"</div>
+                            <span class="tag tag-supplier">供应商</span>
+                        </div>
+                        <div class="user-story">
+                            作为平台运营人员，我希望所有供应商必须入驻平台才能完成全流程闭环，在UBK系统上线签证产品，填写结算价和费用拆分，统一收款结算，避免私单合规风险。
+                        </div>
+                        <div class="journey">
+                            供应商入驻审核 → UBK上线产品（填写费用拆分） → 平台审核 → 下单生成签证订单 → 统一结算
+                        </div>
+                        <div class="module-tags">
+                            <span class="tag tag-supplier">供应商管理</span>
+                            <span class="tag tag-supplier">产品管理</span>
+                            <span class="tag tag-supplier">结算管理</span>
+                        </div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-header">
+                            <div class="scenario-title">"这个客户去年被拒签过，资料有没有风险点？"</div>
+                            <span class="tag tag-ai">AI能力</span>
+                        </div>
+                        <div class="user-story">
+                            作为签证操作人员，我希望客户资料上传后，AI签证Agent能自动提示风险项（如流水异常、行程矛盾、历史签证冲突等），人工再针对性核查，提升审核效率与出签率。
+                        </div>
+                        <div class="journey">
+                            上传客户资料 → AI Agent自动扫描 → 标注风险项 → 人工针对性核查 → 优化材料准备
+                        </div>
+                        <div class="module-tags">
+                            <span class="tag tag-ai">签证Agent风控</span>
+                            <span class="tag tag-platform">客户档案</span>
+                        </div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-header">
+                            <div class="scenario-title"><span class="highlight-new">"客户想在线看签证产品、自己下单，我们没有线上渠道"</span></div>
+                            <span class="tag tag-frontend">前端展示</span>
+                        </div>
+                        <div class="user-story">
+                            作为门店销售，我希望在现有的有米小程序中新增签证业务板块，让我能直接为客户浏览签证产品、查看资料要求、选择套餐、代客下单，同时客户可通过悠哉小程序自主浏览下单、填写上传资料，操作人员实时收单检查，大幅降低沟通成本。
+                        </div>
+                        <div class="journey">
+                            有米/悠哉小程序签证入口 → 产品列表浏览 → 产品详情选择套餐 → 在线下单 → 填写资料上传证件 → 操作人员实时收单检查 → 资料审核 → 送签出签
+                        </div>
+                        <div class="module-tags">
+                            <span class="tag tag-frontend">有米小程序签证板块</span>
+                            <span class="tag tag-frontend">悠哉小程序签证板块</span>
+                            <span class="tag tag-sales">订单管理</span>
+                        </div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-header">
+                            <div class="scenario-title"><span class="highlight-new">"护照身份证信息手动录入太慢，还容易出错"</span></div>
+                            <span class="tag tag-ai">AI能力</span>
+                        </div>
+                        <div class="user-story">
+                            作为签证操作人员，我希望用OCR扫描护照、身份证等证件就能自动识别信息并填充到系统表单和签证申请表，还能一键生成在职证明、邀请函、翻译件等材料模板，不用再手动录入和编写。
+                        </div>
+                        <div class="journey">
+                            OCR扫描证件 → 自动识别信息 → 智能填充表单 → 自动生成申请表/翻译件 → 人工复核确认
+                        </div>
+                        <div class="module-tags">
+                            <span class="tag tag-ai">OCR智能识别</span>
+                            <span class="tag tag-ai">材料模板自动生成</span>
+                            <span class="tag tag-ai">AI填表自动化</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 1.4 核心问题与解决思路 -->
+                <div class="subsection">
+                    <div class="subsection-title">
+                        1.4 核心问题与解决思路
+                        <span class="badge badge-update">更新</span>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <colgroup>
+                                <col style="width:18%">
+                                <col style="width:25%">
+                                <col style="width:57%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>核心问题</th>
+                                    <th>根因</th>
+                                    <th>解决思路</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>供应商私单频发，合规风险</td>
+                                    <td>未入驻平台无法统一收款结算</td>
+                                    <td>建立<span class="highlight-new">供应商管理体系</span>，所有供应商入驻平台，产品经UBK上线审核，统一结算闭环</td>
+                                </tr>
+                                <tr>
+                                    <td>签证政策晦涩难懂，同步滞后</td>
+                                    <td>官方文本难懂，人工同步不及时</td>
+                                    <td>建立<span class="highlight-new">政策监控中心</span>，自动爬取VFS/移民局官网，AI转化为"人话"版指引，标注免责声明</td>
+                                </tr>
+                                <tr>
+                                    <td>填表操作重复耗时</td>
+                                    <td>人工手动填写签证申请表</td>
+                                    <td>引入<span class="highlight-new">AI填表自动化引擎</span>（含OCR识别），模拟人工操作签证网站，自动填表、翻译、校验、提交</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="highlight-new">证件信息录入慢、材料编写耗时</span></td>
+                                    <td><span class="highlight-new">纯手工录入，无自动化工具</span></td>
+                                    <td>引入<span class="highlight-new">OCR智能识别</span>扫描证件自动填充，<span class="highlight-new">材料模板自动生成</span>在职证明/邀请函/翻译件</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="highlight-new">线上获客渠道缺失</span></td>
+                                    <td><span class="highlight-new">现有小程序无签证业务板块</span></td>
+                                    <td>有米/悠哉小程序<span class="highlight-new">新增签证业务板块</span>，客户在线浏览下单、自主提交资料</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="highlight-new">周边服务办理繁琐</span></td>
+                                    <td><span class="highlight-new">保证金、存款证明、个税证明等需线下办理</span></td>
+                                    <td>新增<span class="highlight-new">周边服务在线办理</span>，对接银行/税务/顺丰，在线办理保证金冻结、存款证明、个税证明、物流回寄</td>
+                                </tr>
+                                <tr>
+                                    <td>销售经验无法复制</td>
+                                    <td>隐性经验依赖老员工，无标准化</td>
+                                    <td>建立<span class="highlight-new">知识库</span>与<span class="highlight-new">资料模版库</span>，将老销售经验沉淀为标准SOP，AI辅助新人判断</td>
+                                </tr>
+                                <tr>
+                                    <td>拒签风险难预判</td>
+                                    <td>依赖人工经验，缺乏系统支撑</td>
+                                    <td>构建<span class="highlight-new">签证Agent风控模型</span>，基于历史拒签案例训练AI，自动识别风险项</td>
+                                </tr>
+                                <tr>
+                                    <td>订单流转效率低</td>
+                                    <td>状态更新不及时，信息分散</td>
+                                    <td>建立<span class="highlight">订单状态机</span>与办签人信息管理，完整记录渠道、客户信息、办理进度、预约信息</td>
+                                </tr>
+                                <tr>
+                                    <td>客户资料难复用</td>
+                                    <td>资料散落各处，无统一档案</td>
+                                    <td>建立<span class="highlight">客户签证档案</span>，一人一档，历史记录可追溯</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 1.5 方案要点 -->
+                <div class="subsection">
+                    <div class="subsection-title">1.5 方案要点</div>
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-title">产品策略</div>
+                            <p>四层架构覆盖供应商→平台→销售→前端全链路，赋能B端并拓展线上获客，平台作为产品上线、在线下单的统一中枢</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">技术路径</div>
+                            <p>复用现有UBK+UOM+CSP系统架构，有米/悠哉小程序新增签证板块，模块化设计，AI+OCR自动化流水线前置，支持快速扩展新国家签证流程</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">用户价值</div>
+                            <p>供应商统一入驻管理，门店获取标准化指引，操作人员OCR+AI辅助减负，客户线上自主下单</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">商业价值</div>
+                            <p>消除私单合规风险，线上获客100%覆盖，自动化释放人力聚焦高价值服务，构建专业信任壁垒</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">实施路径</div>
+                            <p>分三期建设：供应商层+平台基础 → 前端展示层+AI能力 → 销售管理+智能升级</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">投入规划</div>
+                            <p>预计投入24人月，10个月完成全部建设（3+3+4三期），成本约250万元</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.6 总体架构 -->
+                <div class="subsection">
+                    <div class="subsection-title">
+                        1.6 总体架构
+                        <span class="badge badge-update">四层架构升级</span>
+                    </div>
+                    <p style="margin-bottom: 16px; font-size: 14px; color: var(--ink-500);">
+                        v3.0从三层架构升级为完整的四层架构，供应商→平台→销售→前端分层模式，每层职责清晰、上下衔接，形成签证业务全链路闭环。
+                    </p>
+                    <div class="arch-diagram">
+                        <!-- 使用者角色 -->
+                        <div class="arch-users-row">
+                            <div class="arch-user-pill">终端客户</div>
+                            <div class="arch-user-pill">门店销售</div>
+                            <div class="arch-user-pill">平台运营</div>
+                            <div class="arch-user-pill">签证操作</div>
+                            <div class="arch-user-pill">供应商</div>
+                        </div>
+                        <div class="arch-flow-label">&#9660; 用户触达</div>
+
+                        <!-- 前端展示层 -->
+                        <div class="arch-layer arch-layer-frontend">
+                            <div class="arch-layer-header">
+                                <div class="arch-layer-header-left">
+                                    <div class="arch-layer-icon">&#128241;</div>
+                                    <span>前端展示层</span>
+                                </div>
+                                <div class="arch-layer-sys-group">
+                                    <span class="arch-layer-sys">有米小程序 · 悠哉小程序</span>
+                                    <span class="arch-layer-badge arch-badge-existing">现有系统</span>
+                                </div>
+                            </div>
+                            <div class="arch-layer-body">
+                                <div class="arch-sys-columns">
+                                    <!-- 有米小程序 -->
+                                    <div class="arch-sys-card">
+                                        <div class="arch-sys-card-head">
+                                            <div class="arch-sys-name">&#128194; 有米小程序（B端·门店销售）</div>
+                                            <span class="arch-sys-tag arch-sys-tag-b">现有</span>
+                                        </div>
+                                        <div class="arch-flow-chain">
+                                            <span class="arch-flow-node">签证入口</span>
+                                            <span class="arch-flow-arrow-h">&#10142;</span>
+                                            <span class="arch-flow-node">产品列表</span>
+                                            <span class="arch-flow-arrow-h">&#10142;</span>
+                                            <span class="arch-flow-node">产品详情</span>
+                                            <span class="arch-flow-arrow-h">&#10142;</span>
+                                            <span class="arch-flow-node">在线下单</span>
+                                        </div>
+                                        <div class="arch-sys-desc">新增「签证」业务板块，销售代客下单、录入办签人信息、拍照上传证件</div>
+                                    </div>
+                                    <!-- 悠哉小程序 -->
+                                    <div class="arch-sys-card">
+                                        <div class="arch-sys-card-head">
+                                            <div class="arch-sys-name">&#127758; 悠哉小程序（C端·终端客户）</div>
+                                            <span class="arch-sys-tag arch-sys-tag-c">现有</span>
+                                        </div>
+                                        <div class="arch-flow-chain">
+                                            <span class="arch-flow-node">签证入口</span>
+                                            <span class="arch-flow-arrow-h">&#10142;</span>
+                                            <span class="arch-flow-node">产品列表</span>
+                                            <span class="arch-flow-arrow-h">&#10142;</span>
+                                            <span class="arch-flow-node">产品详情</span>
+                                            <span class="arch-flow-arrow-h">&#10142;</span>
+                                            <span class="arch-flow-node">自主下单</span>
+                                        </div>
+                                        <div class="arch-sys-desc">新增「签证」频道，客户自助浏览下单、填写资料、上传证件、查看进度</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="arch-flow-label">&#9660; 订单同步 · 资料回传</div>
+
+                        <!-- 销售管理层 -->
+                        <div class="arch-layer arch-layer-sales">
+                            <div class="arch-layer-header">
+                                <div class="arch-layer-header-left">
+                                    <div class="arch-layer-icon">&#128187;</div>
+                                    <span>销售管理层</span>
+                                </div>
+                                <div class="arch-layer-sys-group">
+                                    <span class="arch-layer-sys">CSP门店销售PC端</span>
+                                    <span class="arch-layer-badge arch-badge-existing">现有系统</span>
+                                </div>
+                            </div>
+                            <div class="arch-layer-body">
+                                <span class="arch-module-chip">订单管理</span>
+                                <span class="arch-module-chip">办签人信息</span>
+                                <span class="arch-module-chip">办理进度维护</span>
+                                <span class="arch-module-chip">预约信息</span>
+                                <span class="arch-module-chip arch-module-chip-new">签证订单看板</span>
+                            </div>
+                        </div>
+
+                        <div class="arch-flow-label">&#9660; 材料送审 · 进度回写</div>
+
+                        <!-- 平台运营层 -->
+                        <div class="arch-layer arch-layer-platform">
+                            <div class="arch-layer-header">
+                                <div class="arch-layer-header-left">
+                                    <div class="arch-layer-icon">&#9881;</div>
+                                    <span>平台运营层</span>
+                                </div>
+                                <div class="arch-layer-sys-group">
+                                    <span class="arch-layer-sys">UOM运营管理平台</span>
+                                    <span class="arch-layer-badge arch-badge-new">新增签证模块</span>
+                                </div>
+                            </div>
+                            <div class="arch-layer-body">
+                                <span class="arch-module-chip arch-module-chip-new">资料模版库</span>
+                                <span class="arch-module-chip arch-module-chip-new">材料管理</span>
+                                <span class="arch-module-chip arch-module-chip-new">AI填表自动化</span>
+                                <span class="arch-module-chip arch-module-chip-new">政策监控中心</span>
+                                <span class="arch-module-chip arch-module-chip-new">规则引擎</span>
+                                <span class="arch-module-chip arch-module-chip-new">知识库</span>
+                                <span class="arch-module-chip arch-module-chip-new">数据统计</span>
+                                <span class="arch-module-chip arch-module-chip-new">周边服务</span>
+                            </div>
+                        </div>
+
+                        <div class="arch-flow-label">&#9660; 产品上架 · 账单结算</div>
+
+                        <!-- 供应商层 -->
+                        <div class="arch-layer arch-layer-supplier">
+                            <div class="arch-layer-header">
+                                <div class="arch-layer-header-left">
+                                    <div class="arch-layer-icon">&#128722;</div>
+                                    <span>供应商层</span>
+                                </div>
+                                <div class="arch-layer-sys-group">
+                                    <span class="arch-layer-sys">UBK系统</span>
+                                    <span class="arch-layer-badge arch-badge-existing">现有系统</span>
+                                </div>
+                            </div>
+                            <div class="arch-layer-body">
+                                <span class="arch-module-chip">供应商管理</span>
+                                <span class="arch-module-chip">产品管理</span>
+                                <span class="arch-module-chip">结算管理</span>
+                            </div>
+                        </div>
+
+                        <!-- 支撑层 -->
+                        <div class="arch-support-row">
+                            <div class="arch-support-box arch-ai">
+                                <div class="support-title">&#9889; AI能力层</div>
+                                OCR识别 · AI填表 · 材料模板生成 · 翻译件生成 · 政策解读 · 签证Agent风控 · 智能核对
+                            </div>
+                            <div class="arch-support-box arch-data">
+                                <div class="support-title">&#128451; 数据中台层</div>
+                                签证数据库 · 客户档案库 · 资料模版库 · 规则库 · 政策库 · 知识库 · 拒签案例库
+                            </div>
+                            <div class="arch-support-box arch-infra">
+                                <div class="support-title">&#128279; 基础设施层</div>
+                                用户认证 · 权限管理 · 日志审计 · 文件存储 · 消息中心 · API网关
+                            </div>
+                        </div>
+
+                        <!-- 外部对接 -->
+                        <div class="arch-external-label">外部系统对接</div>
+                        <div class="arch-external-row">
+                            <span class="arch-external-pill">银行系统</span>
+                            <span class="arch-external-pill">税务系统</span>
+                            <span class="arch-external-pill">顺丰快递</span>
+                            <span class="arch-external-pill">VFS/移民局</span>
+                            <span class="arch-external-pill">美国签证网站</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.7 总结 -->
+                <div class="summary-box">
+                    签证业务平台v3.0以"四层架构"为核心框架，融合行业成熟的供应商→平台→销售→前端分层模式与闪电签的OCR+AI自动化能力，通过供应商统一入驻、有米/悠哉小程序签证板块线上获客、OCR智能识别、AI填表与材料模板自动生成、周边服务在线办理，将签证业务从"人工驱动"升级为"系统+AI+自动化驱动"，构建覆盖供应商到终端客户的完整业务闭环。
+                </div>
+            </div>
+
+            <!-- 二、方案说明 -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-num">02</span>
+                    <h2>方案说明</h2>
+                    <div class="section-line"></div>
+                </div>
+
+                <!-- 2.0 方案构思 -->
+                <div class="subsection">
+                    <div class="subsection-title">
+                        2.0 方案构思
+                        <span class="badge badge-new">新增</span>
+                    </div>
+                    <p style="margin-bottom: 20px; font-size: 15px; line-height: 1.8; color: var(--ink-900);">
+                        签证业务长期依赖人工经验，存在<strong>三个核心痛点</strong>：供应商私单频发导致合规风险、政策信息晦涩且同步滞后、证件录入与填表操作重复耗时。本方案的构思逻辑是<strong>"先管控、再提效、后获客"</strong>三步走：
+                    </p>
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-title">第一步：供应商管控闭环</div>
+                            <p>所有供应商必须入驻UBK系统，产品经平台审核后上架，统一发起账单、按账期结算。从源头消除私单，确保业务全流程可控可追溯。</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">第二步：AI+自动化提效</div>
+                            <p>引入OCR识别替代手工录入，AI填表自动化模拟人工操作签证网站，材料模板一键生成翻译件。将7本/天的处理效率分阶段提升至14本→35本，释放人力聚焦高价值的专业服务。</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">第三步：前端线上获客</div>
+                            <p>在现有有米小程序（B端）和悠哉小程序（C端）中新增签证业务板块，让客户在线浏览产品、选择套餐、自主下单；客户拍照上传证件、填写资料自动入库，操作人员实时收单检查，大幅降低沟通成本。</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">贯穿：政策与知识沉淀</div>
+                            <p>政策监控中心自动爬取各国移民局官网政策，AI转化为通俗指引；知识库将老销售的"隐性经验"沉淀为标准SOP，新人不再依赖老员工带教。</p>
+                        </div>
+                    </div>
+                    <p style="margin-top: 20px; font-size: 14px; line-height: 1.8; color: var(--ink-500);">
+                        基于上述思路，方案将系统拆分为<strong>四层架构</strong>（供应商层→平台运营层→销售管理层→前端展示层），每层承载不同角色的工作职责，上下衔接形成业务闭环。以下按架构分层列出各功能模块的详细说明。
+                    </p>
+                </div>
+
+                <!-- 2.1 模块清单汇总 -->
+                <div class="subsection">
+                    <div class="subsection-title">
+                        2.1 模块清单汇总
+                        <span class="badge badge-update">模块扩展至约16个</span>
+                    </div>
+                    <p style="margin-bottom: 16px; font-size: 14px; color: var(--ink-500);">
+                        v3.0从v2.0的12个模块调整至约16个模块，按四层架构分组：供应商层3个、平台运营层7个、销售管理层1个、前端展示层2个、跨层模块3个。
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <colgroup>
+                                <col style="width:12%">
+                                <col style="width:15%">
+                                <col style="width:20%">
+                                <col style="width:40%">
+                                <col style="width:13%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>架构层</th>
+                                    <th>模块</th>
+                                    <th>定位</th>
+                                    <th>核心价值</th>
+                                    <th>状态</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="3"><span class="tag tag-supplier">供应商层</span></td>
+                                    <td>供应商管理</td>
+                                    <td>供应商入驻、资质审核与评价</td>
+                                    <td>统一供应商入口，资质管控，消除私单合规风险</td>
+                                    <td>保留</td>
+                                </tr>
+                                <tr>
+                                    <td>产品管理（含报价/套餐）</td>
+                                    <td>签证产品上架、报价与套餐定义</td>
+                                    <td>标准化产品上架，费用拆分，套餐定义（签证费+服务费+加急费+套餐费）</td>
+                                    <td><span class="highlight">调整</span></td>
+                                </tr>
+                                <tr>
+                                    <td>结算管理</td>
+                                    <td>账单发起与跨区域结算</td>
+                                    <td>供应商发起账单，各分公司按账期付款，支持跨区域结算</td>
+                                    <td><span class="highlight">调整</span></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="7"><span class="tag tag-platform">平台运营层</span></td>
+                                    <td>资料模版库</td>
+                                    <td>样例模版管理与完整版管理</td>
+                                    <td>按国家维护签证资料完整版，资料属性/提供方式/份数/必要性/适用人群/版本管理，供应商可引用</td>
+                                    <td><span class="highlight-new">新增</span></td>
+                                </tr>
+                                <tr>
+                                    <td>材料管理</td>
+                                    <td>签证材料的上传、核对与归档</td>
+                                    <td>标准化材料清单，AI政策解读转"人话"指引，关联资料模版库引用完整版资料</td>
+                                    <td><span class="highlight">调整</span></td>
+                                </tr>
+                                <tr>
+                                    <td>AI填表自动化（含OCR）</td>
+                                    <td>OCR识别+AI填表+模板生成+翻译件</td>
+                                    <td>OCR扫描识别→智能填表→表格生成→翻译件生成完整流水线，批量处理能力</td>
+                                    <td><span class="highlight">调整</span></td>
+                                </tr>
+                                <tr>
+                                    <td>政策监控中心</td>
+                                    <td>签证政策自动监控与AI解读</td>
+                                    <td>爬取VFS/移民局官网政策，AI转化为通俗指引，动态更新提醒</td>
+                                    <td>保留</td>
+                                </tr>
+                                <tr>
+                                    <td>规则引擎</td>
+                                    <td>各国签证规则库与智能匹配</td>
+                                    <td>动态维护国家规则，对接政策监控中心自动更新，智能推荐材料</td>
+                                    <td>保留</td>
+                                </tr>
+                                <tr>
+                                    <td>知识库</td>
+                                    <td>签证经验沉淀与标准化SOP</td>
+                                    <td>老销售经验转化为标准流程，新人学习引用，供应商引用平台模板</td>
+                                    <td>保留</td>
+                                </tr>
+                                <tr>
+                                    <td>数据统计</td>
+                                    <td>签证业务数据的统计分析与报表</td>
+                                    <td>多维度统计，含供应商绩效、产品分析，支持导出报表</td>
+                                    <td><span class="highlight">调整</span></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="1"><span class="tag tag-sales">销售管理层</span></td>
+                                    <td>订单管理</td>
+                                    <td>签证订单全流程管理</td>
+                                    <td>办签人信息管理，办理进度维护（未办理→已收到资料→资料审核完成→使馆受理中→签证结果→资料返还），预约信息维护</td>
+                                    <td><span class="highlight">调整</span></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2"><span class="tag tag-frontend">前端展示层</span></td>
+                                    <td>有米小程序签证板块</td>
+                                    <td>B端门店销售签证产品展示与代客下单</td>
+                                    <td>签证入口、产品列表页、产品详情页、在线下单，销售代客浏览下单、录入办签人信息</td>
+                                    <td><span class="highlight-new">新增</span></td>
+                                </tr>
+                                <tr>
+                                    <td>悠哉小程序签证板块</td>
+                                    <td>C端客户签证产品自助办理全流程</td>
+                                    <td>签证入口、产品列表、产品详情、自主下单、资料填写上传、订单管理、进度查询</td>
+                                    <td><span class="highlight-new">新增</span></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="3"><span class="tag tag-ai">跨层模块</span></td>
+                                    <td>客户档案</td>
+                                    <td>客户签证历史记录与风控管理</td>
+                                    <td>一人一档，历史记录可追溯，签证Agent风控预警</td>
+                                    <td>保留</td>
+                                </tr>
+                                <tr>
+                                    <td>进度追踪</td>
+                                    <td>签证申请进度的实时追踪与通知</td>
+                                    <td>可视化进度展示，自动提醒关键节点，异常预警</td>
+                                    <td>保留</td>
+                                </tr>
+                                <tr>
+                                    <td>周边服务在线办理</td>
+                                    <td>银行/税务/顺丰等周边服务在线办理</td>
+                                    <td>对接银行保证金冻结、税务存款证明、顺丰物流回寄，与签证订单关联</td>
+                                    <td><span class="highlight-new">新增</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ====== 供应商层 ====== -->
+                <div class="layer-group-title layer-group-supplier">供应商层（UBK系统） — 3个模块</div>
+
+                <!-- 2.2 供应商管理 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.2 供应商管理</div>
+                    <div class="modules-grid">
+                        <div class="module-card">
+                            <div class="module-header">
+                                <div class="module-name">供应商管理</div>
+                                <span class="tag tag-supplier">供应商层</span>
+                            </div>
+                            <div class="module-positioning">供应商入驻、资质审核与统一管理，消除私单合规风险，所有供应商必须入驻才能完成全流程闭环</div>
+                            <ul class="module-features">
+                                <li>供应商入驻：在线提交资质材料，平台审核入驻</li>
+                                <li>资质管理：营业执照、签证代理资质、合作协议管理</li>
+                                <li>供应商分级：按服务质量、出签率、响应速度分级管理</li>
+                                <li>供应商评价：门店对供应商服务质量评分，建立"专业信任"生态</li>
+                                <li>准入退出：供应商准入审核机制，违规退出机制</li>
+                                <li>私单管控：未入驻供应商无法走平台结算，从源头消除私单</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.3 产品管理 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.3 产品管理（含报价/套餐）
+                        <span class="badge badge-update">调整</span>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-card">
+                            <div class="module-header">
+                                <div class="module-name">产品管理</div>
+                                <span class="tag tag-supplier">供应商层</span>
+                            </div>
+                            <div class="module-positioning">签证产品在UBK系统上线，填写结算价、建议零售价、费用拆分与套餐定义，平台审核后投放至销售端</div>
+                            <ul class="module-features">
+                                <li>产品上架：供应商在UBK系统上线签证产品</li>
+                                <li>费用拆分：使馆费、服务费、加急费、套餐费等明细拆分</li>
+                                <li>定价管理：填写结算价、建议零售价，支持阶梯定价</li>
+                                <li>产品审核：平台审核上架产品，审核通过后可选择投放至销售端或C端</li>
+                                <li>模板引用：供应商可直接引用平台标准资料模板，也可修改保存为自有完整版</li>
+                                <li>免责标注：页面标注"以使馆最终通知为准"等免责条款</li>
+                                <li class="new-feature">套餐定义：签证费+服务费+加急费+套餐费灵活组合，支持多套餐配置</li>
+                                <li class="new-feature">报价预警：结算价高于零售价时系统自动预警</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.4 结算管理 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.4 结算管理
+                        <span class="badge badge-update">调整</span>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-card">
+                            <div class="module-header">
+                                <div class="module-name">结算管理</div>
+                                <span class="tag tag-supplier">供应商层</span>
+                            </div>
+                            <div class="module-positioning">沿用现有结算模式，供应商在系统发起账单，各分公司按账期付款，支持跨区域结算</div>
+                            <ul class="module-features">
+                                <li>账单发起：供应商在系统发起结算账单</li>
+                                <li>费用拆分结算：按使馆费、服务费、加急费、套餐费等明细结算</li>
+                                <li>跨区域结算：支持各分公司按账期付款，跨区域统一结算</li>
+                                <li>账期管理：管理供应商账期，到期提醒，逾期预警</li>
+                                <li>对账确认：供应商与分公司在线对账确认</li>
+                                <li>结算报表：按供应商、分公司、时间段生成结算报表</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====== 平台运营层 ====== -->
+                <div class="layer-group-title layer-group-platform">平台运营层（UOM运营管理平台） — 7个模块</div>
+
+                <!-- 2.5 资料模版库 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.5 资料模版库
+                        <span class="badge badge-new">新增</span>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-card new-module">
+                            <div class="module-header">
+                                <div class="module-name">资料模版库</div>
+                                <span class="tag tag-platform">平台运营层</span>
+                            </div>
+                            <div class="module-positioning">平台统一维护签证资料模版库，包含样例模版管理与完整版管理，供应商可引用平台完整版或修改保存为自有完整版</div>
+                            <ul class="module-features">
+                                <li class="new-feature">样例模版管理：护照通用样例等模版维护，支持文件上传与预览</li>
+                                <li class="new-feature">资料名称字典：统一维护资料名称标准字典，确保全平台一致</li>
+                                <li class="new-feature">完整版管理：按国家维护签证资料完整版，覆盖所有所需材料</li>
+                                <li class="new-feature">资料属性：标记原件/复印件属性</li>
+                                <li class="new-feature">提供方式：邮寄/自送/电子上传/面试携带</li>
+                                <li class="new-feature">份数管理：明确每种材料所需份数</li>
+                                <li class="new-feature">提交必要性：区分必须材料/建议材料</li>
+                                <li class="new-feature">适用人群：在职/自由职业/学生/退休/学龄前儿童</li>
+                                <li class="new-feature">版本管理：支持完整版资料版本管理，可回溯对比</li>
+                                <li class="new-feature">生效日期：设置资料版本生效日期，到期自动提醒更新</li>
+                                <li class="new-feature">供应商引用：供应商可引用平台完整版，或修改保存为自有完整版</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.6 材料管理 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.6 材料管理
+                        <span class="badge badge-update">调整</span>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-card">
+                            <div class="module-header">
+                                <div class="module-name">材料管理</div>
+                                <span class="tag tag-platform">平台运营层</span>
+                            </div>
+                            <div class="module-positioning">签证材料的上传、核对与归档，结合AI政策解读提供"人话"版材料指引，关联资料模版库引用完整版资料</div>
+                            <ul class="module-features">
+                                <li>材料清单模板：根据目的地自动生成材料清单</li>
+                                <li>AI政策解读：将VFS/移民局官方法规转化为通俗易懂的"人话"版指引</li>
+                                <li>免责标注：材料要求页面标注"以使馆最终通知为准"等免责条款</li>
+                                <li>材料上传：支持多文件批量上传，自动归类</li>
+                                <li>智能核对：AI识别材料完整性，标注缺失项</li>
+                                <li>材料审核：人工审核记录，支持审核意见标注</li>
+                                <li>供应商知识库：供应商可引用平台标准模板，修改后保存为自有知识库</li>
+                                <li>材料归档：按客户档案归档，支持历史查询</li>
+                                <li class="new-feature">资料模版库关联：材料清单直接引用资料模版库的完整版资料，确保信息同步</li>
+                                <li class="new-feature">完整版资料展示：前端详情页展示完整版资料要求（属性/提供方式/份数/适用人群）</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.7 AI填表自动化（含OCR） -->
+                <div class="subsection">
+                    <div class="subsection-title">2.7 AI填表自动化（含OCR）
+                        <span class="badge badge-update">调整</span>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-card">
+                            <div class="module-header">
+                                <div class="module-name">AI填表自动化（含OCR）</div>
+                                <span class="tag tag-ai">平台运营层</span>
+                            </div>
+                            <div class="module-positioning">融合闪电签自动化能力，构建"OCR扫描识别→智能填表→表格生成→翻译件生成"完整流水线，支持批量处理，目标将7本/天的效率提升至5倍以上</div>
+                            <ul class="module-features">
+                                <li>自动填表：模拟人工操作签证网站，指令触发后自动填写申请表</li>
+                                <li>AI翻译：自动翻译中文资料为英文填写内容</li>
+                                <li>信息校验：填写后自动校验信息准确性和完整性</li>
+                                <li>自动提交：校验通过后触发提交，人工复核确认</li>
+                                <li>效率提升：目标将人工处理7本/天翻倍提升至14本+/天</li>
+                                <li>试用反馈机制：业务侧反馈使用体验（卡顿、准确性、效率），快速迭代优化</li>
+                                <li>多国扩展：当前聚焦美国签证，后续推广至日本、申根等国家</li>
+                                <li class="new-feature">OCR智能识别：扫描护照/身份证等证件信息，无需人工录入，识别准确率目标95%+</li>
+                                <li class="new-feature">OCR自动填充：识别后自动填充到系统表单和签证申请表</li>
+                                <li class="new-feature">批量扫描录入：支持批量扫描多本证件，一次性录入多名办签人信息</li>
+                                <li class="new-feature">完整流水线：OCR扫描识别→智能填表→表格生成→翻译件生成一站式处理</li>
+                                <li class="new-feature">材料模板自动生成：在职证明、邀请函、出资证明等模板化自动生成</li>
+                                <li class="new-feature">翻译件一键生成：结婚证、在职证明、户口本等翻译件一键生成</li>
+                                <li class="new-feature">免费工具定位：OCR与模板生成作为免费工具降低操作门槛，提升客户体验</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.8 政策监控中心 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.8 政策监控中心</div>
+                    <div class="modules-grid">
+                        <div class="module-card">
+                            <div class="module-header">
+                                <div class="module-name">政策监控中心</div>
+                                <span class="tag tag-ai">平台运营层</span>
+                            </div>
+                            <div class="module-positioning">从VFS、各国移民局、"中国移民局"等权威官网自动爬取最新签证政策，AI转化为通俗易懂的指引，确保信息及时更新</div>
+                            <ul class="module-features">
+                                <li>政策爬取：自动爬取VFS、各国移民局、行政中心等权威官网政策变更</li>
+                                <li>AI解读转化：将官方晦涩文本转化为通俗易懂的"人话"版指引</li>
+                                <li>变更提醒：政策变更时自动提醒相关人员和供应商</li>
+                                <li>权威数据源管理：确定并维护权威数据源清单与爬取方式</li>
+                                <li>政策版本管理：支持政策历史版本，可回溯对比</li>
+                                <li>与规则引擎联动：政策变更自动触发规则库更新</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.9 规则引擎 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.9 规则引擎</div>
+                    <div class="modules-grid">
+                        <div class="module-card">
+                            <div class="module-header">
+                                <div class="module-name">规则引擎</div>
+                                <span class="tag tag-platform">平台运营层</span>
+                            </div>
+                            <div class="module-positioning">各国签证规则库与智能匹配，对接政策监控中心实现规则动态更新</div>
+                            <ul class="module-features">
+                                <li>国家规则库：维护日本、美国、申根、东南亚等国签证规则</li>
+                                <li>规则配置：材料清单、审核标准、预约要求、处理时限</li>
+                                <li>规则匹配：根据目的地自动匹配签证规则</li>
+                                <li>动态更新：对接政策监控中心，官网政策变更自动触发规则更新</li>
+                                <li>规则版本管理：支持规则历史版本，可回溯</li>
+                                <li>规则更新提醒：领馆政策变更时，系统提醒更新规则</li>
+                                <li>规则测试：规则更新前支持沙箱测试</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.10 知识库 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.10 知识库</div>
+                    <div class="modules-grid">
+                        <div class="module-card">
+                            <div class="module-header">
+                                <div class="module-name">知识库</div>
+                                <span class="tag tag-platform">平台运营层</span>
+                            </div>
+                            <div class="module-positioning">将资深销售的"隐性经验"转化为可复制的标准化流程，为新人销售提供体系支撑</div>
+                            <ul class="module-features">
+                                <li>标准资料模板：平台统一输出从VFS/移民局获取的标准资料模板</li>
+                                <li>经验SOP：老销售"避坑"经验沉淀为标准操作流程</li>
+                                <li>供应商自有知识库：供应商可引用平台模板，修改后保存为自有知识库</li>
+                                <li>案例库：拒签案例、成功案例库，支撑签证Agent训练</li>
+                                <li>新人培训：新人销售通过知识库学习标准化流程，逐步成长</li>
+                                <li>AI辅助判断：AI基于知识库内容辅助新人判断，但核心决策仍由人工完成</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.11 数据统计 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.11 数据统计
+                        <span class="badge badge-update">调整</span>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-card">
+                            <div class="module-header">
+                                <div class="module-name">数据统计</div>
+                                <span class="tag tag-platform">平台运营层</span>
+                            </div>
+                            <div class="module-positioning">签证业务数据的统计分析与报表，支撑业务决策</div>
+                            <ul class="module-features">
+                                <li>核心指标：签证量、出签率、拒签率、平均处理时长</li>
+                                <li>国家分布：各国签证量占比、趋势分析</li>
+                                <li>供应商绩效：统计各供应商的处理量、出签率、服务质量评分</li>
+                                <li>产品分析：各签证产品的销量、转化率、利润分析</li>
+                                <li>时间趋势：按日/周/月统计签证量趋势</li>
+                                <li>人员绩效：统计各签证专员/门店销售的处理量和质量</li>
+                                <li>异常分析：拒签率高、处理时长异常的订单分析</li>
+                                <li>报表导出：支持导出PDF/Excel格式报表</li>
+                                <li class="new-feature">前端转化分析：小程序签证板块访问量、产品浏览量、下单转化率</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====== 销售管理层 ====== -->
+                <div class="layer-group-title layer-group-sales">销售管理层（CSP门店销售PC端） — 1个模块</div>
+
+                <!-- 2.12 订单管理 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.12 订单管理
+                        <span class="badge badge-update">调整</span>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-card">
+                            <div class="module-header">
+                                <div class="module-name">订单管理</div>
+                                <span class="tag tag-sales">销售管理层</span>
+                            </div>
+                            <div class="module-positioning">签证订单的创建与全流程管理，下单后生成专属签证订单，新增办签人信息管理、办理进度维护与预约信息维护</div>
+                            <ul class="module-features">
+                                <li>订单创建：支持门店销售手动创建、API对接旅游订单创建、H5在线下单</li>
+                                <li>专属签证订单：完整记录渠道来源、客户信息、附加服务，区别于散拼团订单</li>
+                                <li>订单详情：包含客户信息、行程信息、签证类型、材料清单、供应商信息</li>
+                                <li>批量操作：支持批量修改状态、批量分配处理人</li>
+                                <li>订单查询：支持按客户姓名、护照号、目的地、供应商、状态等多维度查询</li>
+                                <li>订单导出：支持导出Excel格式，用于汇报或存档</li>
+                                <li class="new-feature">办签人信息管理：中英文姓名、证件类型与号码、出生日期、国籍等详细信息</li>
+                                <li class="new-feature">办理进度维护：未办理 → 已收到资料 → 资料审核完成 → 使馆受理中 → 签证结果 → 资料返还</li>
+                                <li class="new-feature">预约信息维护：面试预约时间、送签时间、取签时间等预约信息管理</li>
+                                <li class="new-feature">周边服务关联：订单可关联保证金冻结、存款证明、个税证明、顺丰物流等周边服务</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====== 前端展示层 ====== -->
+                <div class="layer-group-title layer-group-frontend">前端展示层（有米小程序·悠哉小程序） — 2个模块</div>
+
+                <!-- 2.13 有米小程序签证板块 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.13 有米小程序签证板块
+                        <span class="badge badge-new">新增</span>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-card new-module">
+                            <div class="module-header">
+                                <div class="module-name">有米小程序签证板块</div>
+                                <span class="tag tag-frontend">前端展示层</span>
+                            </div>
+                            <div class="module-positioning">在现有有米小程序（B端·门店销售）中新增签证业务板块，包含签证入口、产品列表页、产品详情页、在线下单四个页面，销售可代客浏览签证产品、查看资料要求、选择套餐、录入办签人信息并下单</div>
+                            <ul class="module-features">
+                                <li class="new-feature">签证频道首页：城市定位、国家搜索、轮播图、热门国家（9个）、热门产品（5个）</li>
+                                <li class="new-feature">列表页：按国家查询、送签地筛选、综合排序、条件筛选</li>
+                                <li class="new-feature">详情页：产品信息展示、套餐选择、完整版资料展示（属性/提供方式/份数/适用人群）</li>
+                                <li class="new-feature">预订须知：展示预订须知、免责声明（"以使馆最终通知为准"）</li>
+                                <li class="new-feature">在线下单：选择套餐、填写联系人信息、收货地址后提交订单</li>
+                                <li class="new-feature">订单填写：联系人信息、收货地址、办签人信息（中英文姓名、证件信息等）</li>
+                                <li class="new-feature">订单列表/详情/退款：客户可查看订单列表、订单详情、申请退款</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.14 悠哉小程序签证板块 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.14 悠哉小程序签证板块
+                        <span class="badge badge-new">新增</span>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-card new-module">
+                            <div class="module-header">
+                                <div class="module-name">悠哉小程序签证板块</div>
+                                <span class="tag tag-frontend">前端展示层</span>
+                            </div>
+                            <div class="module-positioning">在现有悠哉小程序（C端·终端客户）中新增签证业务板块，包含签证入口、产品列表页、产品详情页、自主下单、资料填写上传、订单管理完整流程，客户全程自助办理</div>
+                            <ul class="module-features">
+                                <li class="new-feature">签证频道入口：首页新增签证入口，城市定位、国家搜索、热门国家推荐</li>
+                                <li class="new-feature">产品列表页：按国家查询、送签地筛选、综合排序、条件筛选</li>
+                                <li class="new-feature">产品详情页：产品信息展示、套餐选择、完整版资料展示、预订须知</li>
+                                <li class="new-feature">自主下单：选择套餐、填写联系人及办签人信息、收货地址后提交订单</li>
+                                <li class="new-feature">资料填写上传：客户在小程序中填写签证所需资料，拍照上传护照、身份证等证件</li>
+                                <li class="new-feature">资料补传提醒：资料缺失或不合规时，通过小程序消息提醒客户补传</li>
+                                <li class="new-feature">订单管理：查看签证订单列表、订单详情、申请退款，支持按状态筛选</li>
+                                <li class="new-feature">进度查询：实时查看办理进度（未办理→已收到资料→资料审核→使馆受理→签证结果→资料返还）</li>
+                                <li class="new-feature">消息通知：订单状态变更时通过小程序消息通知客户</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====== 跨层模块 ====== -->
+                <div class="layer-group-title layer-group-cross">跨层模块 — 3个模块</div>
+
+                <!-- 2.15 客户档案 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.15 客户档案</div>
+                    <div class="modules-grid">
+                        <div class="module-card">
+                            <div class="module-header">
+                                <div class="module-name">客户档案</div>
+                                <span class="tag tag-platform">跨层模块</span>
+                            </div>
+                            <div class="module-positioning">客户签证历史记录与资料管理，结合签证Agent风控模型实现AI风险预警</div>
+                            <ul class="module-features">
+                                <li>客户信息：姓名、护照号、联系方式、身份证号等基本信息</li>
+                                <li>历史签证记录：所有历史签证申请记录</li>
+                                <li>拒签记录：拒签原因、拒签国家、拒签日期</li>
+                                <li>签证Agent风控：基于公司多年拒签案例训练AI，自动识别风险项（流水异常、行程矛盾、历史签证冲突等）</li>
+                                <li>风险预警：资料上传后AI自动提示风险项，人工针对性核查</li>
+                                <li>材料存档：历次签证材料存档，可复用</li>
+                                <li>风险标签：根据历史记录标记风险客户</li>
+                                <li>档案查询：支持按姓名、护照号快速查询</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.16 进度追踪 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.16 进度追踪</div>
+                    <div class="modules-grid">
+                        <div class="module-card">
+                            <div class="module-header">
+                                <div class="module-name">进度追踪</div>
+                                <span class="tag tag-platform">跨层模块</span>
+                            </div>
+                            <div class="module-positioning">签证申请进度的实时追踪与通知，提升客户体验</div>
+                            <ul class="module-features">
+                                <li>进度可视化：时间轴展示订单处理进度</li>
+                                <li>状态更新：支持手动更新和系统自动同步</li>
+                                <li>关键节点提醒：收件、送签、出签等节点自动提醒</li>
+                                <li>异常预警：超时未处理、材料不全等异常预警</li>
+                                <li>客户通知：支持短信、邮件、系统消息、小程序消息通知客户</li>
+                                <li>处理历史：记录所有状态变更和操作日志</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.17 周边服务在线办理 -->
+                <div class="subsection">
+                    <div class="subsection-title">2.17 周边服务在线办理
+                        <span class="badge badge-new">新增</span>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-card new-module">
+                            <div class="module-header">
+                                <div class="module-name">周边服务在线办理</div>
+                                <span class="tag tag-ai">平台运营层</span>
+                            </div>
+                            <div class="module-positioning">借鉴闪电签能力，对接银行、税务、顺丰等外部服务，实现保证金冻结、存款证明、个税证明在线办理与物流回寄，降低客户操作门槛</div>
+                            <ul class="module-features">
+                                <li class="new-feature">保证金冻结：对接银行系统，在线办理签证保证金冻结</li>
+                                <li class="new-feature">存款证明在线办理：对接银行系统，在线申请存款证明</li>
+                                <li class="new-feature">个税证明在线办理：对接税务系统，在线申请个税完税证明</li>
+                                <li class="new-feature">顺丰快递物流回寄：对接顺丰快递，签证办理完成后资料在线下单回寄</li>
+                                <li class="new-feature">服务状态追踪：实时查看各项周边服务的办理状态</li>
+                                <li class="new-feature">订单关联：周边服务与签证订单关联，统一管理</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 三、横切约束 -->
+            <div class="section">
+                <div class="section-header gold">
+                    <span class="section-num">03</span>
+                    <h2>横切约束</h2>
+                    <div class="section-line"></div>
+                </div>
+
+                <!-- 3.1 合规与风控 -->
+                <div class="subsection">
+                    <div class="subsection-title">
+                        3.1 合规与风控
+                        <span class="badge badge-update">更新</span>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <colgroup>
+                                <col style="width:16%">
+                                <col style="width:37%">
+                                <col style="width:47%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>约束类型</th>
+                                    <th>约束要求</th>
+                                    <th>实现方式</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>数据安全</td>
+                                    <td>客户护照、身份证等敏感信息加密存储</td>
+                                    <td>AES-256加密存储，权限管控，操作日志审计</td>
+                                </tr>
+                                <tr>
+                                    <td>访问控制</td>
+                                    <td>按角色控制数据访问权限</td>
+                                    <td>复用UOM/UBK权限体系，供应商/平台/销售/前端四层权限隔离</td>
+                                </tr>
+                                <tr>
+                                    <td>操作审计</td>
+                                    <td>关键操作留痕，可追溯</td>
+                                    <td>记录所有订单状态变更、材料审核、客户信息修改、结算操作、代理操作</td>
+                                </tr>
+                                <tr>
+                                    <td>合规审查</td>
+                                    <td>符合《个人信息保护法》要求</td>
+                                    <td>最小化收集原则，客户授权确认，数据留存期限管理</td>
+                                </tr>
+                                <tr>
+                                    <td>业务风控</td>
+                                    <td>识别风险客户，降低拒签率</td>
+                                    <td>签证Agent风控模型，历史拒签记录标记，风险客户预警</td>
+                                </tr>
+                                <tr>
+                                    <td>供应商合规</td>
+                                    <td>消除私单合规风险，供应商统一管控</td>
+                                    <td>所有供应商必须入驻平台，资质审核，产品上架审核，统一结算</td>
+                                </tr>
+                                <tr>
+                                    <td>免责管理</td>
+                                    <td>规避政策变动带来的责任风险</td>
+                                    <td>H5详情页与材料页面标注"以使馆最终通知为准"等免责条款</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="highlight-new">报价风控</span></td>
+                                    <td><span class="highlight-new">防止亏本投放与错误定价</span></td>
+                                    <td><span class="highlight-new">报价预警（结算价>零售价时自动预警）</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="highlight-new">外部对接安全</span></td>
+                                    <td><span class="highlight-new">银行/税务/物流对接安全</span></td>
+                                    <td><span class="highlight-new">API加密传输，银企直连安全通道，税务接口资质认证，顺丰物流接口鉴权</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3.2 与现有系统融合 -->
+                <div class="subsection">
+                    <div class="subsection-title">
+                        3.2 与现有系统融合
+                        <span class="badge badge-update">更新</span>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <colgroup>
+                                <col style="width:18%">
+                                <col style="width:32%">
+                                <col style="width:50%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>系统/服务</th>
+                                    <th>融合内容</th>
+                                    <th>融合方式</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>UOM运营管理平台</td>
+                                    <td>用户认证、权限管理、菜单导航</td>
+                                    <td>嵌入为独立菜单项，复用统一登录和权限体系，面向销售管理层与门店销售端</td>
+                                </tr>
+                                <tr>
+                                    <td>UBK供应商系统</td>
+                                    <td>供应商入驻、产品上架、结算对账</td>
+                                    <td>嵌入签证业务板块，供应商在UBK上线签证产品、发起账单结算</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="highlight-new">有米小程序签证板块</span></td>
+                                    <td><span class="highlight-new">B端门店销售签证产品展示与代客下单</span></td>
+                                    <td><span class="highlight-new">有米小程序新增签证板块，复用现有登录与订单体系，对接UOM产品数据与CSP订单系统</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="highlight-new">悠哉小程序签证板块</span></td>
+                                    <td><span class="highlight-new">C端客户签证产品自助办理全流程</span></td>
+                                    <td><span class="highlight-new">悠哉小程序新增签证频道，客户自助浏览下单、资料填写上传、订单管理、进度查询</span></td>
+                                </tr>
+                                <tr>
+                                    <td>客户管理系统</td>
+                                    <td>客户基本信息、联系方式</td>
+                                    <td>API对接客户主数据，自动同步客户信息</td>
+                                </tr>
+                                <tr>
+                                    <td>订单系统</td>
+                                    <td>旅游订单关联签证订单</td>
+                                    <td>支持从旅游订单创建签证订单，双向关联，生成专属签证订单</td>
+                                </tr>
+                                <tr>
+                                    <td>财务系统</td>
+                                    <td>签证费用、退款流程、跨区域结算</td>
+                                    <td>出签确认触发结算，拒签触发退款流程</td>
+                                </tr>
+                                <tr>
+                                    <td>消息中心</td>
+                                    <td>客户通知、内部提醒</td>
+                                    <td>复用UOM消息中心，支持短信、邮件、站内信、小程序消息</td>
+                                </tr>
+                                <tr>
+                                    <td>外部官网</td>
+                                    <td>VFS、各国移民局、中国移民局</td>
+                                    <td>政策监控中心自动爬取官网政策变更，AI转化为通俗指引</td>
+                                </tr>
+                                <tr>
+                                    <td>美国签证网站</td>
+                                    <td>AI填表工具对接</td>
+                                    <td>AI模拟人工操作美国签证网站，实现自动填表、翻译、校验、提交</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="highlight-new">银行系统</span></td>
+                                    <td><span class="highlight-new">保证金冻结、存款证明</span></td>
+                                    <td><span class="highlight-new">银企直连API，在线办理保证金冻结与存款证明开具</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="highlight-new">税务系统</span></td>
+                                    <td><span class="highlight-new">个税完税证明</span></td>
+                                    <td><span class="highlight-new">对接税务平台API，在线申请个税完税证明</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="highlight-new">顺丰快递</span></td>
+                                    <td><span class="highlight-new">签证资料物流回寄</span></td>
+                                    <td><span class="highlight-new">对接顺丰API，在线下单物流回寄，实时追踪物流状态</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 四、商业模式 -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-num">04</span>
+                    <h2>商业模式</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-title">四层架构B端赋能</div>
+                        <p>平台覆盖供应商→平台→销售→前端四层全链路，作为产品上线、在线下单的统一中枢，不与OTA在C端打价格战</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">专业服务溢价</div>
+                        <p>价格无优势但服务是核心竞争力，客户愿为"不怕出错"的专业指导支付溢价（如1000元获取准确指导）</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">自动化驱动降本</div>
+                        <p>OCR识别+AI填表将7本/天效率提升5倍，材料模板自动生成效率提升80%，自动化释放人力聚焦高价值服务</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">线上获客闭环</div>
+                        <p>有米/悠哉小程序签证板块覆盖100%线上获客场景，客户自主浏览下单、填写资料，降低沟通成本</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">专业信任生态</div>
+                        <p>让客户因"不怕出错"而选择，而非"便宜几十块"而迁移，建立供应商评价体系构建信任壁垒</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">消除私单风险</div>
+                        <p>供应商统一入驻结算，从源头消除私单合规风险，确保业务全流程闭环可控</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">未来扩展</div>
+                        <p>未来可考虑开放给同业客户使用，收取SaaS服务费，形成独立盈利点</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 五、实施路线图 -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-num">05</span>
+                    <h2>实施路线图</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="roadmap">
+                    <div class="phase">
+                        <div class="phase-number">1</div>
+                        <div class="phase-title">供应商层 + 平台基础</div>
+                        <div class="phase-time">第1-3月</div>
+                        <ul class="phase-goals">
+                            <li>供应商管理模块上线</li>
+                            <li>产品管理模块（含报价/套餐定义）</li>
+                            <li>资料模版库（样例模版+完整版管理）</li>
+                            <li>订单管理（含办签人信息/进度/预约）</li>
+                            <li>材料管理基础功能（关联资料模版库）</li>
+                            <li>覆盖日本、美国签证</li>
+                        </ul>
+                    </div>
+                    <div class="phase">
+                        <div class="phase-number">2</div>
+                        <div class="phase-title">前端展示层 + AI能力</div>
+                        <div class="phase-time">第4-6月</div>
+                        <ul class="phase-goals">
+                            <li>有米小程序签证板块上线（入口/列表/详情/下单）</li>
+                            <li>悠哉小程序签证板块上线（C端自主下单+资料上传）</li>
+                            <li>AI填表自动化+OCR智能识别上线</li>
+                            <li>材料模板自动生成+翻译件生成</li>
+                            <li>政策监控中心上线</li>
+                            <li>知识库模块上线</li>
+                            <li>规则引擎对接政策监控</li>
+                            <li>覆盖申根、东南亚签证</li>
+                        </ul>
+                    </div>
+                    <div class="phase">
+                        <div class="phase-number">3</div>
+                        <div class="phase-title">销售管理 + 智能升级</div>
+                        <div class="phase-time">第7-10月</div>
+                        <ul class="phase-goals">
+                            <li>周边服务在线办理（银行/税务/顺丰对接）</li>
+                            <li>签证Agent风控预警上线</li>
+                            <li>高级数据分析（含前端转化分析）</li>
+                            <li>AI填表扩展至更多国家</li>
+                            <li>小程序签证板块体验优化</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 六、融资与资源规划 -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-num">06</span>
+                    <h2>融资与资源规划</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-title">人力投入</div>
+                        <p>产品经理1人（全程）、前端工程师3人、后端工程师3人、AI工程师1人、UI设计师1人、测试工程师1人，共24人月</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">时间周期</div>
+                        <p>10个月完成全部建设，分三期迭代（3+3+4个月）</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">成本估算</div>
+                        <p>人力成本约210万元（含税费），服务器与运维成本约25万元/年，AI模型训练与OCR服务成本约15万元，合计约250万元</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">资金来源</div>
+                        <p>公司内部预算，属于信息化建设投入，不涉及外部融资</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title"><span class="highlight-new">新增人力</span></div>
+                        <p>较v2.0新增前端工程师1人（小程序开发）、UI设计师1人（前端界面设计），支撑前端展示层建设</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title"><span class="highlight-new">外部对接成本</span></div>
+                        <p>银行接口对接、税务接口对接、顺丰快递接口对接的联调与维护成本</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 七、关键成功要素 -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-num">07</span>
+                    <h2>关键成功要素</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="success-factors">
+                    <div class="factor">
+                        <div class="factor-title">供应商入驻率</div>
+                        <div class="factor-desc">所有供应商必须入驻平台，从源头消除私单，是B端闭环的基础</div>
+                    </div>
+                    <div class="factor">
+                        <div class="factor-title">AI填表+OCR落地</div>
+                        <div class="factor-desc">OCR识别与AI填表工具关键在于业务侧用起来并反馈优化，不能让工具闲置</div>
+                    </div>
+                    <div class="factor">
+                        <div class="factor-title">政策数据源准确性</div>
+                        <div class="factor-desc">政策监控中心的关键在于确定权威数据源与爬取方式，确保信息准确及时</div>
+                    </div>
+                    <div class="factor">
+                        <div class="factor-title">经验知识化</div>
+                        <div class="factor-desc">将老销售隐性经验转化为标准化SOP，是知识库和签证Agent训练的核心</div>
+                    </div>
+                    <div class="factor">
+                        <div class="factor-title">不为线上而线上</div>
+                        <div class="factor-desc">很多沟通一个电话就解决，别为线上而线上，系统应聚焦真正需要提效的环节</div>
+                    </div>
+                    <div class="factor">
+                        <div class="factor-title">专业服务不被削弱</div>
+                        <div class="factor-desc">平台化不应削弱"人"的专业服务优势，而应通过自动化释放人力聚焦高价值服务</div>
+                    </div>
+                    <div class="factor">
+                        <div class="factor-title">系统稳定性</div>
+                        <div class="factor-desc">系统稳定性直接影响业务连续性，需保障99.9%可用性</div>
+                    </div>
+                    <div class="factor">
+                        <div class="factor-title">UBK系统对接</div>
+                        <div class="factor-desc">与UBK供应商系统的对接稳定性，是产品上架和结算闭环的关键</div>
+                    </div>
+                    <div class="factor">
+                        <div class="factor-title"><span class="highlight-new">前端用户体验</span></div>
+                        <div class="factor-desc">有米/悠哉小程序签证板块的用户体验直接影响线上获客转化率</div>
+                    </div>
+                    <div class="factor">
+                        <div class="factor-title"><span class="highlight-new">外部服务对接稳定性</span></div>
+                        <div class="factor-desc">银行、税务、顺丰等外部服务接口的稳定性，是周边服务在线办理的保障</div>
+                    </div>
+                    <div class="factor">
+                        <div class="factor-title"><span class="highlight-new">资料模版库完整性</span></div>
+                        <div class="factor-desc">资料模版库完整版管理的覆盖度与准确性，是材料管理与前端展示的基础</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 八、预期效果 -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-num">08</span>
+                    <h2>预期效果</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="impact-grid">
+                    <div class="impact-item">
+                        <div class="impact-value">100%</div>
+                        <div class="impact-label">小程序签证板块覆盖<br>线上获客</div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-value">95%+</div>
+                        <div class="impact-label">OCR识别准确率</div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-value">5倍</div>
+                        <div class="impact-label">批量处理能力提升<br>（7本/天→35本+/天）</div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-value">80%</div>
+                        <div class="impact-label">材料模板生成<br>效率提升</div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-value">50%+</div>
+                        <div class="impact-label">B端运营效率提升</div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-value">100%</div>
+                        <div class="impact-label">供应商入驻率<br>（消除私单）</div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-value">60%+</div>
+                        <div class="impact-label">材料审核错误率下降</div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-value">30%</div>
+                        <div class="impact-label">拒签率下降<br>（签证Agent风控预警）</div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-value">50%</div>
+                        <div class="impact-label">政策同步延迟缩短<br>（自动爬取+AI解读）</div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-value">100%</div>
+                        <div class="impact-label">订单可追溯率</div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-value">200%+</div>
+                        <div class="impact-label">年化ROI<br>（投入产出比）</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
