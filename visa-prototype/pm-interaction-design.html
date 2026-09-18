@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>签证产品交互设计方案 | 众信旅游 · 签证业务平台</title>
+<style>
+/* ========== 全局变量 ========== */
+:root{
+  --bg:#F4F6FA;
+  --bg2:#FFFFFF;
+  --ink:#1B3A5F;
+  --ink-soft:#34506E;
+  --muted:#6B7C92;
+  --rule:#E4E9F0;
+  --accent:#1B3A5F;
+  --accent-dark:#142D49;
+  --accent-soft:#EAF0F6;
+  --gold:#C9A84C;
+  --gold-dark:#B08F33;
+  --gold-soft:#F6EFD9;
+  --success:#1A9E6E;
+  --success-bg:#E4F6EE;
+  --warning:#D98014;
+  --warning-bg:#FCEEDD;
+  --danger:#D6483E;
+  --danger-bg:#FBE7E5;
+  --info:#2E6FB0;
+  --info-bg:#E4EDF8;
+  --radius:12px;
+  --radius-sm:8px;
+  --shadow-sm:0 1px 3px rgba(27,58,95,.06);
+  --shadow-md:0 4px 16px rgba(27,58,95,.08);
+  --shadow-lg:0 10px 32px rgba(27,58,95,.12);
+  --font:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;
+}
+
+/* ========== 重置 ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.7;overflow-x:hidden}
+a{color:var(--gold-dark);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ========== 封面 ========== */
+.cover{
+  background:linear-gradient(135deg,#1B3A5F 0%,#142D49 55%,#0F2440 100%);
+  color:#fff;padding:64px 24px 56px;position:relative;overflow:hidden;
+}
+.cover::before{
+  content:"";position:absolute;top:-120px;right:-80px;width:420px;height:420px;
+  background:radial-gradient(circle,rgba(201,168,76,.16) 0%,transparent 70%);border-radius:50%;
+}
+.cover::after{
+  content:"";position:absolute;bottom:-100px;left:-60px;width:340px;height:340px;
+  background:radial-gradient(circle,rgba(201,168,76,.08) 0%,transparent 70%);border-radius:50%;
+}
+.cover-inner{max-width:980px;margin:0 auto;position:relative;z-index:2}
+.cover-brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.cover-brand .logo{
+  width:44px;height:44px;border-radius:10px;
+  background:linear-gradient(135deg,#C9A84C,#B08F33);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:800;color:#1B3A5F;letter-spacing:-1px;
+  box-shadow:0 4px 14px rgba(201,168,76,.4);
+}
+.cover-brand .brand-text{font-size:15px;color:rgba(255,255,255,.72);letter-spacing:.05em}
+.cover-brand .brand-text strong{color:#C9A84C;font-weight:700}
+.cover-title{font-size:38px;font-weight:800;letter-spacing:.02em;line-height:1.25;margin-bottom:14px}
+.cover-title .gold-line{
+  display:inline-block;width:56px;height:4px;border-radius:2px;
+  background:linear-gradient(90deg,#C9A84C,transparent);vertical-align:middle;margin-right:14px;
+}
+.cover-sub{font-size:18px;color:rgba(255,255,255,.78);font-weight:400;margin-bottom:32px;max-width:680px}
+.cover-tags{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+.cover-tag{
+  display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;
+  background:rgba(201,168,76,.14);border:1px solid rgba(201,168,76,.32);
+  color:#E8D9A8;font-size:13px;font-weight:500;
+}
+.cover-meta{
+  display:flex;flex-wrap:wrap;gap:32px;margin-top:30px;padding-top:24px;
+  border-top:1px solid rgba(255,255,255,.12);
+}
+.cover-meta-item .label{font-size:12px;color:rgba(255,255,255,.5);letter-spacing:.06em;margin-bottom:4px}
+.cover-meta-item .value{font-size:15px;color:#fff;font-weight:600}
+
+/* ========== 目录导航 ========== */
+.toc{
+  position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--rule);
+  box-shadow:0 1px 0 rgba(27,58,95,.03);
+}
+.toc-inner{
+  max-width:980px;margin:0 auto;padding:12px 24px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+}
+.toc-label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.06em;margin-right:6px;white-space:nowrap}
+.toc a{
+  font-size:13px;color:var(--ink-soft);padding:5px 12px;border-radius:999px;
+  transition:all .2s;white-space:nowrap;font-weight:500;
+}
+.toc a:hover{background:var(--accent-soft);color:var(--accent);text-decoration:none}
+.toc a .num{color:var(--gold-dark);font-weight:700;margin-right:3px}
+
+/* ========== 主容器 ========== */
+.main{max-width:980px;margin:0 auto;padding:40px 24px 80px}
+section{margin-bottom:48px;scroll-margin-top:72px}
+
+/* ========== 章节标题 ========== */
+.sec-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:24px}
+.sec-num{
+  flex-shrink:0;width:44px;height:44px;border-radius:11px;
+  background:linear-gradient(135deg,#1B3A5F,#142D49);
+  color:#C9A84C;font-size:18px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(27,58,95,.25);
+  position:relative;
+}
+.sec-num::after{
+  content:"";position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);
+  width:24px;height:3px;border-radius:2px;background:#C9A84C;
+}
+.sec-title-wrap h2{font-size:24px;font-weight:800;color:var(--ink);line-height:1.3}
+.sec-title-wrap .sec-desc{font-size:14px;color:var(--muted);margin-top:3px;font-weight:400}
+
+/* ========== 卡片 ========== */
+.card{
+  background:var(--bg2);border-radius:var(--radius);padding:24px;
+  box-shadow:var(--shadow-sm);border:1px solid var(--rule);margin-bottom:20px;
+}
+.card-title{
+  font-size:16px;font-weight:700;color:var(--ink);margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.card-title::before{
+  content:"";width:4px;height:18px;border-radius:2px;
+  background:linear-gradient(180deg,#C9A84C,#B08F33);flex-shrink:0;
+}
+.card-title .badge-mini{
+  font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;
+  background:var(--gold-soft);color:var(--gold-dark);margin-left:4px;
+}
+
+/* ========== 表格 ========== */
+.table-wrap{
+  overflow-x:auto;overflow-y:auto;max-height:640px;border-radius:var(--radius);
+  border:1px solid var(--rule);background:var(--bg2);
+  box-shadow:var(--shadow-sm);
+}
+.table-wrap table{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
+.table-wrap thead{position:sticky;top:0;z-index:5}
+.table-wrap thead th{
+  background:linear-gradient(180deg,#1B3A5F,#16304D);color:#fff;
+  font-weight:600;text-align:left;padding:13px 16px;font-size:13px;
+  letter-spacing:.02em;white-space:nowrap;border-bottom:2px solid #C9A84C;
+}
+.table-wrap thead th:first-child{border-top-left-radius:0}
+.table-wrap tbody td{
+  padding:12px 16px;border-bottom:1px solid var(--rule);color:var(--ink-soft);
+  vertical-align:top;line-height:1.6;
+}
+.table-wrap tbody tr:nth-child(even){background:#FAFBFD}
+.table-wrap tbody tr:hover{background:var(--accent-soft)}
+.table-wrap tbody tr:last-child td{border-bottom:none}
+.table-wrap .row-id{font-weight:700;color:var(--gold-dark);text-align:center;white-space:nowrap}
+.table-wrap .step-cell{font-weight:700;color:var(--accent);white-space:nowrap}
+.table-wrap .step-num{font-weight:800;color:var(--accent)}
+.table-wrap .count{
+  display:inline-block;padding:2px 9px;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:12px;white-space:nowrap;
+}
+.table-wrap .core-field{color:var(--ink);font-weight:500}
+
+/* ========== 状态徽章 ========== */
+.tag{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.tag-draft{background:#EEF1F5;color:#6B7C92}
+.tag-review{background:var(--info-bg);color:var(--info)}
+.tag-pending{background:var(--warning-bg);color:var(--warning)}
+.tag-pass{background:var(--success-bg);color:var(--success)}
+.tag-reject{background:var(--danger-bg);color:var(--danger)}
+.tag-sale{background:var(--success-bg);color:var(--success)}
+.tag-new{background:var(--gold-soft);color:var(--gold-dark)}
+.tag-three{background:var(--accent-soft);color:var(--accent)}
+.tag-auto{background:#F0F0F4;color:#8A92A0}
+
+/* ========== 步骤导航可视化 ========== */
+.stepper-visual{
+  display:flex;align-items:stretch;gap:0;margin:8px 0 24px;
+  background:var(--bg2);border-radius:var(--radius);padding:20px;
+  border:1px solid var(--rule);box-shadow:var(--shadow-sm);
+  overflow-x:auto;
+}
+.step-node{
+  flex:1;min-width:140px;text-align:center;position:relative;padding:8px 6px;
+}
+.step-node:not(:last-child)::after{
+  content:"";position:absolute;top:26px;right:-6px;width:12px;height:2px;
+  background:var(--gold);opacity:.5;
+}
+.step-node .circle{
+  width:44px;height:44px;border-radius:50%;margin:0 auto 10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:800;color:#fff;
+  background:linear-gradient(135deg,#1B3A5F,#2A5680);
+  box-shadow:0 3px 10px rgba(27,58,95,.25);position:relative;z-index:2;
+}
+.step-node:nth-child(3) .circle{background:linear-gradient(135deg,#C9A84C,#B08F33)}
+.step-node .s-name{font-size:13px;font-weight:700;color:var(--ink)}
+.step-node .s-count{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ========== 向导布局示意 ========== */
+.wizard-layout{
+  display:grid;grid-template-columns:200px 1fr;gap:0;
+  border-radius:var(--radius);overflow:hidden;border:1px solid var(--rule);
+  box-shadow:var(--shadow-sm);background:var(--bg2);margin:8px 0 20px;
+}
+.wiz-sidebar{background:#F8FAFC;padding:18px 14px;border-right:1px solid var(--rule)}
+.wiz-sidebar .ws-title{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.05em;margin-bottom:14px}
+.wiz-step-item{
+  display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;margin-bottom:6px;
+  font-size:13px;color:var(--ink-soft);
+}
+.wiz-step-item .dot{
+  width:22px;height:22px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;background:#E4E9F0;color:var(--muted);
+}
+.wiz-step-item.done{color:var(--success)}
+.wiz-step-item.done .dot{background:var(--success);color:#fff}
+.wiz-step-item.active{background:var(--accent);color:#fff;font-weight:600}
+.wiz-step-item.active .dot{background:#C9A84C;color:#1B3A5F}
+.wiz-step-item.locked{color:#AAB4C2}
+.wiz-step-item.locked .dot{background:#EEF1F5;color:#C2CADA}
+.wiz-content{padding:20px}
+.wiz-content .wc-label{font-size:12px;color:var(--gold-dark);font-weight:700;letter-spacing:.05em;margin-bottom:6px}
+.wiz-content .wc-title{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:12px}
+.wiz-form-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.wiz-field{
+  background:#F8FAFC;border:1px solid var(--rule);border-radius:7px;
+  padding:7px 11px;font-size:12px;color:var(--ink-soft);
+}
+.wiz-field .req{color:var(--danger);font-weight:700}
+.wiz-actionbar{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:16px;padding-top:14px;border-top:1px dashed var(--rule);
+}
+.wiz-btn{
+  font-size:12px;padding:7px 14px;border-radius:7px;font-weight:600;border:none;cursor:default;
+}
+.wiz-btn.ghost{background:#EEF1F5;color:var(--muted)}
+.wiz-btn.gold{background:var(--gold-soft);color:var(--gold-dark);border:1px solid var(--gold)}
+.wiz-btn.primary{background:linear-gradient(135deg,#1B3A5F,#2A5680);color:#fff}
+
+/* ========== 交互说明列表 ========== */
+.interact-list{list-style:none;padding:0}
+.interact-list li{
+  display:flex;gap:12px;padding:12px 0;border-bottom:1px dashed var(--rule);
+}
+.interact-list li:last-child{border-bottom:none}
+.interact-list .il-icon{
+  flex-shrink:0;width:28px;height:28px;border-radius:8px;
+  background:var(--gold-soft);color:var(--gold-dark);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:800;
+}
+.interact-list .il-text{font-size:14px;color:var(--ink-soft);line-height:1.65}
+.interact-list .il-text strong{color:var(--ink)}
+
+/* ========== 三态切换示意 ========== */
+.tri-state{display:inline-flex;border-radius:7px;overflow:hidden;border:1px solid var(--rule);font-size:12px}
+.tri-state span{padding:4px 11px;font-weight:600;color:var(--muted);background:#F8FAFC}
+.tri-state span.on-required{background:var(--danger);color:#fff}
+.tri-state span.on-optional{background:var(--warning);color:#fff}
+.tri-state span.on-skip{background:#EEF1F5;color:#AAB4C2}
+
+/* ========== 流程图 ========== */
+.flow{
+  display:flex;flex-direction:column;align-items:center;gap:0;margin:12px 0 8px;
+}
+.flow-row{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;width:100%}
+.flow-box{
+  background:var(--bg2);border:1.5px solid var(--accent);border-radius:10px;
+  padding:12px 18px;font-size:13px;font-weight:600;color:var(--ink);
+  text-align:center;min-width:130px;box-shadow:var(--shadow-sm);position:relative;
+}
+.flow-box.gold{border-color:var(--gold);background:var(--gold-soft);color:var(--gold-dark)}
+.flow-box.start{border-color:var(--accent);background:var(--accent);color:#fff}
+.flow-box.pass{border-color:var(--success);background:var(--success-bg);color:var(--success)}
+.flow-box.reject{border-color:var(--danger);background:var(--danger-bg);color:var(--danger)}
+.flow-box .fb-sub{font-size:11px;font-weight:400;opacity:.75;margin-top:3px}
+.flow-arrow{
+  display:flex;align-items:center;justify-content:center;color:var(--gold);
+  font-size:18px;font-weight:700;padding:4px 0;
+}
+.flow-arrow.down{transform:rotate(90deg);padding:0}
+.flow-branch{display:flex;gap:40px;align-items:flex-start;justify-content:center;width:100%;flex-wrap:wrap}
+.flow-branch-col{display:flex;flex-direction:column;align-items:center;gap:0}
+.flow-note{
+  font-size:11px;color:var(--muted);text-align:center;margin-top:4px;
+  background:var(--accent-soft);padding:2px 8px;border-radius:5px;
+}
+
+/* ========== 菜单对比 ========== */
+.menu-compare{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
+.menu-block{
+  border-radius:var(--radius);overflow:hidden;border:1px solid var(--rule);
+  background:var(--bg2);box-shadow:var(--shadow-sm);
+}
+.menu-block .mb-head{padding:12px 16px;font-size:14px;font-weight:700;color:#fff;letter-spacing:.04em}
+.menu-block.old .mb-head{background:#8A92A0}
+.menu-block.new .mb-head{background:linear-gradient(135deg,#1B3A5F,#2A5680)}
+.menu-block .mb-body{padding:14px 16px}
+.menu-group{margin-bottom:12px}
+.menu-group:last-child{margin-bottom:0}
+.menu-group .mg-title{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:5px;letter-spacing:.03em}
+.menu-group .mg-items{display:flex;flex-wrap:wrap;gap:6px}
+.menu-item{font-size:13px;padding:4px 10px;border-radius:6px;background:#F4F6FA;color:var(--ink-soft)}
+.menu-item.highlight{background:var(--gold-soft);color:var(--gold-dark);font-weight:700;border:1px dashed var(--gold)}
+.menu-item .new-flag{font-size:10px;background:var(--danger);color:#fff;padding:1px 5px;border-radius:4px;margin-left:4px;font-weight:700;vertical-align:middle}
+
+/* ========== 高亮提示框 ========== */
+.callout{
+  border-radius:var(--radius);padding:16px 18px;margin:16px 0;
+  display:flex;gap:12px;align-items:flex-start;
+}
+.callout.info{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.callout.gold{background:var(--gold-soft);border-left:4px solid var(--gold)}
+.callout .cl-label{flex-shrink:0;font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.05em}
+.callout.gold .cl-label{color:var(--gold-dark)}
+.callout .cl-text{font-size:14px;color:var(--ink-soft);line-height:1.7}
+.callout .cl-text strong{color:var(--ink)}
+
+/* ========== 重点高亮 ========== */
+.hl{background:linear-gradient(180deg,transparent 60%,#F6EFD9 60%);padding:0 2px;font-weight:600;color:var(--ink)}
+.kw{color:var(--gold-dark);font-weight:700}
+
+/* ========== 详情页折叠示意 ========== */
+.detail-fold{border:1px solid var(--rule);border-radius:var(--radius-sm);overflow:hidden;margin-top:10px}
+.df-item{border-bottom:1px solid var(--rule)}
+.df-item:last-child{border-bottom:none}
+.df-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 15px;background:#F8FAFC;cursor:default;font-size:13px;font-weight:600;color:var(--ink);
+}
+.df-head .df-status{font-size:11px}
+.df-body{padding:12px 15px;font-size:13px;color:var(--ink-soft);background:#fff}
+.df-body .df-line{margin-bottom:5px}
+.df-body .df-line strong{color:var(--ink);min-width:90px;display:inline-block}
+
+/* ========== 页脚 ========== */
+.footer{
+  background:linear-gradient(135deg,#1B3A5F,#0F2440);color:rgba(255,255,255,.7);
+  text-align:center;padding:40px 24px;
+}
+.footer .ft-line{font-size:14px;margin-bottom:6px}
+.footer .ft-brand{color:#C9A84C;font-weight:700}
+.footer .ft-meta{font-size:12px;color:rgba(255,255,255,.45);margin-top:10px;letter-spacing:.04em}
+.footer .ft-divider{width:48px;height:2px;background:#C9A84C;margin:14px auto;opacity:.6;border-radius:1px}
+
+/* ========== 响应式 ========== */
+@media(max-width:768px){
+  .cover{padding:44px 18px 40px}
+  .cover-title{font-size:26px}
+  .cover-sub{font-size:15px}
+  .cover-meta{gap:20px}
+  .toc-inner{padding:10px 14px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+  .toc-label{display:none}
+  .main{padding:28px 16px 60px}
+  .sec-head{gap:12px}
+  .sec-num{width:38px;height:38px;font-size:15px}
+  .sec-title-wrap h2{font-size:20px}
+  .card{padding:18px 16px}
+  .stepper-visual{flex-wrap:nowrap;overflow-x:auto;padding:16px}
+  .step-node{min-width:120px}
+  .wizard-layout{grid-template-columns:1fr}
+  .wiz-sidebar{border-right:none;border-bottom:1px solid var(--rule)}
+  .wiz-sidebar .ws-title{margin-bottom:10px}
+  .wiz-step-item{display:inline-flex;margin:0 4px 4px 0}
+  .menu-compare{grid-template-columns:1fr}
+  .flow-branch{gap:20px}
+  .table-wrap{max-height:520px}
+  .table-wrap table{min-width:480px;font-size:13px}
+  .table-wrap thead th,.table-wrap tbody td{padding:10px 12px}
+}
+@media(max-width:480px){
+  .cover-title{font-size:22px}
+  .cover-tag{font-size:12px;padding:6px 11px}
+  .sec-title-wrap h2{font-size:18px}
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== 封面 ==================== -->
+<header class="cover">
+  <div class="cover-inner">
+    <div class="cover-brand">
+      <div class="logo">众</div>
+      <div class="brand-text"><strong>众信旅游</strong> · 签证业务平台</div>
+    </div>
+    <h1 class="cover-title"><span class="gold-line"></span>签证产品交互设计方案</h1>
+    <p class="cover-sub">UBK供应商系统「新增签证产品」分步骤向导 与 UOM运营系统「签证产品审核」功能交互设计方案</p>
+    <div class="cover-tags">
+      <span class="cover-tag">UBK 分步骤向导</span>
+      <span class="cover-tag">DS-160 全字段配置</span>
+      <span class="cover-tag">草稿保存</span>
+      <span class="cover-tag">UOM 审核闭环</span>
+      <span class="cover-tag">21板块 / 75字段</span>
+    </div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="label">文档类型</div>
+        <div class="value">PM 交互设计方案</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">涉及系统</div>
+        <div class="value">UBK 供应商 / UOM 运营</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">日期</div>
+        <div class="value">2026-08-05</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ==================== 目录导航 ==================== -->
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">目录</span>
+    <a href="#sec1"><span class="num">01</span>方案概述</a>
+    <a href="#sec2"><span class="num">02</span>UBK分步骤向导</a>
+    <a href="#sec3"><span class="num">03</span>DS-160字段配置</a>
+    <a href="#sec4"><span class="num">04</span>UOM审核设计</a>
+    <a href="#sec5"><span class="num">05</span>交互闭环</a>
+    <a href="#sec6"><span class="num">06</span>菜单结构变更</a>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ==================== 一、方案概述 ==================== -->
+<section id="sec1">
+  <div class="sec-head">
+    <div class="sec-num">01</div>
+    <div class="sec-title-wrap">
+      <h2>方案概述</h2>
+      <div class="sec-desc">业务场景、核心问题与方案要点</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">业务场景</div>
+    <p style="font-size:15px;color:var(--ink-soft);line-height:1.8">
+      供应商在 <strong style="color:var(--accent)">UBK 系统</strong>创建签证产品 → 提交审核 →
+      <strong style="color:var(--accent)">UOM 运营系统</strong>审核通过 → 自动上架
+      <span class="hl">C端悠哉</span> / <span class="hl">B端有米</span>。
+      整条链路覆盖产品创建、字段配置、草稿暂存、审核流转与多端同步上架，形成完整的签证产品生命周期管理闭环。
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">核心问题</div>
+    <ul class="interact-list">
+      <li>
+        <div class="il-icon">1</div>
+        <div class="il-text"><strong>表单字段不足</strong>：原弹窗表单字段过少，无法承载完整签证产品信息，缺少签证类型、有效期、办理时长等关键字段。</div>
+      </li>
+      <li>
+        <div class="il-icon">2</div>
+        <div class="il-text"><strong>缺少 DS-160 字段配置</strong>：用户上传美国 DS-160 签证填表字段汇总（<span class="kw">21个板块、75个字段</span>），系统无对应配置入口，无法灵活管理采集范围。</div>
+      </li>
+      <li>
+        <div class="il-icon">3</div>
+        <div class="il-text"><strong>缺少草稿保存</strong>：原有流程一次性提交，填写中途无法暂存，体验断裂、数据易丢失。</div>
+      </li>
+      <li>
+        <div class="il-icon">4</div>
+        <div class="il-text"><strong>UOM 无审核入口</strong>：运营系统缺少签证产品审核功能，产品上架无审核把关，无法管控供应商提交质量。</div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">方案要点</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+      <div style="background:var(--accent-soft);border-radius:10px;padding:16px;border-left:3px solid var(--accent)">
+        <div style="font-size:22px;font-weight:800;color:var(--accent)">5步</div>
+        <div style="font-size:13px;color:var(--ink-soft);margin-top:4px">分阶段向导，逐项填写</div>
+      </div>
+      <div style="background:var(--gold-soft);border-radius:10px;padding:16px;border-left:3px solid var(--gold)">
+        <div style="font-size:22px;font-weight:800;color:var(--gold-dark)">草稿</div>
+        <div style="font-size:13px;color:var(--ink-soft);margin-top:4px">随时暂存，断点续填</div>
+      </div>
+      <div style="background:var(--accent-soft);border-radius:10px;padding:16px;border-left:3px solid var(--accent)">
+        <div style="font-size:22px;font-weight:800;color:var(--accent)">21+75</div>
+        <div style="font-size:13px;color:var(--ink-soft);margin-top:4px">DS-160全字段三态配置</div>
+      </div>
+      <div style="background:var(--gold-soft);border-radius:10px;padding:16px;border-left:3px solid var(--gold)">
+        <div style="font-size:22px;font-weight:800;color:var(--gold-dark)">闭环</div>
+        <div style="font-size:13px;color:var(--ink-soft);margin-top:4px">UOM审核，自动上架</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 二、UBK分步骤向导设计 ==================== -->
+<section id="sec2">
+  <div class="sec-head">
+    <div class="sec-num">02</div>
+    <div class="sec-title-wrap">
+      <h2>UBK 分步骤向导设计</h2>
+      <div class="sec-desc">将原弹窗表单升级为5步分阶段向导页面</div>
+    </div>
+  </div>
+
+  <!-- 步骤可视化 -->
+  <div class="stepper-visual">
+    <div class="step-node"><div class="circle">1</div><div class="s-name">基础信息</div><div class="s-count">8个字段</div></div>
+    <div class="step-node"><div class="circle">2</div><div class="s-name">费用与套餐</div><div class="s-count">7个字段</div></div>
+    <div class="step-node"><div class="circle">3</div><div class="s-name">DS-160配置</div><div class="s-count">21个板块</div></div>
+    <div class="step-node"><div class="circle">4</div><div class="s-name">所需材料</div><div class="s-count">12+项</div></div>
+    <div class="step-node"><div class="circle">5</div><div class="s-name">上架与提交</div><div class="s-count">4个字段</div></div>
+  </div>
+
+  <!-- 5步表格 -->
+  <div class="card">
+    <div class="card-title">五步向导字段总览<span class="badge-mini">5 STEPS</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:70px">步骤</th>
+            <th style="width:120px">名称</th>
+            <th style="width:80px">字段数</th>
+            <th>核心字段</th>
+            <th>交互说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="step-cell"><span class="step-num">Step 1</span></td>
+            <td class="step-cell">基础信息</td>
+            <td><span class="count">8个</span></td>
+            <td class="core-field">产品名称、目的国家(12国)、签证类型(5类)、有效期、停留期、入境次数、办理时长min/max</td>
+            <td>必填项标红 <span style="color:var(--danger);font-weight:700">*</span>，国家选择带国旗标识</td>
+          </tr>
+          <tr>
+            <td class="step-cell"><span class="step-num">Step 2</span></td>
+            <td class="step-cell">费用与套餐</td>
+            <td><span class="count">7个</span></td>
+            <td class="core-field">使馆费、服务费、结算价(自动计算)、建议零售价、佣金比例、套餐配置(标准/加急/豪华)</td>
+            <td>结算价 = 使馆费 + 服务费，oninput 联动；套餐可增删</td>
+          </tr>
+          <tr>
+            <td class="step-cell"><span class="step-num">Step 3</span></td>
+            <td class="step-cell">DS-160表单字段配置</td>
+            <td><span class="count">21个板块</span></td>
+            <td class="core-field">个人信息1/2、旅行信息、旅行伴侣、既往赴美、地址电话、护照信息、美国联系点、家庭亲属、配偶、工作教育、安全背景1-5、照片、审查、确认</td>
+            <td>每个板块可设为「必填/选填/不采集」三态切换，展开可查看具体字段清单</td>
+          </tr>
+          <tr>
+            <td class="step-cell"><span class="step-num">Step 4</span></td>
+            <td class="step-cell">所需材料</td>
+            <td><span class="count">12+项</span></td>
+            <td class="core-field">护照原件、2寸白底照片、身份证复印件、户口本复印件、在职证明、营业执照、银行流水、行程单、机票预订单、酒店预订单、邀请函、签证申请表</td>
+            <td>复选框 + 可自定义新增材料项，每项可设必填/选填</td>
+          </tr>
+          <tr>
+            <td class="step-cell"><span class="step-num">Step 5</span></td>
+            <td class="step-cell">上架与提交</td>
+            <td><span class="count">4个</span></td>
+            <td class="core-field">上架渠道(C端/B端复选)、产品简介、字段映射预览、提交审核</td>
+            <td>展示C端/B端各展示哪些字段的映射预览，提交后状态变更为「审核中」</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 向导布局示意 -->
+  <div class="card">
+    <div class="card-title">向导页面布局示意</div>
+    <div class="wizard-layout">
+      <div class="wiz-sidebar">
+        <div class="ws-title">步骤导航 STEPPER</div>
+        <div class="wiz-step-item done"><div class="dot">1</div>基础信息</div>
+        <div class="wiz-step-item done"><div class="dot">2</div>费用与套餐</div>
+        <div class="wiz-step-item active"><div class="dot">3</div>DS-160配置</div>
+        <div class="wiz-step-item locked"><div class="dot">4</div>所需材料</div>
+        <div class="wiz-step-item locked"><div class="dot">5</div>上架与提交</div>
+      </div>
+      <div class="wiz-content">
+        <div class="wc-label">当前步骤 STEP 3 / 5</div>
+        <div class="wc-title">DS-160 表单字段配置</div>
+        <div class="wiz-form-row">
+          <div class="wiz-field">个人信息(1) <span style="color:var(--danger)">必填</span></div>
+          <div class="wiz-field">个人信息(2) 选填</div>
+          <div class="wiz-field">旅行信息 <span style="color:var(--danger)">必填</span></div>
+          <div class="wiz-field">护照信息 <span style="color:var(--danger)">必填</span></div>
+        </div>
+        <div class="wiz-form-row">
+          <div class="wiz-field" style="color:#AAB4C2">安全背景(1-5) 不采集</div>
+          <div class="wiz-field">照片 <span style="color:var(--danger)">必填</span></div>
+        </div>
+        <div class="wiz-actionbar">
+          <span class="wiz-btn ghost">上一步</span>
+          <span style="display:flex;gap:8px">
+            <span class="wiz-btn gold">暂存草稿</span>
+            <span class="wiz-btn primary">下一步</span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="callout info" style="margin-top:16px">
+      <div class="cl-label">布局</div>
+      <div class="cl-text"><strong>左侧</strong>垂直步骤导航(Stepper)，显示当前步骤 + 已完成步骤 + 未完成步骤；<strong>右侧</strong>内容区域，展示当前步骤的表单；<strong>底部固定操作栏</strong>：上一步 | 暂存草稿 | 下一步/提交审核。</div>
+    </div>
+  </div>
+
+  <!-- 向导交互说明 -->
+  <div class="card">
+    <div class="card-title">向导交互说明</div>
+    <ul class="interact-list">
+      <li>
+        <div class="il-icon">A</div>
+        <div class="il-text"><strong>步骤导航</strong>：左侧垂直 Stepper，显示当前步骤 + 已完成步骤 + 未完成步骤，状态清晰可辨。</div>
+      </li>
+      <li>
+        <div class="il-icon">B</div>
+        <div class="il-text"><strong>草稿保存</strong>：点击「暂存草稿」按钮，Toast 提示「草稿已保存」，产品列表中状态显示 <span class="tag tag-draft">草稿</span>。</div>
+      </li>
+      <li>
+        <div class="il-icon">C</div>
+        <div class="il-text"><strong>步骤跳转</strong>：已完成的步骤可点击直接跳转，未完成步骤不可跳转（锁定态）。</div>
+      </li>
+      <li>
+        <div class="il-icon">D</div>
+        <div class="il-text"><strong>表单校验</strong>：必填项为空时，下一步按钮置灰，字段下方红色提示具体原因。</div>
+      </li>
+      <li>
+        <div class="il-icon">E</div>
+        <div class="il-text"><strong>底部操作栏</strong>：固定在页面底部，始终可见，包含「上一步 | 暂存草稿 | 下一步/提交审核」三个操作。</div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 三态切换示意 -->
+  <div class="card">
+    <div class="card-title">DS-160 板块三态切换控件示意</div>
+    <p style="font-size:14px;color:var(--ink-soft);margin-bottom:14px">每个板块支持三种状态切换，供应商可根据业务灵活配置采集范围：</p>
+    <div style="display:flex;flex-wrap:wrap;gap:18px">
+      <div>
+        <div class="tri-state"><span class="on-required">必填</span><span>选填</span><span>不采集</span></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:6px">用户必须填写该板块全部字段</div>
+      </div>
+      <div>
+        <div class="tri-state"><span>必填</span><span class="on-optional">选填</span><span>不采集</span></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:6px">用户可选择性填写</div>
+      </div>
+      <div>
+        <div class="tri-state"><span>必填</span><span>选填</span><span class="on-skip">不采集</span></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:6px">该板块字段不出现在用户填表流程</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 三、DS-160表单字段配置详情 ==================== -->
+<section id="sec3">
+  <div class="sec-head">
+    <div class="sec-num">03</div>
+    <div class="sec-title-wrap">
+      <h2>DS-160 表单字段配置详情</h2>
+      <div class="sec-desc">21个板块、75个字段的完整配置清单</div>
+    </div>
+  </div>
+
+  <div class="callout gold">
+    <div class="cl-label">说明</div>
+    <div class="cl-text">DS-160 为美国非移民签证电子申请表标准。本方案将原始 Excel 中 <span class="kw">21个板块、75个字段</span> 全部纳入系统配置，供应商在 Step 3 逐板块设置采集策略，实现字段级别的精细化管理。</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">21个板块字段清单<span class="badge-mini">21 SECTIONS / 75 FIELDS</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:60px">序号</th>
+            <th style="width:170px">板块名称</th>
+            <th>包含字段</th>
+            <th style="width:170px">配置方式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-id">1</td>
+            <td class="core-field">个人信息(1)</td>
+            <td>姓氏、名字、曾用名、全名(拼音)、性别、出生日期、出生城市、出生国家、国籍、其他国籍、国民身份证号</td>
+            <td><span class="tag tag-three">三态切换</span> 必填/选填/不采集</td>
+          </tr>
+          <tr>
+            <td class="row-id">2</td>
+            <td class="core-field">个人信息(2)</td>
+            <td>美国社会安全号 SSN、美国纳税人识别号</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">3</td>
+            <td class="core-field">旅行信息</td>
+            <td>赴美目的、具体签证类型、是否有具体旅行计划、预计到达日期/停留时间、在美居住地址、支付费用实体</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">4</td>
+            <td class="core-field">旅行伴侣</td>
+            <td>是否有同行人员、是否随团体出行</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">5</td>
+            <td class="core-field">既往赴美记录</td>
+            <td>是否曾去过美国、是否持有过美国签证、是否曾被拒签、是否有人提交过移民申请</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">6</td>
+            <td class="core-field">地址和电话</td>
+            <td>家庭住址、邮寄地址、电话号码(主要/备用/工作)、其他电话、邮箱、其他邮箱、社交媒体账号</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">7</td>
+            <td class="core-field">护照信息</td>
+            <td>护照类型、护照号码、护照本编号、签发国家/机构、有效期、遗失记录</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">8</td>
+            <td class="core-field">美国联系点</td>
+            <td>联系人姓名/组织、关系、地址/电话</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">9</td>
+            <td class="core-field">家庭：亲属</td>
+            <td>父母信息、父母在美情况、直系亲属、其他亲戚</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">10</td>
+            <td class="core-field">家庭：配偶</td>
+            <td>配偶全名及生日、国籍及出生地、地址</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">11</td>
+            <td class="core-field">目前工作/教育/培训</td>
+            <td>主要职业、雇主名称、地址、电话、开始日期、月收入、职责简述</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">12</td>
+            <td class="core-field">以往工作/教育</td>
+            <td>过去5年工作信息、教育程度</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">13</td>
+            <td class="core-field">其他工作/教育</td>
+            <td>语言与族裔、出境记录、组织成员、专业技能、兵役、准军事部队</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">14</td>
+            <td class="core-field">安全/背景(1)</td>
+            <td>健康及传染疾病申报</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">15</td>
+            <td class="core-field">安全/背景(2)</td>
+            <td>犯罪与性交易申报</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">16</td>
+            <td class="core-field">安全/背景(3)</td>
+            <td>移民违规与危害安全申报</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">17</td>
+            <td class="core-field">安全/背景(4)</td>
+            <td>欺诈与驱逐申报</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">18</td>
+            <td class="core-field">安全/背景(5)</td>
+            <td>监护权、国籍与投票申报</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">19</td>
+            <td class="core-field">照片</td>
+            <td>上传签证电子照片（符合美国国务院规范）</td>
+            <td><span class="tag tag-three">三态切换</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">20</td>
+            <td class="core-field">审查</td>
+            <td>审查所有信息（系统汇总核对）</td>
+            <td><span class="tag tag-auto">系统自动</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">21</td>
+            <td class="core-field">确认页</td>
+            <td>生成并打印确认页（条形码 + AA开头的申请ID）</td>
+            <td><span class="tag tag-auto">系统自动</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <div class="cl-label">备注</div>
+    <div class="cl-text">板块 <strong>1-19</strong> 由供应商通过三态切换配置采集策略；板块 <strong>20 审查</strong> 与 <strong>21 确认页</strong> 为系统自动环节，不可配置，确保 DS-160 流程完整性。</div>
+  </div>
+</section>
+
+<!-- ==================== 四、UOM签证产品审核设计 ==================== -->
+<section id="sec4">
+  <div class="sec-head">
+    <div class="sec-num">04</div>
+    <div class="sec-title-wrap">
+      <h2>UOM 签证产品审核设计</h2>
+      <div class="sec-desc">运营端审核列表、审核详情页与审核流程</div>
+    </div>
+  </div>
+
+  <!-- 审核列表页 -->
+  <div class="card">
+    <div class="card-title">审核列表页设计</div>
+    <p style="font-size:14px;color:var(--ink-soft);margin-bottom:14px">UOM 运营在「产品审核」菜单查看所有供应商提交的签证产品，支持按状态筛选、查看详情与快捷审核操作。</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:130px">列名</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="core-field">产品名称</td><td>供应商提交的签证产品名称</td></tr>
+          <tr><td class="core-field">供应商</td><td>UBK 供应商名称</td></tr>
+          <tr><td class="core-field">提交时间</td><td>YYYY-MM-DD HH:mm 格式</td></tr>
+          <tr><td class="core-field">签证类型</td><td>旅游 / 商务 / 探亲 / 留学 / 电子签</td></tr>
+          <tr><td class="core-field">目的国家</td><td>国家名 + 国旗标识</td></tr>
+          <tr><td class="core-field">审核状态</td><td>
+            <span class="tag tag-pending">待审核</span>
+            <span class="tag tag-pass">已通过</span>
+            <span class="tag tag-reject">已驳回</span>
+          </td></tr>
+          <tr><td class="core-field">操作</td><td>查看详情 / 审核通过 / 审核驳回</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 审核详情页 -->
+  <div class="card">
+    <div class="card-title">审核详情页设计</div>
+    <p style="font-size:14px;color:var(--ink-soft);margin-bottom:8px">展示5步向导的全部提交内容，每个步骤可折叠/展开，重点信息高亮：</p>
+    <div class="detail-fold">
+      <div class="df-item">
+        <div class="df-head"><span>Step 1 基础信息</span><span class="df-status"><span class="tag tag-pass">已填写</span></span></div>
+        <div class="df-body">
+          <div class="df-line"><strong>产品名称</strong>美国B1/B2旅游签证</div>
+          <div class="df-line"><strong>目的国家</strong>美国　<strong>签证类型</strong>旅游</div>
+          <div class="df-line"><strong>有效期</strong>10年　<strong>入境次数</strong>多次</div>
+        </div>
+      </div>
+      <div class="df-item">
+        <div class="df-head"><span>Step 2 费用与套餐 <span style="color:var(--gold-dark);font-size:11px;margin-left:6px">[重点高亮]</span></span><span class="df-status"><span class="tag tag-pass">已填写</span></span></div>
+        <div class="df-body">
+          <div class="df-line"><strong>使馆费</strong>¥1120　<strong>服务费</strong>¥800</div>
+          <div class="df-line"><strong>结算价</strong>¥1920（自动计算）　<strong>建议零售价</strong>¥2580</div>
+          <div class="df-line"><strong>套餐</strong>标准 / 加急 / 豪华</div>
+        </div>
+      </div>
+      <div class="df-item">
+        <div class="df-head"><span>Step 3 DS-160字段配置 <span style="color:var(--gold-dark);font-size:11px;margin-left:6px">[重点高亮]</span></span><span class="df-status"><span class="tag tag-pass">已配置</span></span></div>
+        <div class="df-body">
+          <div class="df-line">必填板块：个人信息(1)、旅行信息、护照信息、照片 等</div>
+          <div class="df-line">不采集板块：安全/背景(1-5)</div>
+        </div>
+      </div>
+      <div class="df-item">
+        <div class="df-head"><span>Step 4 所需材料</span><span class="df-status"><span class="tag tag-pass">已配置</span></span></div>
+        <div class="df-body"><div class="df-line">护照原件、2寸白底照片、身份证复印件 等 12 项</div></div>
+      </div>
+      <div class="df-item">
+        <div class="df-head"><span>Step 5 上架与提交 <span style="color:var(--gold-dark);font-size:11px;margin-left:6px">[重点高亮]</span></span><span class="df-status"><span class="tag tag-pass">已提交</span></span></div>
+        <div class="df-body"><div class="df-line"><strong>上架渠道</strong>C端悠哉 + B端有米</div></div>
+      </div>
+    </div>
+    <div class="callout gold" style="margin-top:16px">
+      <div class="cl-label">底部操作栏</div>
+      <div class="cl-text">
+        <strong>审核通过</strong>（→自动上架C端/B端）　|　<strong>审核驳回</strong>（→填写驳回理由→退回供应商修改）
+      </div>
+    </div>
+  </div>
+
+  <!-- 审核流程图 -->
+  <div class="card">
+    <div class="card-title">审核流程图</div>
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-box start">供应商提交审核<div class="fb-sub">UBK Step 5</div></div>
+      </div>
+      <div class="flow-arrow down">&rarr;</div>
+      <div class="flow-row">
+        <div class="flow-box gold">UOM运营收到待审核通知<div class="fb-sub">审核列表显示新产品</div></div>
+      </div>
+      <div class="flow-arrow down">&rarr;</div>
+      <div class="flow-row">
+        <div class="flow-box">打开审核详情页<div class="fb-sub">逐项审查5步内容</div></div>
+      </div>
+      <div class="flow-arrow down">&rarr;</div>
+      <div class="flow-branch">
+        <div class="flow-branch-col">
+          <div class="flow-box pass">审核通过<div class="fb-sub">选择上架渠道</div></div>
+          <div class="flow-arrow down">&rarr;</div>
+          <div class="flow-box pass">自动同步上架<div class="fb-sub">C端悠哉 / B端有米</div></div>
+        </div>
+        <div class="flow-branch-col">
+          <div class="flow-box reject">审核驳回<div class="fb-sub">填写驳回理由</div></div>
+          <div class="flow-arrow down">&rarr;</div>
+          <div class="flow-box reject">通知供应商修改<div class="fb-sub">退回UBK重新编辑</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="callout info" style="margin-top:16px">
+      <div class="cl-label">流程</div>
+      <div class="cl-text">供应商提交审核 → UOM运营收到待审核通知 → 打开审核详情页逐项审查 → 审核通过（选择上架渠道→自动同步C端悠哉/B端有米）→ 或审核驳回（填写驳回理由→供应商收到通知→修改后重新提交）。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 五、交互闭环说明 ==================== -->
+<section id="sec5">
+  <div class="sec-head">
+    <div class="sec-num">05</div>
+    <div class="sec-title-wrap">
+      <h2>交互闭环说明</h2>
+      <div class="sec-desc">UBK与UOM完整交互链路与状态变更</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">完整交互链路<span class="badge-mini">8 STEPS</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:60px">序号</th>
+            <th style="width:180px">触发动作</th>
+            <th>系统响应</th>
+            <th style="width:200px">状态变更</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-id">1</td>
+            <td class="core-field">UBK点击「上线签证产品」</td>
+            <td>跳转到分步骤向导页面</td>
+            <td><span class="tag tag-draft">新建</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">2</td>
+            <td class="core-field">填写Step1-5，点击「暂存草稿」</td>
+            <td>Toast提示，数据暂存</td>
+            <td><span class="tag tag-draft">草稿</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">3</td>
+            <td class="core-field">Step5点击「提交审核」</td>
+            <td>Toast提示，跳回产品列表</td>
+            <td><span class="tag tag-review">审核中</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">4</td>
+            <td class="core-field">UOM收到待审核产品</td>
+            <td>审核列表显示新产品</td>
+            <td><span class="tag tag-pending">待审核</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">5</td>
+            <td class="core-field">UOM点击「审核通过」</td>
+            <td>弹窗选择上架渠道→确认</td>
+            <td><span class="tag tag-pass">已通过</span> → 自动上架</td>
+          </tr>
+          <tr>
+            <td class="row-id">6</td>
+            <td class="core-field">UOM点击「审核驳回」</td>
+            <td>弹窗填写驳回理由→确认</td>
+            <td><span class="tag tag-reject">已驳回</span> → 通知供应商</td>
+          </tr>
+          <tr>
+            <td class="row-id">7</td>
+            <td class="core-field">供应商收到驳回通知</td>
+            <td>产品列表状态变更→可编辑修改重新提交</td>
+            <td><span class="tag tag-reject">已驳回</span> → 编辑 → <span class="tag tag-review">审核中</span></td>
+          </tr>
+          <tr>
+            <td class="row-id">8</td>
+            <td class="core-field">C端/B端收到上架产品</td>
+            <td>产品卡片展示在签证频道</td>
+            <td><span class="tag tag-sale">在售</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout gold">
+    <div class="cl-label">闭环</div>
+    <div class="cl-text">从「新建」到「在售」，产品经历 <strong>新建 → 草稿 → 审核中 → 待审核 → 已通过/已驳回 → 在售</strong> 完整状态流转，驳回可循环修改重新提交，确保质量可控、链路可追溯。</div>
+  </div>
+</section>
+
+<!-- ==================== 六、UOM菜单结构变更 ==================== -->
+<section id="sec6">
+  <div class="sec-head">
+    <div class="sec-num">06</div>
+    <div class="sec-title-wrap">
+      <h2>UOM 菜单结构变更</h2>
+      <div class="sec-desc">在「签证管理」二级菜单中新增「产品审核」</div>
+    </div>
+  </div>
+
+  <div class="menu-compare">
+    <!-- 原结构 -->
+    <div class="menu-block old">
+      <div class="mb-head">原结构</div>
+      <div class="mb-body">
+        <div class="menu-group">
+          <div class="mg-title">政策与规则</div>
+          <div class="mg-items"><span class="menu-item">政策监控中心</span><span class="menu-item">规则引擎</span></div>
+        </div>
+        <div class="menu-group">
+          <div class="mg-title">材料与模板</div>
+          <div class="mg-items"><span class="menu-item">资料模版库</span><span class="menu-item">材料管理</span></div>
+        </div>
+        <div class="menu-group">
+          <div class="mg-title">智能工具</div>
+          <div class="mg-items"><span class="menu-item">AI填表自动化</span><span class="menu-item">签证知识库</span></div>
+        </div>
+        <div class="menu-group">
+          <div class="mg-title">数据分析</div>
+          <div class="mg-items"><span class="menu-item">签证数据统计</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 新结构 -->
+    <div class="menu-block new">
+      <div class="mb-head">新增后</div>
+      <div class="mb-body">
+        <div class="menu-group">
+          <div class="mg-title">政策与规则</div>
+          <div class="mg-items"><span class="menu-item">政策监控中心</span><span class="menu-item">规则引擎</span></div>
+        </div>
+        <div class="menu-group">
+          <div class="mg-title">材料与模板</div>
+          <div class="mg-items"><span class="menu-item">资料模版库</span><span class="menu-item">材料管理</span></div>
+        </div>
+        <div class="menu-group">
+          <div class="mg-title">智能工具</div>
+          <div class="mg-items"><span class="menu-item">AI填表自动化</span><span class="menu-item">签证知识库</span></div>
+        </div>
+        <div class="menu-group">
+          <div class="mg-title">产品管理 <span style="color:var(--gold-dark);font-size:11px">[新增分类]</span></div>
+          <div class="mg-items"><span class="menu-item highlight">产品审核<span class="new-flag">NEW</span></span></div>
+        </div>
+        <div class="menu-group">
+          <div class="mg-title">数据分析</div>
+          <div class="mg-items"><span class="menu-item">签证数据统计</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <div class="cl-label">变更</div>
+    <div class="cl-text">在 UOM 系统「签证管理」二级菜单中新增 <strong>「产品管理」</strong> 分类，下设 <strong>「产品审核」</strong> 菜单项，带 <span class="tag tag-new">NEW</span> 标识以提示运营人员。该入口承载供应商提交签证产品的审核工作。</div>
+  </div>
+</section>
+
+</main>
+
+<!-- ==================== 页脚 ==================== -->
+<footer class="footer">
+  <div class="ft-line"><span class="ft-brand">众信旅游</span> · 签证业务平台</div>
+  <div class="ft-line">PM-Agent 交互设计方案</div>
+  <div class="ft-divider"></div>
+  <div class="ft-meta">2026-08-05</div>
+</footer>
+
+</body>
+</html>
