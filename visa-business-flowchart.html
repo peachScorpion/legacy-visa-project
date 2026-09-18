@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>众信签证业务平台 - 跨系统业务流程图 v4.0</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --navy-900: #0F2540;
+            --navy-800: #1B3A5F;
+            --navy-700: #2d5a8a;
+            --navy-100: #eaf1f8;
+            --gold-600: #C9A84C;
+            --gold-400: #dabf68;
+            --gold-100: #faf6ec;
+            --ink-900: #1a1a2e;
+            --ink-700: #333;
+            --ink-500: #666;
+            --ink-300: #999;
+            --ink-100: #f5f7fa;
+            --line: #e8ecf1;
+            --green-600: #2e7d32;
+            --green-100: #e8f5e9;
+            --red-600: #c62828;
+            --red-100: #ffebee;
+            --orange-600: #e65100;
+            --orange-100: #fff3e0;
+            --teal-600: #00695c;
+            --teal-100: #e0f2f1;
+            --purple-600: #6a1b9a;
+            --purple-100: #f3e5f5;
+            --pink-600: #ad1457;
+            --pink-100: #fce4ec;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+            --shadow-sm: 0 1px 3px rgba(15,37,64,0.06);
+            --shadow-md: 0 4px 16px rgba(15,37,64,0.08);
+            --shadow-lg: 0 12px 40px rgba(15,37,64,0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.7;
+            color: var(--ink-700);
+            background: var(--ink-100);
+            padding: 32px 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .doc-header {
+            background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 50%, var(--navy-700) 100%);
+            color: #fff;
+            padding: 48px 48px 40px;
+            position: relative;
+        }
+        .doc-header::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+            height: 4px; background: linear-gradient(90deg, var(--gold-600), var(--gold-400), var(--gold-600));
+        }
+        .doc-header .eyebrow {
+            display: inline-block; font-size: 13px; font-weight: 500;
+            letter-spacing: 2px; text-transform: uppercase; color: var(--gold-400); margin-bottom: 12px;
+        }
+        .doc-header h1 { font-size: 30px; font-weight: 700; margin-bottom: 8px; }
+        .doc-header .subtitle { font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 300; }
+
+        .doc-body { padding: 40px 48px; }
+
+        .section { margin-bottom: 48px; }
+        .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+        .section-header .section-num {
+            background: var(--navy-800); color: #fff; font-size: 13px; font-weight: 600;
+            padding: 6px 14px; border-radius: 4px;
+        }
+        .section-header h2 { font-size: 22px; font-weight: 700; color: var(--navy-900); }
+        .section-header .section-line { flex: 1; height: 1px; background: var(--line); }
+
+        /* Role table */
+        .role-table-wrap { border-radius: var(--radius-md); border: 1px solid var(--line); overflow: hidden; margin-bottom: 24px; }
+        .role-table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
+        .role-table thead th { background: var(--navy-800); color: #fff; padding: 14px 16px; text-align: left; font-weight: 500; font-size: 13px; }
+        .role-table tbody td { padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.6; }
+        .role-table tbody tr:nth-child(even) { background: #fbfcfd; }
+        .role-table tbody tr:last-child td { border-bottom: none; }
+        .role-tag { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+        .tag-supplier { background: var(--pink-100); color: var(--pink-600); }
+        .tag-platform { background: var(--purple-100); color: var(--purple-600); }
+        .tag-store { background: var(--green-100); color: var(--green-600); }
+        .tag-customer { background: #e3f2fd; color: #1565c0; }
+        .tag-operator { background: var(--teal-100); color: var(--teal-600); }
+        .tag-system { background: var(--orange-100); color: var(--orange-600); }
+
+        .system-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 20px; }
+        .system-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-md); padding: 20px; border-top: 3px solid var(--navy-800); }
+        .system-card h4 { font-size: 15px; font-weight: 600; color: var(--navy-800); margin-bottom: 8px; }
+        .system-card p { font-size: 13px; color: var(--ink-500); line-height: 1.6; }
+
+        /* Flowchart */
+        .flowchart-wrap { background: var(--ink-100); border-radius: var(--radius-md); padding: 24px; overflow-x: auto; }
+        .flowchart-wrap svg { display: block; margin: 0 auto; }
+        .flowchart-legend { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; font-size: 13px; color: var(--ink-500); }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .legend-shape { width: 24px; height: 16px; display: inline-block; }
+        .legend-start { background: var(--green-100); border: 1.5px solid var(--green-600); border-radius: 20px; }
+        .legend-op { background: #fff; border: 1.5px solid var(--navy-700); border-radius: 3px; }
+        .legend-decision { background: var(--gold-100); border: 1.5px solid var(--gold-600); transform: rotate(45deg); width: 14px; height: 14px; margin: 1px 5px; }
+        .legend-end { background: var(--red-100); border: 1.5px solid var(--red-600); border-radius: 20px; }
+        .legend-new { background: #fff3e0; border: 1.5px dashed var(--orange-600); border-radius: 3px; }
+
+        /* SVG styles */
+        .swimlane-bg { fill: #fff; }
+        .swimlane-bg:nth-child(even) { fill: #fbfcfd; }
+        .swimlane-header { font-size: 15px; font-weight: 700; fill: #fff; }
+        .swimlane-sub { font-size: 12px; fill: rgba(255,255,255,0.75); }
+        .node-rect { fill: #fff; stroke: var(--navy-700); stroke-width: 2; rx: 4; }
+        .node-new { fill: #fff8e1; stroke: var(--orange-600); stroke-width: 2; rx: 4; stroke-dasharray: 5,3; }
+        .node-start { fill: var(--green-100); stroke: var(--green-600); stroke-width: 2; rx: 20; }
+        .node-end { fill: var(--red-100); stroke: var(--red-600); stroke-width: 2; rx: 20; }
+        .node-decision { fill: var(--gold-100); stroke: var(--gold-600); stroke-width: 2; }
+        .node-ai { fill: var(--teal-100); stroke: var(--teal-600); stroke-width: 2; rx: 4; }
+        .node-text { font-size: 13px; fill: var(--ink-700); font-weight: 500; text-anchor: middle; dominant-baseline: central; }
+        .node-text-ai { font-size: 13px; fill: var(--teal-600); font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+        .node-text-new { font-size: 13px; fill: var(--orange-600); font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+        .flow-arrow { stroke: var(--navy-700); stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+        .flow-arrow-reject { stroke: var(--red-600); stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-red); }
+        .flow-label { font-size: 12px; fill: var(--ink-500); font-weight: 500; }
+        .flow-label-yes { fill: var(--green-600); }
+        .flow-label-no { fill: var(--red-600); }
+
+        /* Order status flow */
+        .status-flow-wrap { background: var(--ink-100); border-radius: var(--radius-md); padding: 24px; overflow-x: auto; }
+        .status-flow-wrap svg { display: block; margin: 0 auto; }
+
+        /* Special rules */
+        .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+        .rule-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-md); padding: 20px; border-left: 4px solid var(--orange-600); }
+        .rule-card.green { border-left-color: var(--green-600); }
+        .rule-card.red { border-left-color: var(--red-600); }
+        .rule-card.blue { border-left-color: #1565c0; }
+        .rule-card.purple { border-left-color: var(--purple-600); }
+        .rule-card h4 { font-size: 14px; font-weight: 600; color: var(--navy-800); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .rule-card p { font-size: 13px; color: var(--ink-500); line-height: 1.6; }
+
+        /* Validation */
+        .validation-box { background: linear-gradient(135deg, #e8f5e9 0%, #e0f2f1 100%); border: 1px solid #b2dfdb; border-radius: var(--radius-md); padding: 28px; margin-top: 24px; }
+        .validation-box h4 { color: var(--teal-600); margin-bottom: 16px; font-size: 15px; font-weight: 600; }
+        .validation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+        .validation-item { background: #fff; border-radius: var(--radius-sm); padding: 16px 20px; border-left: 3px solid var(--green-600); }
+        .validation-item.warn { border-left-color: var(--orange-600); }
+        .validation-item h5 { font-size: 14px; font-weight: 600; color: var(--navy-800); margin-bottom: 6px; }
+        .validation-item p { font-size: 13px; color: var(--ink-500); line-height: 1.6; }
+
+        @media (max-width: 768px) {
+            body { padding: 12px 8px; }
+            .doc-header { padding: 32px 20px; }
+            .doc-header h1 { font-size: 22px; }
+            .doc-body { padding: 24px 20px; }
+            .flowchart-wrap { padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="doc-header">
+            <div class="eyebrow">CROSS-SYSTEM BUSINESS FLOW · v4.0</div>
+            <h1>众信签证业务平台 — 跨系统业务流程图</h1>
+            <div class="subtitle">融合现有系统（UBK/UOM/CSP/有米·悠哉小程序），覆盖前期咨询→下单→支付→材料→填表→缴费→预约→面签→出签→EVUS→结算全链路。订单状态（📌标记）嵌入各业务节点：待支付→已支付→材料收集中→材料审核中→填表中→签证费已缴→已预约面签→面签待办→面签中→待出签→已出签→已完成。含30分钟支付超时→已取消、三分支面签结果与独立订单状态流转图</div>
+        </div>
+
+        <div class="doc-body">
+
+            <!-- 一、角色与系统说明 -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-num">01</span>
+                    <h2>角色与系统说明</h2>
+                    <div class="section-line"></div>
+                </div>
+                <p style="margin-bottom: 20px; font-size: 14px; color: var(--ink-500);">下表汇总各业务角色及其所在系统、核心职责，帮助理解流程图中各泳道的职责边界。</p>
+                <div class="role-table-wrap">
+                    <table class="role-table">
+                        <colgroup><col style="width:12%"><col style="width:14%"><col style="width:18%"><col style="width:42%"><col style="width:14%"></colgroup>
+                        <thead><tr><th>角色</th><th>所在系统</th><th>系统定位</th><th>核心职责</th><th>泳道颜色</th></tr></thead>
+                        <tbody>
+                            <tr><td><span class="role-tag tag-supplier">签证供应商</span></td><td>UBK系统</td><td>供应商端入口</td><td>入驻平台 → 上线签证产品 → 接收订单处理 → 发起结算账单</td><td>粉色</td></tr>
+                            <tr><td><span class="role-tag tag-platform">平台运营人员</span></td><td>UOM·运营管理组</td><td>平台管控中枢</td><td>审核供应商资质 → 审核上架产品 → 投放至销售端 → 分公司财务审核付款/退款 → 监控全流程异常</td><td>紫色</td></tr>
+                            <tr><td><span class="role-tag tag-store">门店销售</span></td><td>CSP门店销售PC端 + 有米小程序</td><td>B端销售端</td><td>有米小程序接待客户 → 咨询评估(出行目的/使领馆) → 代客下单 → 录入办签人信息 → 跟踪进度回复客户</td><td>绿色</td></tr>
+                            <tr><td><span class="role-tag tag-customer">终端客户</span></td><td>悠哉小程序</td><td>C端客户自助端</td><td>悠哉小程序浏览签证产品 → 了解签证要求 → 自助下单 → 填写资料上传证件 → 前往使领馆面签 → 接收护照与出签通知</td><td>蓝色</td></tr>
+                            <tr><td><span class="role-tag tag-operator">签证操作人员</span></td><td>UOM·签证操作组</td><td>操作处理后台</td><td>审核材料完整性 → AI填表(DS-160) → 代缴签证费 → 预约面谈 → 面签培训 → 送签核对 → 出签确认 → EVUS登记 → 护照交付</td><td>青色</td></tr>
+                            <tr><td><span class="role-tag tag-system">外部系统</span></td><td>VFS/移民局/签证网站</td><td>外部对接</td><td>政策监控爬取最新政策 → AI填表操作美国签证网站 → 领馆面签审核 → 护照贴签返还</td><td>橙色</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="system-grid">
+                    <div class="system-card" style="border-top-color: var(--pink-600);"><h4>UBK 系统</h4><p>供应商入驻、签证产品上架、费用拆分（使馆费/服务费/加急费/套餐费）、账单发起入口。</p></div>
+                    <div class="system-card" style="border-top-color: var(--purple-600);"><h4>UOM 运营管理平台</h4><p>核心中枢。承载供应商/产品审核、订单管理、材料管理、AI填表、政策监控、代缴签证费、预约面签、财务结算与退款等模块。</p></div>
+                    <div class="system-card" style="border-top-color: var(--green-600);"><h4>CSP + 有米小程序</h4><p>B端销售端。有米小程序新增签证业务板块，销售接待客户、咨询评估、代客浏览下单。</p></div>
+                    <div class="system-card" style="border-top-color: #1565c0;"><h4>悠哉小程序</h4><p>C端客户自助端。新增签证频道，客户自助浏览下单、填写资料上传证件、查看办理进度、前往面签。</p></div>
+                    <div class="system-card" style="border-top-color: var(--orange-600);"><h4>外部系统</h4><p>VFS、各国移民局、ustraveldocs.com（预约系统）、美国签证网站（DS-160填表）、EVUS登记系统。</p></div>
+                </div>
+            </div>
+
+            <!-- 二、跨系统业务流程图 -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-num">02</span>
+                    <h2>跨系统业务流程图（泳道图 · 订单状态标注于业务节点 · 含支付超时与三分支面签结果）</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="flowchart-legend">
+                    <div class="legend-item"><span class="legend-shape legend-start"></span> 开始 / 结束</div>
+                    <div class="legend-item"><span class="legend-shape legend-op"></span> 操作节点</div>
+                    <div class="legend-item"><span class="legend-shape legend-decision"></span> 判断节点</div>
+                    <div class="legend-item"><span class="legend-shape legend-end"></span> 流程终止</div>
+                    <div class="legend-item" style="color: var(--teal-600);"><span style="width:24px;height:16px;background:var(--teal-100);border:1.5px solid var(--teal-600);border-radius:3px;display:inline-block;"></span> AI自动操作</div>
+                    <div class="legend-item" style="color: var(--orange-600);"><span class="legend-shape legend-new"></span> v4.0新增节点</div>
+                </div>
+                <div class="flowchart-wrap">
+                    <svg width="1300" height="3500" viewBox="0 0 1300 3500" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <marker id="arrowhead" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#2d5a8a"/></marker>
+                            <marker id="arrowhead-red" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#c62828"/></marker>
+                            <marker id="arrowhead-green" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#2e7d32"/></marker>
+                            <marker id="arrowhead-orange" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#e65100"/></marker>
+                        </defs>
+
+                        <!-- Swimlane backgrounds -->
+                        <rect x="40" y="0" width="210" height="3500" fill="#ffffff"/>
+                        <rect x="250" y="0" width="210" height="3500" fill="#f8f9fb"/>
+                        <rect x="460" y="0" width="210" height="3500" fill="#ffffff"/>
+                        <rect x="670" y="0" width="210" height="3500" fill="#f8f9fb"/>
+                        <rect x="880" y="0" width="210" height="3500" fill="#ffffff"/>
+                        <rect x="1090" y="0" width="210" height="3500" fill="#f8f9fb"/>
+
+                        <!-- Swimlane headers -->
+                        <rect x="40" y="0" width="1260" height="66" fill="#1B3A5F"/>
+                        <rect x="40" y="0" width="5" height="66" fill="#E91E63"/>
+                        <rect x="255" y="0" width="5" height="66" fill="#7B1FA2"/>
+                        <rect x="465" y="0" width="5" height="66" fill="#388E3C"/>
+                        <rect x="675" y="0" width="5" height="66" fill="#1976D2"/>
+                        <rect x="885" y="0" width="5" height="66" fill="#00796B"/>
+                        <rect x="1095" y="0" width="5" height="66" fill="#EF6C00"/>
+                        <text x="145" y="28" class="swimlane-header" text-anchor="middle">签证供应商</text>
+                        <text x="145" y="50" class="swimlane-sub" text-anchor="middle">UBK系统</text>
+                        <text x="355" y="28" class="swimlane-header" text-anchor="middle">平台运营人员</text>
+                        <text x="355" y="50" class="swimlane-sub" text-anchor="middle">UOM·运营管理组</text>
+                        <text x="565" y="28" class="swimlane-header" text-anchor="middle">门店销售</text>
+                        <text x="565" y="50" class="swimlane-sub" text-anchor="middle">CSP+有米小程序</text>
+                        <text x="775" y="28" class="swimlane-header" text-anchor="middle">终端客户</text>
+                        <text x="775" y="50" class="swimlane-sub" text-anchor="middle">悠哉小程序</text>
+                        <text x="985" y="28" class="swimlane-header" text-anchor="middle">签证操作人员</text>
+                        <text x="985" y="50" class="swimlane-sub" text-anchor="middle">UOM·签证操作组</text>
+                        <text x="1195" y="28" class="swimlane-header" text-anchor="middle">外部系统</text>
+                        <text x="1195" y="50" class="swimlane-sub" text-anchor="middle">VFS·移民局·签证网站</text>
+
+                        <!-- Swimlane dividers -->
+                        <line x1="40" y1="0" x2="40" y2="3500" stroke="#d0d5dd" stroke-width="1"/>
+                        <line x1="250" y1="66" x2="250" y2="3500" stroke="#e8ecf1" stroke-width="1"/>
+                        <line x1="460" y1="66" x2="460" y2="3500" stroke="#e8ecf1" stroke-width="1"/>
+                        <line x1="670" y1="66" x2="670" y2="3500" stroke="#e8ecf1" stroke-width="1"/>
+                        <line x1="880" y1="66" x2="880" y2="3500" stroke="#e8ecf1" stroke-width="1"/>
+                        <line x1="1090" y1="66" x2="1090" y2="3500" stroke="#e8ecf1" stroke-width="1"/>
+                        <line x1="1300" y1="0" x2="1300" y2="3700" stroke="#d0d5dd" stroke-width="1"/>
+                        <line x1="40" y1="66" x2="1300" y2="66" stroke="#1B3A5F" stroke-width="2"/>
+                        <line x1="40" y1="3700" x2="1300" y2="3700" stroke="#d0d5dd" stroke-width="1"/>
+
+                        <!-- ======== Stage 1: 前置基础配置与产品上架 (y=72~730) ======== -->
+                        <rect x="40" y="72" width="1260" height="28" fill="#eaf1f8"/>
+                        <text x="670" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#1B3A5F">阶段一：前置基础配置与产品上架（政策监控→模版库→产品引用）</text>
+
+                        <rect class="node-ai" x="1095" y="110" width="200" height="64" stroke-width="2"/>
+                        <text x="1195" y="130" class="node-text-ai">★政策监控中心</text>
+                        <text x="1195" y="148" class="node-text" style="font-size:11px;fill:#00695c;">爬取各国签证政策</text>
+                        <text x="1195" y="162" class="node-text" style="font-size:11px;fill:#666;">AI解读转"人话"指引</text>
+                        <line class="flow-arrow" x1="1095" y1="145" x2="460" y2="145"/>
+                        <text x="700" y="138" class="flow-label" style="fill:#00695c;">政策同步</text>
+
+                        <rect class="node-rect" x="250" y="110" width="210" height="64" stroke-width="2"/>
+                        <text x="355" y="130" class="node-text">维护资料模版库</text>
+                        <text x="355" y="148" class="node-text" style="font-size:11px;fill:#999;">按国家配置材料模板</text>
+                        <text x="355" y="162" class="node-text" style="font-size:11px;fill:#999;">字段/份数/送签要求</text>
+                        <line class="flow-arrow" x1="355" y1="174" x2="355" y2="195"/>
+
+                        <rect class="node-start" x="65" y="195" width="160" height="44" rx="22"/>
+                        <text x="145" y="217" class="node-text">提交入驻申请</text>
+                        <line class="flow-arrow" x1="145" y1="239" x2="145" y2="265" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="145" y1="265" x2="355" y2="265" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="355" y1="265" x2="355" y2="285"/>
+
+                        <polygon class="node-decision" points="355,285 430,330 355,375 280,330"/>
+                        <text x="355" y="324" class="node-text" style="font-size:12px;">资质审核</text>
+                        <text x="355" y="342" class="node-text" style="font-size:12px;">通过?</text>
+                        <line class="flow-arrow-reject" x1="280" y1="330" x2="240" y2="330" style="marker-end:none;"/>
+                        <line class="flow-arrow-reject" x1="240" y1="330" x2="240" y2="217" style="marker-end:none;"/>
+                        <line class="flow-arrow-reject" x1="240" y1="217" x2="225" y2="217"/>
+                        <text x="260" y="322" class="flow-label flow-label-no">否</text>
+                        <line class="flow-arrow" x1="355" y1="375" x2="355" y2="400" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="355" y1="400" x2="145" y2="400" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="145" y1="400" x2="145" y2="420"/>
+                        <text x="367" y="392" class="flow-label flow-label-yes">是</text>
+
+                        <rect class="node-rect" x="45" y="420" width="200" height="64" stroke-width="2"/>
+                        <text x="145" y="440" class="node-text">UBK上线签证产品</text>
+                        <text x="145" y="458" class="node-text" style="font-size:11px;fill:#999;">填写结算价/费用拆分/套餐</text>
+                        <text x="145" y="472" class="node-text" style="font-size:11px;fill:#00695c;">★引用平台模版库</text>
+                        <line class="flow-arrow" x1="250" y1="460" x2="355" y2="460" x2="355" y2="174" stroke-dasharray="4,3" opacity="0.4"/>
+                        <text x="280" y="453" class="flow-label" style="fill:#999;font-size:11px;">模板引用</text>
+                        <line class="flow-arrow" x1="145" y1="484" x2="145" y2="510" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="145" y1="510" x2="355" y2="510" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="355" y1="510" x2="355" y2="530"/>
+
+                        <polygon class="node-decision" points="355,530 440,580 355,630 270,580"/>
+                        <text x="355" y="572" class="node-text" style="font-size:12px;">产品审核</text>
+                        <text x="355" y="590" class="node-text" style="font-size:11px;">国家+模板</text>
+                        <text x="355" y="606" class="node-text" style="font-size:11px;">字段对应?</text>
+                        <line class="flow-arrow-reject" x1="270" y1="580" x2="235" y2="580" style="marker-end:none;"/>
+                        <line class="flow-arrow-reject" x1="235" y1="580" x2="235" y2="452" style="marker-end:none;"/>
+                        <line class="flow-arrow-reject" x1="235" y1="452" x2="245" y2="452"/>
+                        <text x="250" y="572" class="flow-label flow-label-no">否</text>
+                        <line class="flow-arrow" x1="355" y1="630" x2="355" y2="650"/>
+                        <rect class="node-rect" x="245" y="650" width="220" height="44" stroke-width="2"/>
+                        <text x="355" y="672" class="node-text">投放至有米/悠哉小程序</text>
+                        <text x="367" y="644" class="flow-label flow-label-yes">是</text>
+
+                        <!-- ======== Stage 2: 前期咨询·下单·支付与材料收集 (y=730~1580) ======== -->
+                        <rect x="40" y="730" width="1260" height="28" fill="#e8f5e9"/>
+                        <text x="670" y="749" text-anchor="middle" font-size="14" font-weight="700" fill="#2e7d32">阶段二：前期咨询·下单·支付与材料收集（下单→待支付→30分钟超时→已取消/已支付→材料收集中 · 国家模板校验）</text>
+
+                        <line class="flow-arrow" x1="355" y1="694" x2="355" y2="775" style="marker-end:none;"/>
+                        <circle cx="355" cy="775" r="4" fill="#2d5a8a"/>
+                        <line class="flow-arrow" x1="355" y1="775" x2="565" y2="775" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="565" y1="775" x2="565" y2="800"/>
+                        <text x="430" y="767" class="flow-label" style="fill:#2e7d32;font-weight:600;">B端·有米</text>
+                        <line class="flow-arrow" x1="565" y1="775" x2="775" y2="775" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="775" y1="775" x2="775" y2="800"/>
+                        <text x="660" y="767" class="flow-label" style="fill:#1565c0;font-weight:600;">C端·悠哉</text>
+
+                        <!-- B端: 接待+咨询评估 -->
+                        <rect class="node-new" x="465" y="800" width="200" height="64" stroke-width="2"/>
+                        <text x="565" y="820" class="node-text-new">★接待客户+咨询评估</text>
+                        <text x="565" y="838" class="node-text" style="font-size:11px;fill:#666;">了解出行目的(旅游/商务/探亲)</text>
+                        <text x="565" y="852" class="node-text" style="font-size:11px;fill:#666;">按户籍确定使领馆(京/沪/穗)</text>
+                        <line class="flow-arrow" x1="565" y1="864" x2="565" y2="885"/>
+
+                        <!-- C端: 浏览+了解要求 -->
+                        <rect class="node-new" x="675" y="800" width="200" height="64" stroke-width="2"/>
+                        <text x="775" y="820" class="node-text-new">★浏览产品+了解要求</text>
+                        <text x="775" y="838" class="node-text" style="font-size:11px;fill:#666;">查看签证类型/有效期/费用</text>
+                        <text x="775" y="852" class="node-text" style="font-size:11px;fill:#666;">了解材料清单与办理周期</text>
+                        <line class="flow-arrow" x1="775" y1="864" x2="775" y2="885"/>
+
+                        <!-- B端: 代客下单 -->
+                        <rect class="node-rect" x="465" y="885" width="200" height="54" stroke-width="2"/>
+                        <text x="565" y="905" class="node-text">代客下单+录入办签人</text>
+                        <text x="565" y="923" class="node-text" style="font-size:11px;fill:#999;">选择套餐/联系人/收货地址</text>
+                        <text x="517" y="950" text-anchor="start" font-size="8" fill="#e65100" font-weight="600">订单:待支付</text>
+                        
+
+                        <!-- C端: 自助下单 -->
+                        <rect class="node-rect" x="675" y="885" width="200" height="54" stroke-width="2"/>
+                        <text x="775" y="905" class="node-text">自主下单</text>
+                        <text x="775" y="923" class="node-text" style="font-size:11px;fill:#999;">选择套餐/联系人/收货地址</text>
+                        <text x="727" y="950" text-anchor="start" font-size="8" fill="#e65100" font-weight="600">订单:待支付</text>
+                        
+
+                        <!-- Merge → 国家+模板校验 -->
+                        <line class="flow-arrow" x1="565" y1="939" x2="565" y2="965" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="775" y1="939" x2="775" y2="965"/>
+                        <line class="flow-arrow" x1="565" y1="965" x2="775" y2="965" style="marker-end:none;"/>
+                        <circle cx="670" cy="965" r="4" fill="#2d5a8a"/>
+                        <line class="flow-arrow" x1="670" y1="965" x2="355" y2="965" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="355" y1="965" x2="355" y2="985"/>
+
+                        <!-- ★订单流程：创建订单·待支付 -->
+                        <rect class="node-new" x="250" y="985" width="210" height="50" stroke-width="2" style="stroke:#e65100;fill:#fff3e0;"/>
+                        <text x="355" y="1006" class="node-text-new" style="fill:#e65100;">★创建订单·待支付</text>
+                        <text x="355" y="1023" class="node-text" style="font-size:10px;fill:#999;">订单状态: PENDING_PAYMENT</text>
+                        <line class="flow-arrow" x1="355" y1="1035" x2="355" y2="1055"/>
+
+                        <!-- ★判断: 30分钟内支付? -->
+                        <polygon class="node-decision" points="355,1055 445,1095 355,1135 265,1095" fill="#faf6ec" stroke="#C9A84C" stroke-width="2"/>
+                        <text x="355" y="1090" class="node-text" style="font-size:12px;">30分钟内</text>
+                        <text x="355" y="1106" class="node-text" style="font-size:12px;">完成支付?</text>
+
+                        <!-- 否 → 已取消(自动关闭) -->
+                        <line class="flow-arrow-reject" x1="265" y1="1095" x2="150" y2="1095" style="marker-end:none;"/>
+                        <text x="255" y="1087" class="flow-label flow-label-no">否</text>
+                        <rect class="node-end" x="55" y="1075" width="180" height="40" rx="20" style="fill:#ffebee;stroke:#c62828;"/>
+                        <text x="145" y="1100" class="node-text" style="fill:#c62828;">已取消(超时自动关闭)</text>
+
+                        <!-- 是 → 已支付 -->
+                        <line class="flow-arrow" x1="355" y1="1135" x2="355" y2="1155" marker-end="url(#arrowhead-green)"/>
+                        <text x="367" y="1148" class="flow-label flow-label-yes">是</text>
+                        <rect class="node-new" x="250" y="1155" width="210" height="30" stroke-width="2" style="stroke:#2e7d32;fill:#e8f5e9;"/>
+                        <text x="355" y="1175" class="node-text-new" style="fill:#2e7d32;">支付成功·已支付 PAID</text>
+                        <line class="flow-arrow" x1="355" y1="1185" x2="355" y2="1185"/>
+
+                        <polygon class="node-decision" points="355,1185 445,1230 355,1275 265,1230"/>
+                        <text x="355" y="1222" class="node-text" style="font-size:12px;">国家+模板</text>
+                        <text x="355" y="1240" class="node-text" style="font-size:12px;">字段校验?</text>
+                        <line class="flow-arrow-reject" x1="265" y1="1230" x2="220" y2="1230" style="marker-end:none;"/>
+                        <line class="flow-arrow-reject" x1="220" y1="1230" x2="220" y2="912" style="marker-end:none;"/>
+                        <line class="flow-arrow-reject" x1="220" y1="912" x2="465" y2="912"/>
+                        <text x="225" y="1222" class="flow-label flow-label-no">否</text>
+                        <text x="300" y="905" class="flow-label" style="fill:#c62828;font-size:11px;">退回重新选择</text>
+                        <line class="flow-arrow" x1="355" y1="1275" x2="355" y2="1295"/>
+                        <text x="367" y="1288" class="flow-label flow-label-yes">是</text>
+
+                        <!-- 生成材料清单 -->
+                        <rect class="node-rect" x="240" y="1295" width="230" height="54" stroke-width="2"/>
+                        <text x="355" y="1315" class="node-text">生成材料清单（按国家+人群）</text>
+                        <text x="355" y="1333" class="node-text" style="font-size:11px;fill:#00695c;">★在职/退休/学生/儿童差异化</text>
+                        <text x="307" y="1360" text-anchor="start" font-size="8" fill="#1565c0" font-weight="600">订单:材料收集中</text>
+                                                <line class="flow-arrow" x1="470" y1="1322" x2="565" y2="1322" stroke-dasharray="4,3" opacity="0.6" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="565" y1="1322" x2="775" y2="1322" stroke-dasharray="4,3" opacity="0.6"/>
+                        <text x="500" y="1315" class="flow-label" style="fill:#999;font-size:11px;">清单下发</text>
+
+                        <!-- B端: 收集客户资料 -->
+                        <rect class="node-rect" x="470" y="1360" width="190" height="44" stroke-width="2"/>
+                        <text x="565" y="1382" class="node-text">收集客户资料</text>
+                        <text x="517" y="1415" text-anchor="start" font-size="8" fill="#1565c0" font-weight="600">订单:材料收集中</text>
+                                                <!-- C端: 填写资料+上传证件 -->
+                        <rect class="node-rect" x="680" y="1360" width="190" height="44" stroke-width="2"/>
+                        <text x="775" y="1382" class="node-text">填写资料+上传证件</text>
+                        <text x="727" y="1415" text-anchor="start" font-size="8" fill="#1565c0" font-weight="600">订单:材料收集中</text>
+                                                <line class="flow-arrow" x1="355" y1="1349" x2="355" y2="1360" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="355" y1="1360" x2="565" y2="1360" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="565" y1="1360" x2="775" y2="1360"/>
+
+                        <!-- Merge → Lane5 -->
+                        <line class="flow-arrow" x1="565" y1="1404" x2="565" y2="1430" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="775" y1="1404" x2="775" y2="1430"/>
+                        <line class="flow-arrow" x1="565" y1="1430" x2="985" y2="1430" style="marker-end:none;"/>
+                        <circle cx="775" cy="1430" r="4" fill="#2d5a8a"/>
+                        <line class="flow-arrow" x1="985" y1="1430" x2="985" y2="1455"/>
+
+                        <!-- ======== Stage 3: 材料审核·填表·缴费·预约·送签准备 (y=1440~2300) ======== -->
+                        <rect x="40" y="1440" width="1260" height="28" fill="#e0f2f1"/>
+                        <text x="670" y="1459" text-anchor="middle" font-size="14" font-weight="700" fill="#00695c">阶段三：材料审核·AI填表·代缴签证费·预约面签·送签准备</text>
+
+                        <!-- 审核材料完整性 -->
+                        <rect class="node-rect" x="890" y="1480" width="190" height="64" stroke-width="2"/>
+                        <text x="985" y="1500" class="node-text">审核材料完整性</text>
+                        <text x="985" y="1518" class="node-text" style="font-size:11px;fill:#00695c;">★按模板字段逐项核对</text>
+                        <text x="985" y="1532" class="node-text" style="font-size:11px;fill:#00695c;">★AI政策解读辅助</text>
+                        <text x="937" y="1555" text-anchor="start" font-size="8" fill="#7c3aed" font-weight="600">订单:材料审核中</text>
+                                                <line class="flow-arrow" x1="985" y1="1544" x2="985" y2="1560"/>
+
+                        <!-- 签证Agent风控 -->
+                        <rect class="node-ai" x="890" y="1560" width="190" height="54" stroke-width="2"/>
+                        <text x="985" y="1580" class="node-text-ai">★签证Agent风控</text>
+                        <text x="985" y="1598" class="node-text" style="font-size:11px;fill:#00695c;">扫描风险项</text>
+                        <text x="937" y="1625" text-anchor="start" font-size="8" fill="#7c3aed" font-weight="600">订单:材料审核中</text>
+                                                <line class="flow-arrow" x1="985" y1="1614" x2="985" y2="1630"/>
+
+                        <!-- 材料合格? -->
+                        <polygon class="node-decision" points="985,1630 1060,1675 985,1720 910,1675"/>
+                        <text x="985" y="1669" class="node-text" style="font-size:12px;">材料合格?</text>
+                        <text x="985" y="1687" class="node-text" style="font-size:12px;">+无风险</text>
+                        <line class="flow-arrow-reject" x1="910" y1="1675" x2="220" y2="1675" stroke-dasharray="5,3" style="marker-end:none;"/>
+                        <circle cx="220" cy="1675" r="4" fill="#c62828"/>
+                        <line class="flow-arrow-reject" x1="220" y1="1675" x2="220" y2="1404" stroke-dasharray="5,3" style="marker-end:none;"/>
+                        <circle cx="220" cy="1404" r="4" fill="#c62828"/>
+                        <line class="flow-arrow-reject" x1="220" y1="1404" x2="565" y2="1404" stroke-dasharray="5,3" style="marker-end:none;"/>
+                        <line class="flow-arrow-reject" x1="565" y1="1404" x2="775" y2="1404" stroke-dasharray="5,3"/>
+                        <text x="500" y="1667" class="flow-label flow-label-no">否,退回补充</text>
+                        <text x="240" y="1540" class="flow-label" style="fill:#c62828;font-size:11px;writing-mode:vertical-rl;">退回补充材料</text>
+                        <line class="flow-arrow" x1="985" y1="1720" x2="985" y2="1735"/>
+                        <text x="997" y="1731" class="flow-label flow-label-yes">是</text>
+
+                        <!-- 需AI填表? -->
+                        <polygon class="node-decision" points="985,1735 1060,1780 985,1825 910,1780"/>
+                        <text x="985" y="1774" class="node-text" style="font-size:12px;">需AI填表?</text>
+                        <text x="985" y="1792" class="node-text" style="font-size:12px;">(美国签证)</text>
+                        <line class="flow-arrow" x1="1060" y1="1780" x2="1195" y2="1780" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="1195" y1="1780" x2="1195" y2="1835"/>
+                        <text x="1075" y="1772" class="flow-label flow-label-yes">是</text>
+                        <line class="flow-arrow" x1="985" y1="1825" x2="985" y2="1930"/>
+                        <text x="963" y="1839" class="flow-label flow-label-no">否</text>
+
+                        <!-- AI填表 + DS-160确认页 -->
+                        <rect class="node-ai" x="1095" y="1835" width="200" height="64" stroke-width="2"/>
+                        <text x="1195" y="1855" class="node-text-ai">★AI自动填表</text>
+                        <text x="1195" y="1873" class="node-text" style="font-size:11px;fill:#00695c;">填写DS-160+翻译/校验</text>
+                        <text x="1195" y="1887" class="node-text" style="font-size:11px;fill:#00695c;">★生成DS-160确认页(条码)</text>
+                        <text x="1147" y="1910" text-anchor="start" font-size="8" fill="#e65100" font-weight="600">订单:填表中</text>
+                                                <line class="flow-arrow" x1="1195" y1="1899" x2="1195" y2="1920" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="1195" y1="1920" x2="985" y2="1920" style="marker-end:none;"/>
+
+                        <!-- 送签要求核对 -->
+                        <rect class="node-rect" x="880" y="1930" width="210" height="54" stroke-width="2"/>
+                        <text x="985" y="1950" class="node-text">送签要求核对</text>
+                        <text x="985" y="1968" class="node-text" style="font-size:11px;fill:#00695c;">★关联模版库送签配置</text>
+                        <text x="937" y="1995" text-anchor="start" font-size="8" fill="#e65100" font-weight="600">订单:填表中</text>
+                                                <line class="flow-arrow" x1="985" y1="1984" x2="985" y2="2005"/>
+
+                        <!-- ★NEW: 代缴签证费 -->
+                        <rect class="node-new" x="880" y="2005" width="210" height="64" stroke-width="2"/>
+                        <text x="985" y="2025" class="node-text-new">★代缴签证费</text>
+                        <text x="985" y="2043" class="node-text" style="font-size:11px;fill:#666;">B1/B2: 185美元(约¥1300)</text>
+                        <text x="985" y="2057" class="node-text" style="font-size:11px;fill:#c62828;">⚠费用一经缴纳概不退还</text>
+                        <text x="937" y="2080" text-anchor="start" font-size="8" fill="#2e7d32" font-weight="600">订单:签证费已缴</text>
+                                                <line class="flow-arrow" x1="985" y1="2069" x2="985" y2="2090"/>
+
+                        <!-- ★NEW: 在线预约面谈时间 -->
+                        <rect class="node-new" x="880" y="2090" width="210" height="64" stroke-width="2"/>
+                        <text x="985" y="2110" class="node-text-new">★在线预约面谈时间</text>
+                        <text x="985" y="2128" class="node-text" style="font-size:11px;fill:#666;">登录ustraveldocs.com</text>
+                        <text x="985" y="2142" class="node-text" style="font-size:11px;fill:#666;">关联DS-160编号·生成确认页</text>
+                        <text x="937" y="2165" text-anchor="start" font-size="8" fill="#1565c0" font-weight="600">订单:已预约面签</text>
+                                                <line class="flow-arrow" x1="985" y1="2154" x2="985" y2="2175"/>
+
+                        <!-- ★NEW: 发送确认+面签培训 -->
+                        <rect class="node-new" x="880" y="2175" width="210" height="54" stroke-width="2"/>
+                        <text x="985" y="2195" class="node-text-new">★发送确认+面签培训</text>
+                        <text x="985" y="2213" class="node-text" style="font-size:11px;fill:#666;">DS-160确认页+预约确认页</text>
+                        <text x="985" y="2227" class="node-text" style="font-size:11px;fill:#666;">电话/当面培训·常见问题</text>
+                        <text x="937" y="2240" text-anchor="start" font-size="8" fill="#e65100" font-weight="600">订单:面签待办</text>
+                        
+                        <!-- 培训通知同步至B端/C端：从节点底部出发，绕到下方再向左 -->
+                        <line x1="940" y1="2229" x2="940" y2="2245" stroke="#2d5a8a" stroke-width="1.5" fill="none" stroke-dasharray="5,3" style="marker-end:none;"/>
+                        <line x1="940" y1="2245" x2="565" y2="2245" stroke="#2d5a8a" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
+                        <text x="720" y="2240" class="flow-label" style="fill:#2d5a8a;font-size:11px;font-weight:500;">通知客户(B端+C端)</text>
+                        <line class="flow-arrow" x1="985" y1="2229" x2="985" y2="2255"/>
+
+                        <!-- ======== Stage 4: 面签·出签·后续交付与结算 (y=2240~3500) ======== -->
+                        <rect x="40" y="2240" width="1260" height="28" fill="#fff3e0"/>
+                        <text x="670" y="2259" text-anchor="middle" font-size="14" font-weight="700" fill="#e65100">阶段四：面签·出签·后续交付与结算（含行政审查/EVUS登记/护照返还）</text>
+
+                        <!-- ★NEW: 客户前往使领馆面签 (Lane4) -->
+                        <rect class="node-new" x="675" y="2285" width="200" height="64" stroke-width="2"/>
+                        <text x="775" y="2305" class="node-text-new">★客户前往使领馆面签</text>
+                        <text x="775" y="2323" class="node-text" style="font-size:11px;fill:#666;">携带护照/DS-160确认页/预约确认页</text>
+                        <text x="775" y="2337" class="node-text" style="font-size:11px;fill:#666;">按预约时间前往</text>
+                        <text x="727" y="2360" text-anchor="start" font-size="8" fill="#e65100" font-weight="600">订单:面签中</text>
+                                                <line class="flow-arrow" x1="775" y1="2349" x2="775" y2="2370" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="775" y1="2370" x2="985" y2="2370" style="marker-end:none;"/>
+                        <!-- 签证操作→客户 催办通知 -->
+                        <line class="flow-arrow" x1="985" y1="2255" x2="985" y2="2270" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="985" y1="2270" x2="775" y2="2270" stroke-dasharray="4,3" opacity="0.6" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="775" y1="2270" x2="775" y2="2285"/>
+                        <text x="850" y="2263" class="flow-label" style="fill:#999;font-size:11px;">提醒面签</text>
+
+                        <!-- ★NEW: 面签流程 (Lane6 外部系统) -->
+                        <rect class="node-new" x="1095" y="2370" width="200" height="64" stroke-width="2"/>
+                        <text x="1195" y="2390" class="node-text-new">★面签流程</text>
+                        <text x="1195" y="2408" class="node-text" style="font-size:11px;fill:#666;">安检→录入指纹→签证官面谈</text>
+                        <text x="1195" y="2422" class="node-text" style="font-size:11px;fill:#666;">面谈约10-15分钟</text>
+                        <text x="1147" y="2445" text-anchor="start" font-size="8" fill="#e65100" font-weight="600">订单:面签中</text>
+                                                <line class="flow-arrow" x1="985" y1="2370" x2="1095" y2="2370" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="1195" y1="2434" x2="1195" y2="2460"/>
+
+                        <!-- 领馆审核结果：三分支判断 -->
+                        <polygon class="node-decision" points="1195,2460 1290,2515 1195,2570 1100,2515"/>
+                        <text x="1195" y="2505" class="node-text" style="font-size:12px;">领馆审核</text>
+                        <text x="1195" y="2523" class="node-text" style="font-size:12px;">结果?</text>
+
+                        <!-- 分支1: 通过 → 护照贴签 -->
+                        <line class="flow-arrow" x1="1100" y1="2515" x2="985" y2="2515" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="985" y1="2515" x2="985" y2="2540"/>
+                        <text x="1020" y="2507" class="flow-label flow-label-yes">通过</text>
+                        <rect class="node-rect" x="890" y="2540" width="190" height="44" stroke-width="2"/>
+                        <text x="985" y="2562" class="node-text">护照贴签（领馆收走护照）</text>
+                        <text x="937" y="2595" text-anchor="start" font-size="8" fill="#2e7d32" font-weight="600">订单:待出签</text>
+                                                <line class="flow-arrow" x1="985" y1="2584" x2="985" y2="2605"/>
+
+                        <!-- ★NEW: 护照返还+核对 (Lane4) -->
+                        <line class="flow-arrow" x1="890" y1="2562" x2="775" y2="2562" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="775" y1="2562" x2="775" y2="2605"/>
+                        <rect class="node-new" x="675" y="2605" width="200" height="64" stroke-width="2"/>
+                        <text x="775" y="2625" class="node-text-new">★护照返还+核对</text>
+                        <text x="775" y="2643" class="node-text" style="font-size:11px;fill:#666;">快递或中信银行返还</text>
+                        <text x="775" y="2657" class="node-text" style="font-size:11px;fill:#666;">客人核对签证页信息</text>
+                        <text x="727" y="2680" text-anchor="start" font-size="8" fill="#2e7d32" font-weight="600">订单:已出签</text>
+                        
+                        <line class="flow-arrow" x1="775" y1="2669" x2="775" y2="2690" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="775" y1="2690" x2="985" y2="2690" style="marker-end:none;"/>
+
+                        <!-- ★NEW: EVUS登记 (Lane5) -->
+                        <rect class="node-new" x="880" y="2690" width="210" height="64" stroke-width="2"/>
+                        <text x="985" y="2710" class="node-text-new">★EVUS登记</text>
+                        <text x="985" y="2728" class="node-text" style="font-size:11px;fill:#666;">10年B1/B2签证赴美前必登记</text>
+                        <text x="985" y="2742" class="node-text" style="font-size:11px;fill:#666;">2025.10起收费30美元</text>
+                        <text x="937" y="2765" text-anchor="start" font-size="8" fill="#2e7d32" font-weight="600">订单:已出签</text>
+                        
+                        <line class="flow-arrow" x1="985" y1="2754" x2="985" y2="2775"/>
+
+                        <!-- 出签确认+通知客户 -->
+                        <rect class="node-rect" x="890" y="2775" width="190" height="54" stroke-width="2"/>
+                        <text x="985" y="2795" class="node-text">出签确认+通知客户</text>
+                        <text x="985" y="2813" class="node-text" style="font-size:11px;fill:#666;">短信/小程序推送</text>
+                        <text x="937" y="2840" text-anchor="start" font-size="8" fill="#2e7d32" font-weight="600">订单:已出签→已完成</text>
+                        
+                        <!-- 通知·客户：从节点左边缘出发，不使用透明度 -->
+                        <line x1="890" y1="2795" x2="775" y2="2795" stroke="#2d5a8a" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
+                        <text x="800" y="2788" class="flow-label" style="fill:#2d5a8a;font-size:11px;font-weight:500;">通知·客户</text>
+                        <!-- 同步·门店：从节点左边缘出发，下移增加间距 -->
+                        <line x1="890" y1="2820" x2="565" y2="2820" stroke="#2d5a8a" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
+                        <text x="640" y="2835" class="flow-label" style="fill:#2d5a8a;font-size:11px;font-weight:500;">同步·门店</text>
+                        <line class="flow-arrow" x1="985" y1="2829" x2="985" y2="2855"/>
+
+                        <!-- 分支2: 拒签 → UOM退款 -->
+                        <line class="flow-arrow-reject" x1="1195" y1="2570" x2="1195" y2="2595" style="marker-end:none;"/>
+                        <line class="flow-arrow-reject" x1="1195" y1="2595" x2="355" y2="2595" style="marker-end:none;"/>
+                        <line class="flow-arrow-reject" x1="355" y1="2595" x2="355" y2="2620"/>
+                        <text x="700" y="2588" class="flow-label flow-label-no">拒签</text>
+                        <text x="360" y="2588" class="flow-label" style="fill:#c62828;font-size:11px;">护照当场退还</text>
+
+                        <!-- ★NEW: 拒签理由单 -->
+                        <rect class="node-new" x="250" y="2620" width="210" height="54" stroke-width="2"/>
+                        <text x="355" y="2640" class="node-text-new">★接收拒签理由单</text>
+                        <text x="355" y="2658" class="node-text" style="font-size:11px;fill:#666;">领馆出具·记录拒签原因</text>
+                        <text x="307" y="2685" text-anchor="start" font-size="8" fill="#c62828" font-weight="600">订单:已拒签</text>
+                                                <line class="flow-arrow-reject" x1="355" y1="2674" x2="355" y2="2700"/>
+
+                        <!-- UOM触发退款 -->
+                        <rect class="node-rect" x="255" y="2700" width="200" height="44" stroke-width="2"/>
+                        <text x="355" y="2722" class="node-text">UOM触发退款流程</text>
+                        <text x="307" y="2755" text-anchor="start" font-size="8" fill="#c62828" font-weight="600">订单:退款中</text>
+                                                <line class="flow-arrow-reject" x1="355" y1="2744" x2="355" y2="2770"/>
+                        <rect class="node-end" x="275" y="2770" width="160" height="50" rx="20" style="fill:#ffebee;stroke:#c62828;"/>
+                        <text x="355" y="2789" class="node-text" style="fill:#c62828;font-weight:600;">退款结案·已关闭</text>
+                        <text x="355" y="2803" text-anchor="middle" font-size="8" fill="#c62828">CLOSED · 终态</text>
+
+                        <!-- 分支3: 行政审查 → 等待 → 回到审核 -->
+                        <line x1="1290" y1="2515" x2="1290" y2="2595" stroke="#e65100" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-orange)"/>
+                        <text x="1300" y="2558" class="flow-label" style="fill:#e65100;font-size:10px;" transform="rotate(90 1300 2558)">行政审查</text>
+                        <rect class="node-new" x="1095" y="2595" width="200" height="54" stroke-width="2" style="stroke:#e65100;"/>
+                        <text x="1195" y="2615" class="node-text-new" style="fill:#e65100;">★行政审查中</text>
+                        <text x="1195" y="2633" class="node-text" style="font-size:11px;fill:#666;">审理延长1-2个月</text>
+                        <text x="1147" y="2660" text-anchor="start" font-size="8" fill="#e65100" font-weight="600">订单:审查中</text>
+                                                <path d="M 1195 2649 L 1195 2685 L 1298 2685 L 1298 2440 L 1195 2440 L 1195 2458" 
+                             stroke="#e65100" stroke-width="1.5" fill="none" stroke-dasharray="5,3" 
+                             marker-end="url(#arrowhead-orange)"/>
+                        <text x="1230" y="2700" class="flow-label" style="fill:#e65100;font-size:10px;">审查后重新审核</text>
+
+                        <!-- ====== 结算流程 ====== -->
+                        <line class="flow-arrow" x1="890" y1="2855" x2="800" y2="2855" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="800" y1="2855" x2="800" y2="2890" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="800" y1="2890" x2="145" y2="2890" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="145" y1="2890" x2="145" y2="2915"/>
+
+                        <rect class="node-rect" x="55" y="2915" width="180" height="44" stroke-width="2"/>
+                        <text x="145" y="2937" class="node-text">供应商发起结算账单</text>
+                        <line class="flow-arrow" x1="235" y1="2937" x2="355" y2="2937" style="marker-end:none;"/>
+                        <line class="flow-arrow" x1="355" y1="2937" x2="355" y2="2960"/>
+
+                        <rect class="node-rect" x="250" y="2960" width="210" height="54" stroke-width="2"/>
+                        <text x="355" y="2980" class="node-text">UOM分公司财务审核付款</text>
+                        <text x="355" y="2998" class="node-text" style="font-size:11px;fill:#666;">跨区域结算/账期付款</text>
+                        <line class="flow-arrow" x1="355" y1="3014" x2="355" y2="3035"/>
+
+                        <rect class="node-end" x="270" y="3035" width="170" height="50" rx="20" style="fill:#e8f5e9;stroke:#2e7d32;"/>
+                        <text x="355" y="3054" class="node-text" style="fill:#2e7d32;font-weight:600;">订单闭环·已完成</text>
+                        <text x="355" y="3068" text-anchor="middle" font-size="8" fill="#2e7d32">COMPLETED · 终态</text>
+
+                        <!-- ====== 特殊规则标注 ====== -->
+                        <rect x="500" y="2915" width="560" height="140" fill="#fff8e1" stroke="#e65100" stroke-width="1.5" stroke-dasharray="5,3" rx="8"/>
+                        <text x="780" y="2940" text-anchor="middle" font-size="13" font-weight="700" fill="#e65100;">⚠ 特殊规则标注</text>
+                        <text x="520" y="2962" font-size="11.5" fill="#666">• 签证费一经缴纳概不退还（预约完成后领馆全额收取）</text>
+                        <text x="520" y="2982" font-size="11.5" fill="#666">• 改期面谈需支付额外预约更改费（约100元/次）</text>
+                        <text x="520" y="3002" font-size="11.5" fill="#666">• 14周岁以下儿童免面签，由监护人或同行人代为递交材料</text>
+                        <text x="520" y="3022" font-size="11.5" fill="#666">• 建议至少提前3个月开始准备，旺季面试日期可能排至30天后</text>
+                        <text x="520" y="3042" font-size="11.5" fill="#666">• 所有材料必须真实，材料真实性是签证审核核心</text>
+
+                        </svg>
+                </div>
+            </div>
+
+
+            <!-- 订单状态说明 -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-num">02b</span>
+                    <h2>订单状态说明（主流程图节点标注 · 五阶段18状态3终态）</h2>
+                    <div class="section-line"></div>
+                </div>
+                <p style="margin-bottom: 16px; font-size: 14px; color: var(--ink-500);">主流程图中各业务节点下方以 <b style="color:var(--orange-600);">订单:xxx</b> 格式标注当前订单状态，颜色对应状态类型。下表完整说明各状态含义及所属阶段。</p>
+                <div style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:8px;">
+                        <thead>
+                            <tr style="background:var(--navy-800);color:#fff;">
+                                <th style="padding:10px 12px;text-align:left;border-radius:8px 0 0 0;">阶段</th>
+                                <th style="padding:10px 12px;text-align:left;">状态名称</th>
+                                <th style="padding:10px 12px;text-align:left;">英文代码</th>
+                                <th style="padding:10px 12px;text-align:left;">颜色</th>
+                                <th style="padding:10px 12px;text-align:left;border-radius:0 8px 0 0;">触发条件与含义</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background:#fff3e0;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);" rowspan="3"><b style="color:var(--orange-600);">创建期</b><br><span style="font-size:11px;color:var(--ink-300);">Stage 1</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:var(--orange-600);font-weight:600;">● 待支付</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">PENDING_PAYMENT</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#e65100;vertical-align:middle;"></span> 橙色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">B端代客下单或C端自主下单后创建订单，等待客户支付</td>
+                            </tr>
+                            <tr style="background:#ffebee;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:var(--red-600);font-weight:600;">● 已取消</span> <span style="font-size:10px;color:var(--red-600);">[终态1]</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">CANCELLED</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#c62828;vertical-align:middle;"></span> 红色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">创建订单后30分钟内未完成支付，系统自动取消订单</td>
+                            </tr>
+                            <tr style="background:#e8f5e9;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:var(--green-600);font-weight:600;">● 已支付</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">PAID</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#2e7d32;vertical-align:middle;"></span> 绿色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">客户完成支付，进入材料收集阶段</td>
+                            </tr>
+                            <tr style="background:#e3f2fd;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);" rowspan="2"><b style="color:#1565c0;">材料期</b><br><span style="font-size:11px;color:var(--ink-300);">Stage 2</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:#1565c0;font-weight:600;">● 材料收集中</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">COLLECTING</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#1565c0;vertical-align:middle;"></span> 蓝色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">系统按国家+人群生成材料清单，B端收集/C端上传证件</td>
+                            </tr>
+                            <tr style="background:#f3e5f5;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:#7c3aed;font-weight:600;">● 材料审核中</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">REVIEWING</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#7c3aed;vertical-align:middle;"></span> 紫色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">UOM签证操作组逐项审核材料完整性，AI政策解读辅助风控</td>
+                            </tr>
+                            <tr style="background:#fff3e0;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);" rowspan="3"><b style="color:var(--orange-600);">送签期</b><br><span style="font-size:11px;color:var(--ink-300);">Stage 3</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:var(--orange-600);font-weight:600;">● 填表中</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">FORM_FILLING</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#e65100;vertical-align:middle;"></span> 橙色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">AI自动填写DS-160表格+翻译/校验+生成确认页，送签要求核对</td>
+                            </tr>
+                            <tr style="background:#e8f5e9;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:var(--green-600);font-weight:600;">● 签证费已缴</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">FEE_PAID</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#2e7d32;vertical-align:middle;"></span> 绿色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">UOM代缴签证费（B1/B2: 185美元），费用一经缴纳概不退还</td>
+                            </tr>
+                            <tr style="background:#e3f2fd;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:#1565c0;font-weight:600;">● 已预约面签</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">APPOINTED</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#1565c0;vertical-align:middle;"></span> 蓝色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">登录ustraveldocs.com预约面谈时间，关联DS-160编号生成确认页</td>
+                            </tr>
+                            <tr style="background:#fff3e0;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);" rowspan="2"><b style="color:var(--orange-600);">面签期</b><br><span style="font-size:11px;color:var(--ink-300);">Stage 4</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:var(--orange-600);font-weight:600;">● 面签待办</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">INTERVIEW_TODO</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#e65100;vertical-align:middle;"></span> 橙色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">发送DS-160确认页+预约确认页给客户，完成面签培训</td>
+                            </tr>
+                            <tr style="background:#fff3e0;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:var(--orange-600);font-weight:600;">● 面签中</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">INTERVIEWING</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#e65100;vertical-align:middle;"></span> 橙色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">客户前往使领馆，安检→录入指纹→签证官面谈（约10-15分钟）</td>
+                            </tr>
+                            <tr style="background:#e8f5e9;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);" rowspan="2"><b style="color:var(--green-600);">出签期</b><br><span style="font-size:11px;color:var(--ink-300);">Stage 4</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:var(--green-600);font-weight:600;">● 待出签</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">PENDING_ISSUE</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#2e7d32;vertical-align:middle;"></span> 绿色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">面签通过，领馆收走护照进行贴签</td>
+                            </tr>
+                            <tr style="background:#e8f5e9;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:var(--green-600);font-weight:600;">● 已出签</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">ISSUED</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#2e7d32;vertical-align:middle;"></span> 绿色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">护照返还+核对签证页信息，EVUS登记完成</td>
+                            </tr>
+                            <tr style="background:#ffebee;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);" rowspan="2"><b style="color:var(--red-600);">拒签/退款</b><br><span style="font-size:11px;color:var(--ink-300);">异常分支</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:var(--red-600);font-weight:600;">● 已拒签</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">REJECTED</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#c62828;vertical-align:middle;"></span> 红色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">领馆拒签，护照当场退还，接收拒签理由单</td>
+                            </tr>
+                            <tr style="background:#ffebee;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:var(--red-600);font-weight:600;">● 退款中</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">REFUNDING</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#c62828;vertical-align:middle;"></span> 红色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">UOM触发退款流程（签证费不退，退还服务费）</td>
+                            </tr>
+                            <tr style="background:#fff3e0;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><b style="color:var(--orange-600);">行政审查</b><br><span style="font-size:11px;color:var(--ink-300);">异常分支</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:var(--orange-600);font-weight:600;">● 审查中</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">ADMIN_PROCESSING</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#e65100;vertical-align:middle;"></span> 橙色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">领馆行政审查，审理延长1-2个月，审查后重新审核</td>
+                            </tr>
+                            <tr style="background:#ffebee;">
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);" rowspan="1"><b style="color:var(--red-600);">终态</b><br><span style="font-size:11px;color:var(--ink-300);">Terminal</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="color:var(--red-600);font-weight:700;">● 已关闭</span> <span style="font-size:10px;color:var(--red-600);">[终态2]</span></td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);font-family:monospace;font-size:12px;">CLOSED</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#c62828;vertical-align:middle;"></span> 红色</td>
+                                <td style="padding:8px 12px;border-bottom:1px solid var(--line);">退款结案，订单关闭（拒签路径终态）</td>
+                            </tr>
+                            <tr style="background:#e8f5e9;">
+                                <td style="padding:8px 12px;"><b style="color:var(--green-600);">终态</b><br><span style="font-size:11px;color:var(--ink-300);">Terminal</span></td>
+                                <td style="padding:8px 12px;"><span style="color:var(--green-600);font-weight:700;">● 已完成</span> <span style="font-size:10px;color:var(--green-600);">[终态3]</span></td>
+                                <td style="padding:8px 12px;font-family:monospace;font-size:12px;">COMPLETED</td>
+                                <td style="padding:8px 12px;"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#2e7d32;vertical-align:middle;"></span> 绿色</td>
+                                <td style="padding:8px 12px;">出签确认+通知客户，结算完成，订单闭环（正常路径终态）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;">
+                    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-500);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#e65100;"></span> 进行中/待处理</div>
+                    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-500);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#1565c0;"></span> 等待客户操作</div>
+                    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-500);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#7c3aed;"></span> 审核中</div>
+                    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-500);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2e7d32;"></span> 已完成/通过</div>
+                    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-500);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#c62828;"></span> 异常/终态(失败)</div>
+                </div>
+            </div>
+
+            
+            <!-- 订单状态流转图 -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-num">03</span>
+                    <h2>订单状态流转图（五阶段生命周期 · 双循环容错 · 三终态）</h2>
+                    <div class="section-line"></div>
+                </div>
+                <p style="margin-bottom: 20px; font-size: 14px; color: var(--ink-500);">订单状态独立于业务泳道，按生命周期五阶段纵向展开。包含两个循环容错机制（材料退回补充、行政审查重审）和三个终态（已取消、已关闭、已完成）。</p>
+                <div class="status-flow-wrap">
+                    <svg width="1100" height="1050" viewBox="0 0 1100 1050" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <marker id="st-arrow" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#2d5a8a"/></marker>
+                            <marker id="st-arrow-red" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#c62828"/></marker>
+                            <marker id="st-arrow-green" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#2e7d32"/></marker>
+                            <marker id="st-arrow-orange" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#e65100"/></marker>
+                        </defs>
+
+                        <!-- Phase 1: 创建期 (y=30~230) -->
+                        <rect x="0" y="30" width="1100" height="28" fill="#eaf1f8"/>
+                        <text x="550" y="49" text-anchor="middle" font-size="14" font-weight="700" fill="#1B3A5F">阶段一：创建期（待支付→30分钟超时→已取消 / 已支付）</text>
+
+                        <!-- [开始] -->
+                        <rect x="380" y="80" width="120" height="36" rx="18" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+                        <text x="440" y="102" text-anchor="middle" font-size="13" fill="#2e7d32" font-weight="600">开始</text>
+                        <line x1="440" y1="116" x2="440" y2="140" stroke="#2d5a8a" stroke-width="1.5" marker-end="url(#st-arrow)"/>
+
+                        <!-- 待支付 -->
+                        <rect x="340" y="140" width="200" height="44" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="2" stroke-dasharray="5,3"/>
+                        <text x="440" y="160" text-anchor="middle" font-size="13" fill="#e65100" font-weight="600">待支付</text>
+                        <text x="440" y="176" text-anchor="middle" font-size="10" fill="#999">PENDING_PAYMENT</text>
+                        <line x1="440" y1="184" x2="440" y2="205" stroke="#2d5a8a" stroke-width="1.5" marker-end="url(#st-arrow)"/>
+
+                        <!-- 判断: 30分钟内支付? -->
+                        <polygon points="440,205 530,245 440,285 350,245" fill="#faf6ec" stroke="#C9A84C" stroke-width="2"/>
+                        <text x="440" y="240" text-anchor="middle" font-size="12" fill="#333" font-weight="500">30分钟内</text>
+                        <text x="440" y="256" text-anchor="middle" font-size="12" fill="#333" font-weight="500">完成支付?</text>
+
+                        <!-- 否 → 已取消 [终态1] -->
+                        <line x1="350" y1="245" x2="230" y2="245" stroke="#c62828" stroke-width="1.5" fill="none" marker-end="url(#st-arrow-red)"/>
+                        <text x="290" y="237" text-anchor="middle" font-size="11" fill="#c62828" font-weight="500">否(超时)</text>
+                        <rect x="80" y="225" width="150" height="40" rx="20" fill="#ffebee" stroke="#c62828" stroke-width="2"/>
+                        <text x="155" y="250" text-anchor="middle" font-size="13" fill="#c62828" font-weight="600">已取消</text>
+
+                        <!-- 是 → 已支付 -->
+                        <line x1="440" y1="285" x2="440" y2="310" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#st-arrow-green)"/>
+                        <text x="455" y="300" font-size="11" fill="#2e7d32" font-weight="500">是</text>
+                        <rect x="340" y="310" width="200" height="44" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+                        <text x="440" y="330" text-anchor="middle" font-size="13" fill="#2e7d32" font-weight="600">已支付</text>
+                        <text x="440" y="346" text-anchor="middle" font-size="10" fill="#999">PAID</text>
+
+                        <!-- Phase 2: 材料期 (y=370~540) -->
+                        <rect x="0" y="370" width="1100" height="28" fill="#e0f2f1"/>
+                        <text x="550" y="389" text-anchor="middle" font-size="14" font-weight="700" fill="#00695c">阶段二：材料期（材料收集中→审核中→循环退回补充→填表中）</text>
+
+                        <line x1="440" y1="354" x2="440" y2="410" stroke="#2d5a8a" stroke-width="1.5" marker-end="url(#st-arrow)"/>
+
+                        <!-- 材料收集中 -->
+                        <rect x="340" y="410" width="200" height="40" rx="4" fill="#fff" stroke="#2d5a8a" stroke-width="2"/>
+                        <text x="440" y="435" text-anchor="middle" font-size="13" fill="#333" font-weight="500">材料收集中</text>
+                        <line x1="440" y1="450" x2="440" y2="470" stroke="#2d5a8a" stroke-width="1.5" marker-end="url(#st-arrow)"/>
+
+                        <!-- 材料审核中 -->
+                        <rect x="340" y="470" width="200" height="40" rx="4" fill="#fff" stroke="#2d5a8a" stroke-width="2"/>
+                        <text x="440" y="495" text-anchor="middle" font-size="13" fill="#333" font-weight="500">材料审核中</text>
+                        <line x1="440" y1="510" x2="440" y2="525" stroke="#2d5a8a" stroke-width="1.5" marker-end="url(#st-arrow)"/>
+
+                        <!-- 判断: 材料合格? -->
+                        <polygon points="440,525 530,560 440,595 350,560" fill="#faf6ec" stroke="#C9A84C" stroke-width="2"/>
+                        <text x="440" y="557" text-anchor="middle" font-size="12" fill="#333" font-weight="500">材料合格?</text>
+
+                        <!-- 否 → 退回补充 (循环1) -->
+                        <line x1="530" y1="560" x2="640" y2="560" stroke="#c62828" stroke-width="1.5" fill="none" style="marker-end:none;"/>
+                        <text x="585" y="552" text-anchor="middle" font-size="11" fill="#c62828" font-weight="500">否</text>
+                        <rect x="640" y="540" width="160" height="40" rx="4" fill="#ffebee" stroke="#c62828" stroke-width="2"/>
+                        <text x="720" y="565" text-anchor="middle" font-size="13" fill="#c62828" font-weight="500">退回补充材料</text>
+                        <!-- 循环箭头: 退回补充 → 材料收集中 -->
+                        <line x1="720" y1="540" x2="720" y2="430" stroke="#c62828" stroke-width="1.5" fill="none" stroke-dasharray="5,3" style="marker-end:none;"/>
+                        <line x1="720" y1="430" x2="540" y2="430" stroke="#c62828" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#st-arrow-red)"/>
+                        <text x="680" y="422" text-anchor="middle" font-size="10" fill="#c62828">循环① 重新收集</text>
+
+                        <!-- 是 → 填表中 -->
+                        <line x1="440" y1="595" x2="440" y2="620" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#st-arrow-green)"/>
+                        <text x="455" y="612" font-size="11" fill="#2e7d32" font-weight="500">是</text>
+
+                        <!-- Phase 3: 送签期 (y=600~720) -->
+                        <rect x="0" y="600" width="1100" height="28" fill="#fff3e0"/>
+                        <text x="550" y="619" text-anchor="middle" font-size="14" font-weight="700" fill="#e65100">阶段三：送签期（填表中→签证费已缴→已预约面签→面签待办）</text>
+
+                        <!-- 填表中 -->
+                        <rect x="340" y="640" width="200" height="40" rx="4" fill="#fff" stroke="#2d5a8a" stroke-width="2"/>
+                        <text x="440" y="665" text-anchor="middle" font-size="13" fill="#333" font-weight="500">填表中</text>
+                        <line x1="440" y1="680" x2="440" y2="700" stroke="#2d5a8a" stroke-width="1.5" marker-end="url(#st-arrow)"/>
+
+                        <!-- 签证费已缴 -->
+                        <rect x="340" y="700" width="200" height="40" rx="4" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+                        <text x="440" y="725" text-anchor="middle" font-size="13" fill="#6a1b9a" font-weight="500">签证费已缴</text>
+                        <line x1="440" y1="740" x2="440" y2="760" stroke="#2d5a8a" stroke-width="1.5" marker-end="url(#st-arrow)"/>
+
+                        <!-- 已预约面签 -->
+                        <rect x="340" y="760" width="200" height="40" rx="4" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+                        <text x="440" y="785" text-anchor="middle" font-size="13" fill="#1565c0" font-weight="500">已预约面签</text>
+                        <line x1="440" y1="800" x2="440" y2="820" stroke="#2d5a8a" stroke-width="1.5" marker-end="url(#st-arrow)"/>
+
+                        <!-- Phase 4: 面签期 (y=810~1000) -->
+                        <rect x="0" y="810" width="1100" height="28" fill="#fce4ec"/>
+                        <text x="550" y="829" text-anchor="middle" font-size="14" font-weight="700" fill="#ad1457">阶段四：面签期（面签待办→面签中→领馆审核→三分支：通过/拒签/行政审查）</text>
+
+                        <!-- 面签待办 -->
+                        <rect x="340" y="850" width="200" height="40" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+                        <text x="440" y="875" text-anchor="middle" font-size="13" fill="#e65100" font-weight="500">面签待办</text>
+                        <line x1="440" y1="890" x2="440" y2="910" stroke="#2d5a8a" stroke-width="1.5" marker-end="url(#st-arrow)"/>
+
+                        <!-- 面签中 -->
+                        <rect x="340" y="910" width="200" height="40" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+                        <text x="440" y="935" text-anchor="middle" font-size="13" fill="#e65100" font-weight="500">面签中</text>
+                        <line x1="440" y1="950" x2="440" y2="970" stroke="#2d5a8a" stroke-width="1.5" marker-end="url(#st-arrow)"/>
+
+                        <!-- 判断: 领馆审核结果? -->
+                        <polygon points="440,970 560,1020 440,1070 320,1020" fill="#faf6ec" stroke="#C9A84C" stroke-width="2"/>
+                        <text x="440" y="1010" text-anchor="middle" font-size="12" fill="#333" font-weight="500">领馆审核</text>
+                        <text x="440" y="1026" text-anchor="middle" font-size="12" fill="#333" font-weight="500">结果?</text>
+
+                        <!-- 分支1: 通过 → 待出签 → 已出签 → 已完成 -->
+                        <line x1="320" y1="1020" x2="200" y2="1020" stroke="#2e7d32" stroke-width="1.5" fill="none" style="marker-end:none;"/>
+                        <text x="260" y="1012" text-anchor="middle" font-size="11" fill="#2e7d32" font-weight="500">通过</text>
+                        <rect x="80" y="1000" width="120" height="40" rx="4" fill="#fff" stroke="#2e7d32" stroke-width="2"/>
+                        <text x="140" y="1025" text-anchor="middle" font-size="13" fill="#2e7d32" font-weight="500">待出签</text>
+                        <line x1="140" y1="1040" x2="140" y2="1060" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#st-arrow-green)"/>
+                        <rect x="80" y="1060" width="120" height="40" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+                        <text x="140" y="1085" text-anchor="middle" font-size="13" fill="#2e7d32" font-weight="600">已出签</text>
+
+                        <!-- 分支2: 拒签 → 已拒签 → 退款中 → 已关闭 [终态2] -->
+                        <line x1="560" y1="1020" x2="680" y2="1020" stroke="#c62828" stroke-width="1.5" fill="none" style="marker-end:none;"/>
+                        <text x="620" y="1012" text-anchor="middle" font-size="11" fill="#c62828" font-weight="500">拒签</text>
+                        <rect x="680" y="1000" width="130" height="40" rx="4" fill="#ffebee" stroke="#c62828" stroke-width="2"/>
+                        <text x="745" y="1025" text-anchor="middle" font-size="13" fill="#c62828" font-weight="500">已拒签</text>
+                        <line x1="745" y1="1040" x2="745" y2="1060" stroke="#c62828" stroke-width="1.5" marker-end="url(#st-arrow-red)"/>
+                        <rect x="680" y="1060" width="130" height="40" rx="4" fill="#ffebee" stroke="#c62828" stroke-width="2"/>
+                        <text x="745" y="1085" text-anchor="middle" font-size="13" fill="#c62828" font-weight="500">退款中</text>
+                        <line x1="745" y1="1100" x2="745" y2="1120" stroke="#c62828" stroke-width="1.5" marker-end="url(#st-arrow-red)"/>
+                        <rect x="670" y="1120" width="150" height="40" rx="20" fill="#ffebee" stroke="#c62828" stroke-width="2"/>
+                        <text x="745" y="1145" text-anchor="middle" font-size="13" fill="#c62828" font-weight="600">已关闭 CLOSED</text>
+
+                        <!-- 分支3: 行政审查 → 审查中 → 循环回到领馆审核 -->
+                        <line x1="440" y1="1070" x2="440" y2="1090" stroke="#e65100" stroke-width="1.5" fill="none" style="marker-end:none;"/>
+                        <text x="455" y="1082" font-size="11" fill="#e65100" font-weight="500">行政审查</text>
+                        <rect x="340" y="1090" width="200" height="40" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+                        <text x="440" y="1115" text-anchor="middle" font-size="13" fill="#e65100" font-weight="500">审查中(1-2月)</text>
+                        <!-- 循环箭头: 审查中 → 领馆审核 -->
+                        <line x1="540" y1="1110" x2="900" y2="1110" stroke="#e65100" stroke-width="1.5" fill="none" stroke-dasharray="5,3" style="marker-end:none;"/>
+                        <line x1="900" y1="1110" x2="900" y2="1020" stroke="#e65100" stroke-width="1.5" fill="none" stroke-dasharray="5,3" style="marker-end:none;"/>
+                        <line x1="900" y1="1020" x2="560" y2="1020" stroke="#e65100" stroke-width="1.5" fill="none" stroke-dasharray="5,3" style="marker-end:none;"/>
+                        <text x="720" y="1102" text-anchor="middle" font-size="10" fill="#e65100">循环② 审查后重新审核</text>
+
+                        <!-- Phase 5: 完成期 (y=1160~1230) -->
+                        <rect x="0" y="1160" width="1100" height="28" fill="#e8f5e9"/>
+                        <text x="550" y="1179" text-anchor="middle" font-size="14" font-weight="700" fill="#2e7d32">阶段五：完成期（已出签→已完成 COMPLETED [终态3]）</text>
+
+                        <!-- 已出签 → 已完成 -->
+                        <line x1="140" y1="1100" x2="140" y2="1110" stroke="#2e7d32" stroke-width="1.5" style="marker-end:none;"/>
+                        <line x1="140" y1="1110" x2="440" y2="1110" stroke="#2e7d32" stroke-width="1.5" style="marker-end:none;"/>
+                        <line x1="440" y1="1110" x2="440" y2="1160" stroke="#2e7d32" stroke-width="1.5" style="marker-end:none;"/>
+                        <line x1="440" y1="1188" x2="440" y2="1210" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#st-arrow-green)"/>
+
+                        <!-- 已完成 [终态3] -->
+                        <rect x="340" y="1210" width="200" height="44" rx="22" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+                        <text x="440" y="1232" text-anchor="middle" font-size="14" fill="#2e7d32" font-weight="700">已完成</text>
+                        <text x="440" y="1248" text-anchor="middle" font-size="10" fill="#999">COMPLETED</text>
+
+                        <!-- 终态标注 -->
+                        <rect x="20" y="225" width="40" height="20" rx="10" fill="#c62828"/>
+                        <text x="40" y="240" text-anchor="middle" font-size="10" fill="#fff" font-weight="600">终态1</text>
+
+                        <rect x="630" y="1120" width="40" height="20" rx="10" fill="#c62828"/>
+                        <text x="650" y="1135" text-anchor="middle" font-size="10" fill="#fff" font-weight="600">终态2</text>
+
+                        <rect x="560" y="1210" width="40" height="20" rx="10" fill="#2e7d32"/>
+                        <text x="580" y="1225" text-anchor="middle" font-size="10" fill="#fff" font-weight="600">终态3</text>
+
+                        <!-- 图例 -->
+                        <rect x="800" y="1210" width="280" height="60" fill="#f5f7fa" stroke="#e8ecf1" stroke-width="1" rx="6"/>
+                        <text x="815" y="1228" font-size="11" fill="#666" font-weight="600">图例</text>
+                        <line x1="815" y1="1238" x2="840" y2="1238" stroke="#2d5a8a" stroke-width="1.5" marker-end="url(#st-arrow)"/>
+                        <text x="848" y="1242" font-size="10" fill="#666">正常流转</text>
+                        <line x1="915" y1="1238" x2="940" y2="1238" stroke="#c62828" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#st-arrow-red)"/>
+                        <text x="948" y="1242" font-size="10" fill="#666">异常/循环</text>
+                        <line x1="815" y1="1255" x2="840" y2="1255" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#st-arrow-green)"/>
+                        <text x="848" y="1259" font-size="10" fill="#666">正常分支</text>
+                        <line x1="915" y1="1255" x2="940" y2="1255" stroke="#e65100" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#st-arrow-orange)"/>
+                        <text x="948" y="1259" font-size="10" fill="#666">行政审查</text>
+
+                    </svg>
+                </div>
+            </div>
+
+<!-- 四、特殊规则与注意事项 -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-num">04</span>
+                    <h2>特殊规则与注意事项</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="rules-grid">
+                    <div class="rule-card red">
+                        <h4>⚠ 签证费不退</h4>
+                        <p>预约完成后领馆全额收取签证费（B1/B2: 185美元/约¥1300），任何情况下无法退款。即使拒签也不退还。</p>
+                    </div>
+                    <div class="rule-card">
+                        <h4>⚠ 改期费用</h4>
+                        <p>如需更改面谈时间，通常需支付额外预约更改费（约100元/次），由ustraveldocs.com系统收取。</p>
+                    </div>
+                    <div class="rule-card green">
+                        <h4>✓ 14周岁以下儿童免面签</h4>
+                        <p>14周岁以下儿童可免于亲自前往使领馆面签，由监护人或同行人代为递交材料。80周岁以上老人同样适用免面签。</p>
+                    </div>
+                    <div class="rule-card blue">
+                        <h4>⏱ 尽早规划</h4>
+                        <p>建议至少提前3个月开始准备。收齐材料到通知面试约需3-5个工作日，面试日期本身可能在30天后，旺季更长。</p>
+                    </div>
+                    <div class="rule-card red">
+                        <h4>📋 材料真实性</h4>
+                        <p>所有提交的材料必须真实，这是签证审核的核心。虚假材料将导致拒签且可能影响后续申请。</p>
+                    </div>
+                    <div class="rule-card purple">
+                        <h4>📝 EVUS登记</h4>
+                        <p>持有10年有效B1/B2签证的中国公民，赴美前必须完成EVUS（签证更新电子系统）登记。自2025年10月1日起收费30美元。</p>
+                    </div>
+                    <div class="rule-card">
+                        <h4>🏢 使领馆管辖范围</h4>
+                        <p>根据客人户籍或常住地确定使领馆：北京、上海、广州、沈阳、武汉。不同领馆管辖不同区域，不可随意选择。</p>
+                    </div>
+                    <div class="rule-card green">
+                        <h4>👥 人群差异化材料</h4>
+                        <p>按人群类型（在职/退休/学生/儿童/自由职业）提供差异化材料清单：身份证明、工作/学习证明、财力证明、行程与邀请证明。</p>
+                    </div>
+                    <div class="rule-card">
+                        <h4>📄 DS-160确认页</h4>
+                        <p>DS-160表格填妥后生成带条形码的确认页，是面签必备文件。表格内容必须真实准确，直接影响签证官判断。</p>
+                    </div>
+                    <div class="rule-card purple">
+                        <h4>🔍 行政审查</h4>
+                        <p>少数申请进入行政审查（Administrative Processing），审理时间可能延长至1-2个月。审查结果可能通过或拒签。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 五、流程逻辑验证 -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-num">05</span>
+                    <h2>流程逻辑验证</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="validation-box">
+                    <h4>闭环验证结果（v4.1 全链路版本 · 6泳道 · 主流程图订单状态嵌入业务节点 · 独立订单状态流转图五阶段三终态）</h4>
+                    <div class="validation-grid">
+                        <div class="validation-item">
+                            <h5>✓ 前期咨询与评估完整</h5>
+                            <p>B端有米小程序接待客户后新增<b>咨询评估</b>节点（了解出行目的/按户籍确定使领馆），C端悠哉小程序新增<b>了解签证要求</b>节点。下单前完成咨询闭环。</p>
+                        </div>
+                        <div class="validation-item">
+                            <h5>✓ 人群差异化材料清单</h5>
+                            <p>生成材料清单节点增加<b>按国家+人群（在职/退休/学生/儿童）差异化</b>，确保不同人群材料要求准确下发。</p>
+                        </div>
+                        <div class="validation-item">
+                            <h5>✓ DS-160填表+确认页</h5>
+                            <p>AI填表节点明确标注<b>填写DS-160+翻译/校验+生成DS-160确认页(条码)</b>，确认页是面签必备文件。</p>
+                        </div>
+                        <div class="validation-item">
+                            <h5>✓ 代缴签证费环节</h5>
+                            <p>新增<b>代缴签证费</b>节点（185美元/约¥1300），标注费用一经缴纳概不退还，操作人员代为在线支付。</p>
+                        </div>
+                        <div class="validation-item">
+                            <h5>✓ 在线预约面签</h5>
+                            <p>新增<b>在线预约面谈时间</b>节点（登录ustraveldocs.com·关联DS-160编号·生成预约确认页），面签日期可能排至30天后。</p>
+                        </div>
+                        <div class="validation-item">
+                            <h5>✓ 面签前培训</h5>
+                            <p>新增<b>发送确认+面签培训</b>节点，将DS-160确认页和预约确认页发送给客户，提供电话/当面培训讲解常见问题。</p>
+                        </div>
+                        <div class="validation-item">
+                            <h5>✓ 面签流程细节</h5>
+                            <p>新增<b>客户前往使领馆面签</b>（Lane4，携带材料）和<b>面签流程</b>（Lane6，安检→指纹→面谈10-15分钟）两个节点，清晰区分客户行为与领馆流程。</p>
+                        </div>
+                        <div class="validation-item">
+                            <h5>✓ 三分支签证结果</h5>
+                            <p>领馆审核结果从二分支扩展为<b>三分支</b>：通过→护照贴签；拒签→接收拒签理由单→UOM退款→退款结案；行政审查→等待1-2月→回到审核。</p>
+                        </div>
+                        <div class="validation-item">
+                            <h5>✓ 护照返还与核对</h5>
+                            <p>新增<b>护照返还+核对</b>节点（Lane4），快递或中信银行返还，客人核对签证页个人信息，确保护照安全交付。</p>
+                        </div>
+                        <div class="validation-item">
+                            <h5>✓ EVUS登记</h5>
+                            <p>新增<b>EVUS登记</b>节点，10年B1/B2签证赴美前必登记，2025年10月起收费30美元，确保赴美合规。</p>
+                        </div>
+                        <div class="validation-item">
+                            <h5>✓ 独立订单状态流转图</h5>
+                            <p>订单状态以 <b>订单:xxx</b> 格式标注于主流程图各业务节点下方（偏左避免流程线遮挡），颜色区分状态类型（橙=进行中、蓝=等待客户、紫=审核中、绿=已通过、红=异常）。详见 Section 02b 订单状态说明表。同时保留独立订单状态流转图（Section 03），按五阶段生命周期展开，含双循环容错和三终态。</p>
+                        </div>
+                        <div class="validation-item">
+                            <h5>✓ 特殊规则标注</h5>
+                            <p>新增<b>特殊规则与注意事项</b>章节，覆盖签证费不退、改期费用、儿童免面签、尽早规划、材料真实性、EVUS登记、使领馆管辖、人群差异化等10项规则。</p>
+                        </div>
+                        <div class="validation-item">
+                            <h5>✓ 异常分支完整（7条）</h5>
+                            <p>资质审核不通过→退回供应商；产品审核不通过→退回修改；下单校验不匹配→退回重选；材料不合格→退回补充；拒签→退款结案；行政审查→等待重审；材料退回→补充后重审。七条异常路径均有终止节点。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
