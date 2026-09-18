@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>签证业务原型 - pm-agent验收报告</title>
+<style>
+:root {
+  --brand: #1B3A5F;
+  --gold: #C9A84C;
+  --c-color: #E53935;
+  --b-color: #FF6B3D;
+  --ch-color: #D9466F;
+  --op-color: #E53935;
+  --ubk-color: #E60012;
+  --pass: #00B578;
+  --warn: #FF8F1F;
+  --fail: #FF4444;
+  --gray-50: #FAFAFA;
+  --gray-100: #F5F5F5;
+  --gray-200: #EEEEEE;
+  --gray-500: #999999;
+  --gray-700: #333333;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--gray-100);
+  color: var(--gray-700);
+  line-height: 1.6;
+}
+.container { max-width: 960px; margin: 0 auto; padding: 32px 20px; }
+
+/* Header */
+.report-header {
+  background: linear-gradient(135deg, var(--brand) 0%, #0A0E27 100%);
+  color: #fff; padding: 40px 32px; border-radius: 16px;
+  margin-bottom: 32px; position: relative; overflow: hidden;
+}
+.report-header::after {
+  content: ''; position: absolute; right: -40px; top: -40px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: rgba(201,168,76,0.08);
+}
+.report-header h1 { font-size: 28px; font-weight: 800; letter-spacing: 1px; }
+.report-header .subtitle { font-size: 14px; color: var(--gold); margin-top: 8px; }
+.report-header .meta {
+  display: flex; gap: 24px; margin-top: 20px; font-size: 13px; color: rgba(255,255,255,0.7);
+}
+.report-header .meta span { display: flex; align-items: center; gap: 6px; }
+
+/* Verdict Badge */
+.verdict-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 20px; border-radius: 24px;
+  font-size: 16px; font-weight: 700;
+  margin-top: 16px;
+}
+.verdict-pass { background: rgba(0,181,120,0.15); color: #00B578; border: 1px solid rgba(0,181,120,0.3); }
+
+/* Section */
+.section {
+  background: #fff; border-radius: 12px; padding: 24px;
+  margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.section-title {
+  font-size: 18px; font-weight: 700; color: var(--brand);
+  margin-bottom: 16px; padding-bottom: 12px;
+  border-bottom: 2px solid var(--gray-100);
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title .icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #fff;
+}
+
+/* Score Card */
+.score-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  margin-bottom: 20px;
+}
+.score-card {
+  background: var(--gray-50); border-radius: 12px; padding: 20px;
+  text-align: center; border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+.score-card.pass { border-color: rgba(0,181,120,0.2); }
+.score-card.warn { border-color: rgba(255,143,31,0.2); }
+.score-card .score-label { font-size: 13px; color: var(--gray-500); margin-bottom: 8px; }
+.score-card .score-value { font-size: 36px; font-weight: 800; }
+.score-card .score-value.pass { color: var(--pass); }
+.score-card .score-value.warn { color: var(--warn); }
+.score-card .score-desc { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 12px; background: var(--gray-50); color: var(--gray-500); font-weight: 600; border-bottom: 1px solid var(--gray-200); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); }
+tr:last-child td { border-bottom: none; }
+.tag { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+.tag-pass { background: rgba(0,181,120,0.1); color: var(--pass); }
+.tag-warn { background: rgba(255,143,31,0.1); color: var(--warn); }
+.tag-fail { background: rgba(255,68,68,0.1); color: var(--fail); }
+.tag-c { background: rgba(229,57,53,0.1); color: var(--c-color); }
+.tag-b { background: rgba(255,107,61,0.1); color: var(--b-color); }
+.tag-ch { background: rgba(217,70,111,0.1); color: var(--ch-color); }
+.tag-op { background: rgba(229,57,53,0.1); color: var(--op-color); }
+.tag-ubk { background: rgba(230,0,18,0.1); color: var(--ubk-color); }
+
+/* Platform cards */
+.platform-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.platform-card {
+  background: var(--gray-50); border-radius: 10px; padding: 16px;
+  border-left: 3px solid var(--gray-200);
+}
+.platform-card.c { border-left-color: var(--c-color); }
+.platform-card.b { border-left-color: var(--b-color); }
+.platform-card.ch { border-left-color: var(--ch-color); }
+.platform-card.op { border-left-color: var(--op-color); }
+.platform-card.ubk { border-left-color: var(--ubk-color); }
+.platform-card .pc-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.platform-card .pc-pages { font-size: 12px; color: var(--gray-500); }
+.platform-card .pc-status { font-size: 12px; margin-top: 8px; }
+
+/* Flow diagram */
+.flow-diagram {
+  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+  padding: 16px; background: var(--gray-50); border-radius: 10px;
+  margin: 12px 0;
+}
+.flow-node {
+  padding: 6px 14px; border-radius: 8px;
+  font-size: 12px; font-weight: 600; white-space: nowrap;
+}
+.flow-arrow { color: var(--gray-500); font-size: 14px; }
+.flow-node.c { background: rgba(229,57,53,0.1); color: var(--c-color); }
+.flow-node.b { background: rgba(255,107,61,0.1); color: var(--b-color); }
+
+/* Issue list */
+.issue-item {
+  display: flex; gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.issue-item:last-child { border-bottom: none; }
+.issue-icon {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; flex-shrink: 0;
+}
+.issue-icon.fixed { background: rgba(0,181,120,0.1); color: var(--pass); }
+.issue-icon.pending { background: rgba(255,143,31,0.1); color: var(--warn); }
+.issue-content { flex: 1; }
+.issue-title { font-size: 13px; font-weight: 600; color: var(--gray-700); }
+.issue-desc { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+.issue-fix { font-size: 12px; color: var(--pass); margin-top: 4px; }
+
+/* Summary */
+.summary-box {
+  background: linear-gradient(135deg, rgba(27,58,95,0.03), rgba(201,168,76,0.03));
+  border-radius: 12px; padding: 20px; margin-top: 20px;
+  border: 1px solid rgba(27,58,95,0.08);
+}
+.summary-box h3 { font-size: 14px; color: var(--brand); margin-bottom: 12px; }
+.summary-box p { font-size: 13px; color: var(--gray-700); line-height: 1.8; }
+
+/* Footer */
+.report-footer {
+  text-align: center; padding: 20px; font-size: 12px; color: var(--gray-500);
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Header -->
+<div class="report-header">
+  <h1>签证业务原型 pm-agent 验收报告</h1>
+  <div class="subtitle">众信旅游 · 签证业务全系统高保真原型 v6.0</div>
+  <div class="meta">
+    <span>📅 2026-07-31</span>
+    <span>🔧 验收范围：5平台 × 18签证页面</span>
+    <span>👨‍💼 验收人：pm-agent</span>
+  </div>
+  <div class="verdict-badge verdict-pass">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+    验收通过
+  </div>
+</div>
+
+<!-- 总评分 -->
+<div class="section">
+  <div class="section-title">
+    <div class="icon" style="background:var(--brand)">📊</div>
+    验收总评分
+  </div>
+  <div class="score-grid">
+    <div class="score-card pass">
+      <div class="score-label">美观度</div>
+      <div class="score-value pass">92</div>
+      <div class="score-desc">统一CSS规范 · SVG图标 · 品牌色一致</div>
+    </div>
+    <div class="score-card pass">
+      <div class="score-label">逻辑闭环</div>
+      <div class="score-value pass">100</div>
+      <div class="score-desc">18页面全覆盖 · 双下单路径闭环</div>
+    </div>
+    <div class="score-card pass">
+      <div class="score-label">交互通顺</div>
+      <div class="score-value pass">100</div>
+      <div class="score-desc">全链路测试通过 · 返回导航无死端</div>
+    </div>
+  </div>
+  <div class="summary-box">
+    <h3>验收结论</h3>
+    <p><strong>综合评分：97分 · 验收通过</strong></p>
+    <p>本次验收覆盖5个平台（C端悠哉、B端有米、CSP渠道管理、UOM运营管理、UBK供应商）共18个签证页面。针对上一轮验收反馈的问题（页面未使用frontend-design设计、缺乏统一规范、交互未闭环、首页缺少签证入口），已完成全部修复并复验通过。</p>
+  </div>
+</div>
+
+<!-- 美观度验收 -->
+<div class="section">
+  <div class="section-title">
+    <div class="icon" style="background:var(--c-color)">🎨</div>
+    一、美观度验收
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>验收项</th>
+        <th>验收标准</th>
+        <th>修复前</th>
+        <th>修复后</th>
+        <th>结果</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>统一CSS规范</td>
+        <td>使用design-system.css变量，与现有系统页面视觉对齐</td>
+        <td>全内联样式，未使用CSS变量</td>
+        <td>新增40+签证页面CSS类（v-page/v-banner/v-search/v-product-card等），引用design-system.css变量</td>
+        <td><span class="tag tag-pass">通过</span></td>
+      </tr>
+      <tr>
+        <td>图标质量</td>
+        <td>功能图标使用SVG，国旗可保留emoji</td>
+        <td>全部使用emoji（🔍✈️💼🎓⚡🛂📷🖼️）</td>
+        <td>功能图标替换为inline SVG，国旗emoji保留</td>
+        <td><span class="tag tag-pass">通过</span></td>
+      </tr>
+      <tr>
+        <td>配色一致性</td>
+        <td>C端红色#E53935 / B端橙色#FF6B3D，通过CSS变量自动适配</td>
+        <td>硬编码颜色值，不一致</td>
+        <td>使用var(--c-brand)/var(--b-brand)，[id^="page-b-v"]选择器自动切换B端配色</td>
+        <td><span class="tag tag-pass">通过</span></td>
+      </tr>
+      <tr>
+        <td>组件复用</td>
+        <td>卡片/按钮/标签/表单等组件统一样式</td>
+        <td>每个页面独立定义样式</td>
+        <td>v-product-card/v-btn-primary/v-filter-tab/v-order-form-row等统一组件类</td>
+        <td><span class="tag tag-pass">通过</span></td>
+      </tr>
+      <tr>
+        <td>间距与圆角</td>
+        <td>使用--space-*/--radius-*变量</td>
+        <td>硬编码px值</td>
+        <td>CSS类中使用var(--space-md)/var(--radius-lg)等变量</td>
+        <td><span class="tag tag-pass">通过</span></td>
+      </tr>
+      <tr>
+        <td>交互反馈</td>
+        <td>:active状态有视觉反馈</td>
+        <td>无反馈</td>
+        <td>卡片scale(.98)、按钮opacity(.85)、快捷入口scale(.92)</td>
+        <td><span class="tag tag-pass">通过</span></td>
+      </tr>
+      <tr>
+        <td>必填标识</td>
+        <td>表单必填字段标注红色星号</td>
+        <td>无标识</td>
+        <td>v-required类实现红色星号标识</td>
+        <td><span class="tag tag-pass">通过</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="summary-box">
+    <h3>美观度评分：92/100</h3>
+    <p><strong>扣分项（-8分）：</strong>PC端签证页面（CSP/UOM/UBK）仍使用部分内联样式，后续迭代可进一步统一。移动端签证页面已完全达到与现有系统页面一致的视觉质量。</p>
+  </div>
+</div>
+
+<!-- 逻辑闭环验收 -->
+<div class="section">
+  <div class="section-title">
+    <div class="icon" style="background:var(--b-color)">🔗</div>
+    二、逻辑闭环验收
+  </div>
+  
+  <h3 style="font-size:14px;color:var(--gray-700);margin-bottom:12px;">2.1 页面完整性（18个签证页面）</h3>
+  <div class="platform-grid">
+    <div class="platform-card c">
+      <div class="pc-title"><span class="tag tag-c">C端 · 悠哉</span> 5个页面</div>
+      <div class="pc-pages">vhome签证频道 · vlist签证列表 · vdetail签证详情 · vorder签证下单 · vprogress签证进度</div>
+      <div class="pc-status"><span class="tag tag-pass">全部存在</span> <span class="tag tag-pass">内容完整</span></div>
+    </div>
+    <div class="platform-card b">
+      <div class="pc-title"><span class="tag tag-b">B端 · 有米</span> 3个页面</div>
+      <div class="pc-pages">vlist签证产品 · vdetail签证详情 · vorder代客下单</div>
+      <div class="pc-status"><span class="tag tag-pass">全部存在</span> <span class="tag tag-pass">内容完整</span></div>
+    </div>
+    <div class="platform-card ch">
+      <div class="pc-title"><span class="tag tag-ch">CSP渠道管理</span> 1个页面</div>
+      <div class="pc-pages">vorders签证订单</div>
+      <div class="pc-status"><span class="tag tag-pass">存在</span> <span class="tag tag-pass">内容完整</span></div>
+    </div>
+    <div class="platform-card op">
+      <div class="pc-title"><span class="tag tag-op">UOM运营管理</span> 7个页面</div>
+      <div class="pc-pages">vtemplates资料模版库 · vmaterials材料管理 · vaifill AI填表 · vpolicy政策监控 · vrules规则引擎 · vknowledge知识库 · vstats签证数据</div>
+      <div class="pc-status"><span class="tag tag-pass">全部存在</span> <span class="tag tag-pass">内容完整</span></div>
+    </div>
+    <div class="platform-card ubk" style="grid-column:span 2">
+      <div class="pc-title"><span class="tag tag-ubk">UBK供应商</span> 3个页面（新增平台）</div>
+      <div class="pc-pages">vproducts签证产品 · vorders签证订单 · vsettlement结算管理</div>
+      <div class="pc-status"><span class="tag tag-pass">全部存在</span> <span class="tag tag-pass">内容完整</span></div>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px;color:var(--gray-700);margin:20px 0 12px;">2.2 业务流程覆盖</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>流程阶段</th>
+        <th>C端路径（悠哉小程序）</th>
+        <th>B端路径（有米小程序）</th>
+        <th>结果</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>入口</td>
+        <td>首页 → 签证入口卡片 → 签证频道</td>
+        <td>工作台 → 签证产品入口 → 签证产品列表</td>
+        <td><span class="tag tag-pass">通过</span></td>
+      </tr>
+      <tr>
+        <td>浏览</td>
+        <td>签证频道 → 签证列表（筛选/搜索）</td>
+        <td>签证产品列表（筛选/搜索）</td>
+        <td><span class="tag tag-pass">通过</span></td>
+      </tr>
+      <tr>
+        <td>详情</td>
+        <td>签证列表 → 签证详情</td>
+        <td>签证产品列表 → 签证详情</td>
+        <td><span class="tag tag-pass">通过</span></td>
+      </tr>
+      <tr>
+        <td>下单</td>
+        <td>签证详情 → 签证下单（自主下单）</td>
+        <td>签证详情 → 代客下单（销售代下单）</td>
+        <td><span class="tag tag-pass">通过</span></td>
+      </tr>
+      <tr>
+        <td>跟踪</td>
+        <td>签证下单 → 签证进度（进度时间线）</td>
+        <td>代客下单 → 返回工作台</td>
+        <td><span class="tag tag-pass">通过</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="summary-box">
+    <h3>逻辑闭环评分：100/100</h3>
+    <p>双下单路径（B端代客下单 + C端自主下单）完整闭环，与产品方案中的业务流程图v3.1完全对齐。18个签证页面全部存在且内容完整，覆盖入口→浏览→详情→下单→跟踪全流程。</p>
+  </div>
+</div>
+
+<!-- 交互通顺验收 -->
+<div class="section">
+  <div class="section-title">
+    <div class="icon" style="background:var(--pass)">⚡</div>
+    三、交互通顺验收
+  </div>
+
+  <h3 style="font-size:14px;color:var(--gray-700);margin-bottom:12px;">3.1 C端交互流程测试</h3>
+  <div class="flow-diagram">
+    <span class="flow-node c">首页</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node c">签证频道</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node c">签证列表</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node c">签证详情</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node c">签证下单</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node c">签证进度</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node c">首页</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>测试步骤</th><th>触发方式</th><th>预期跳转</th><th>实际结果</th><th>结果</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>首页签证入口</td><td>点击签证入口卡片</td><td>vhome</td><td>page-c-vhome</td><td><span class="tag tag-pass">通过</span></td></tr>
+      <tr><td>签证频道→列表</td><td>点击"查看全部"</td><td>vlist</td><td>page-c-vlist</td><td><span class="tag tag-pass">通过</span></td></tr>
+      <tr><td>列表→详情</td><td>点击产品卡片</td><td>vdetail</td><td>page-c-vdetail</td><td><span class="tag tag-pass">通过</span></td></tr>
+      <tr><td>详情→下单</td><td>点击"立即办理"</td><td>vorder</td><td>page-c-vorder</td><td><span class="tag tag-pass">通过</span></td></tr>
+      <tr><td>下单→进度</td><td>点击"提交订单"</td><td>vprogress</td><td>page-c-vprogress</td><td><span class="tag tag-pass">通过</span></td></tr>
+      <tr><td>进度→首页</td><td>点击返回箭头</td><td>home</td><td>page-c-home</td><td><span class="tag tag-pass">通过</span></td></tr>
+      <tr><td>列表→频道(返回)</td><td>点击返回箭头</td><td>vhome</td><td>page-c-vhome</td><td><span class="tag tag-pass">通过</span></td></tr>
+      <tr><td>快捷入口→列表</td><td>点击热门国家/签证类型</td><td>vlist</td><td>page-c-vlist</td><td><span class="tag tag-pass">通过</span></td></tr>
+      <tr><td>搜索栏→列表</td><td>点击搜索栏</td><td>vlist</td><td>page-c-vlist</td><td><span class="tag tag-pass">通过</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-size:14px;color:var(--gray-700);margin:20px 0 12px;">3.2 B端交互流程测试</h3>
+  <div class="flow-diagram">
+    <span class="flow-node b">工作台</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node b">签证产品</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node b">签证详情</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node b">代客下单</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node b">工作台</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>测试步骤</th><th>触发方式</th><th>预期跳转</th><th>实际结果</th><th>结果</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>工作台签证入口</td><td>点击签证产品入口卡片</td><td>vlist</td><td>page-b-vlist</td><td><span class="tag tag-pass">通过</span></td></tr>
+      <tr><td>列表→详情</td><td>点击产品卡片</td><td>vdetail</td><td>page-b-vdetail</td><td><span class="tag tag-pass">通过</span></td></tr>
+      <tr><td>详情→代客下单</td><td>点击"代客下单"</td><td>vorder</td><td>page-b-vorder</td><td><span class="tag tag-pass">通过</span></td></tr>
+      <tr><td>下单→工作台</td><td>点击"提交订单"</td><td>workbench</td><td>page-b-workbench</td><td><span class="tag tag-pass">通过</span></td></tr>
+      <tr><td>列表→工作台(返回)</td><td>点击返回箭头</td><td>workbench</td><td>page-b-workbench</td><td><span class="tag tag-pass">通过</span></td></tr>
+      <tr><td>列表→客户管理</td><td>点击"我的客户"</td><td>customers</td><td>page-b-customers</td><td><span class="tag tag-pass">通过</span></td></tr>
+    </tbody>
+  </table>
+  <div class="summary-box">
+    <h3>交互通顺评分：100/100</h3>
+    <p>C端9项测试全部通过，B端6项测试全部通过。所有按钮、卡片、返回箭头、搜索栏、快捷入口均可点击且跳转正确，无死端、无断链。交互处理器已支持新旧CSS选择器双兼容。</p>
+  </div>
+</div>
+
+<!-- 问题修复记录 -->
+<div class="section">
+  <div class="section-title">
+    <div class="icon" style="background:var(--gold)">🔧</div>
+    四、问题修复记录
+  </div>
+  
+  <div class="issue-item">
+    <div class="issue-icon fixed">✓</div>
+    <div class="issue-content">
+      <div class="issue-title">页面未使用frontend-design设计，缺乏统一规范</div>
+      <div class="issue-desc">签证页面全部使用内联样式，未引用design-system.css变量，与现有系统页面视觉质量差距明显</div>
+      <div class="issue-fix">已修复：新增40+签证页面CSS类（v-page/v-banner/v-search/v-product-card/v-detail-*/v-order-*/v-progress-*），引用design-system.css变量，重写8个移动端签证页面函数</div>
+    </div>
+  </div>
+
+  <div class="issue-item">
+    <div class="issue-icon fixed">✓</div>
+    <div class="issue-content">
+      <div class="issue-title">功能图标使用emoji，不够专业</div>
+      <div class="issue-desc">搜索🔍、签证类型✈️💼🎓⚡🛂、上传📷🖼️等均使用emoji，视觉质量低</div>
+      <div class="issue-fix">已修复：功能图标全部替换为inline SVG，国旗emoji保留（国旗emoji在移动端渲染效果好）</div>
+    </div>
+  </div>
+
+  <div class="issue-item">
+    <div class="issue-icon fixed">✓</div>
+    <div class="issue-content">
+      <div class="issue-title">交互未形成闭环，点击子按钮/子页面无反应</div>
+      <div class="issue-desc">签证页面按钮点击无跳转，卡片点击无反应，返回箭头不工作</div>
+      <div class="issue-fix">已修复：添加全局签证交互事件委托处理器，覆盖C端5页+B端3页所有交互节点（按钮/卡片/返回/搜索/快捷入口）</div>
+    </div>
+  </div>
+
+  <div class="issue-item">
+    <div class="issue-icon fixed">✓</div>
+    <div class="issue-content">
+      <div class="issue-title">前端小程序首页缺少签证入口</div>
+      <div class="issue-desc">C端悠哉首页和B端有米工作台均无签证业务入口卡片</div>
+      <div class="issue-fix">已修复：C端首页添加data-entry="vhome"签证入口卡片（红色渐变），B端工作台添加b-nav-entry签证产品入口（橙色主题）</div>
+    </div>
+  </div>
+
+  <div class="issue-item">
+    <div class="issue-icon fixed">✓</div>
+    <div class="issue-content">
+      <div class="issue-title">C端/B端签证列表页缺少返回导航</div>
+      <div class="issue-desc">重写后vlist页面缺少返回栏，用户无法从列表页返回上级</div>
+      <div class="issue-fix">已修复：C端vlist添加v-back-bar返回签证频道，B端vlist添加v-back-bar返回工作台</div>
+    </div>
+  </div>
+
+  <div class="issue-item">
+    <div class="issue-icon fixed">✓</div>
+    <div class="issue-content">
+      <div class="issue-title">交互处理器不兼容新CSS类选择器</div>
+      <div class="issue-desc">重写后页面使用.v-back-icon/.v-btn-primary/.v-product-card等新类，旧处理器仅匹配内联样式选择器</div>
+      <div class="issue-fix">已修复：更新交互处理器，同时支持新旧选择器（span[style*="font-size:18px"] || .v-back-icon，.btn-primary || .v-btn-primary等）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 待优化项 -->
+<div class="section">
+  <div class="section-title">
+    <div class="icon" style="background:var(--warn)">📌</div>
+    五、待优化项（不阻塞验收）
+  </div>
+  <table>
+    <thead>
+      <tr><th>优化项</th><th>当前状态</th><th>优化建议</th><th>优先级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>PC端签证页面视觉统一</td>
+        <td>CSP/UOM/UBK签证页面仍使用部分内联样式</td>
+        <td>后续迭代中提取PC端签证页面CSS类，与移动端统一规范</td>
+        <td><span class="tag tag-warn">中</span></td>
+      </tr>
+      <tr>
+        <td>页面切换动效</td>
+        <td>页面切换无过渡动画</td>
+        <td>添加slide/fade过渡效果提升体验</td>
+        <td><span class="tag tag-warn">低</span></td>
+      </tr>
+      <tr>
+        <td>表单验证交互</td>
+        <td>下单页表单无实时验证</td>
+        <td>添加输入验证、错误提示等微交互</td>
+        <td><span class="tag tag-warn">低</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Footer -->
+<div class="report-footer">
+  <p>pm-agent验收报告 · 众信旅游签证业务平台 · 2026-07-31</p>
+  <p>原型访问地址：http://localhost:8770/v5-prototype.html</p>
+</div>
+
+</div>
+</body>
+</html>
